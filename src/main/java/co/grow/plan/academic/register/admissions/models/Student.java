@@ -1,4 +1,6 @@
-package co.grow.plan.academic.register.models;
+package co.grow.plan.academic.register.admissions.models;
+
+import co.grow.plan.academic.register.academicplan.models.Course;
 
 import javax.persistence.*;
 

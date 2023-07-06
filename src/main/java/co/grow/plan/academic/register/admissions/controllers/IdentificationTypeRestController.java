@@ -1,7 +1,7 @@
-package co.grow.plan.academic.register.controllers;
+package co.grow.plan.academic.register.admissions.controllers;
 
-import co.grow.plan.academic.register.models.IdentificationType;
-import co.grow.plan.academic.register.services.IdentificacionTypeService;
+import co.grow.plan.academic.register.admissions.models.IdentificationType;
+import co.grow.plan.academic.register.admissions.services.IdentificacionTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

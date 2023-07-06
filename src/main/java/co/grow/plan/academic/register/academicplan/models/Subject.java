@@ -1,9 +1,9 @@
-package co.grow.plan.academic.register.models;
+package co.grow.plan.academic.register.academicplan.models;
 
 import javax.persistence.*;
 
 @Entity
-public class IdentificationType {
+public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -11,10 +11,10 @@ public class IdentificationType {
     @Column(unique = true, nullable = false)
     private String name;
 
-    public IdentificationType() {
+    public Subject() {
     }
 
-    public IdentificationType(String name) {
+    public Subject(String name) {
         this.name = name;
     }
 
@@ -36,7 +36,7 @@ public class IdentificationType {
 
     @Override
     public String toString() {
-        return "IdentificationType{" +
+        return "Subject{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

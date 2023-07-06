@@ -1,9 +1,10 @@
-package co.grow.plan.academic.register.models;
+package co.grow.plan.academic.register.academicplan.models;
 
 import javax.persistence.*;
 
 @Entity
-public class Period {
+public class Course {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -11,10 +12,10 @@ public class Period {
     @Column(unique = true, nullable = false)
     private String name;
 
-    public Period() {
+    public Course() {
     }
 
-    public Period(String name) {
+    public Course(String name) {
         this.name = name;
     }
 
@@ -36,7 +37,7 @@ public class Period {
 
     @Override
     public String toString() {
-        return "Periodo{" +
+        return "Course{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

@@ -1,10 +1,9 @@
-package co.grow.plan.academic.register.models;
+package co.grow.plan.academic.register.admissions.models;
 
 import javax.persistence.*;
 
 @Entity
-public class Course {
-
+public class IdentificationType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -12,10 +11,10 @@ public class Course {
     @Column(unique = true, nullable = false)
     private String name;
 
-    public Course() {
+    public IdentificationType() {
     }
 
-    public Course(String name) {
+    public IdentificationType(String name) {
         this.name = name;
     }
 
@@ -37,7 +36,7 @@ public class Course {
 
     @Override
     public String toString() {
-        return "Course{" +
+        return "IdentificationType{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

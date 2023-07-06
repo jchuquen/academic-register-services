@@ -1,7 +1,7 @@
-package co.grow.plan.academic.register.services;
+package co.grow.plan.academic.register.admissions.services;
 
-import co.grow.plan.academic.register.models.IdentificationType;
-import co.grow.plan.academic.register.repositories.IdentificationTypeDao;
+import co.grow.plan.academic.register.admissions.models.IdentificationType;
+import co.grow.plan.academic.register.admissions.repositories.IdentificationTypeDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
