@@ -9,94 +9,287 @@ info:
 servers:
   - url: http://localhost:1500/ar4u/api/v1
 tags:
-  - name: Admissions
+  - name: admissions
     description: Everything related to the admission process
     
-  - name: Academic Plans
+  - name: academic-plans
     description: Resources to configure everything related to the courses offered by the university 
     
-  - name: Grades Management
+  - name: grades-management
     description: Operations to manage grades information
     
-  - name: Security
+  - name: security
     description: Enpoints for managing security settings
   
 paths:
-  /pet:
-    put:
+  /admissions/identification-types:
+    get:
       tags:
-        - pet
-      summary: Update an existing pet
-      description: Update an existing pet by Id
-      operationId: updatePet
-      requestBody:
-        description: Update an existent pet in the store
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Pet'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Pet'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Pet'
-        required: true
+        - admissions
+      summary: List registered identification types
+      description: List registered identification types
+      operationId: listIdentificationTypes
       responses:
         '200':
-          description: Successful operation
+          description: Identification type found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'          
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Identificationtype'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/Pet'
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Identificationtype'
+                
+        '204':
+          description: No identification types were found
         '400':
-          description: Invalid ID supplied
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '403':
+          description: Not enough permissions to access this resource
         '404':
-          description: Pet not found
-        '405':
-          description: Validation exception
+          description: Resource not found
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
       security:
         - petstore_auth:
             - write:pets
             - read:pets
     post:
       tags:
-        - pet
-      summary: Add a new pet to the store
-      description: Add a new pet to the store
-      operationId: addPet
+        - admissions
+      summary: Create a new identification type (e.g CC, TI, RC,...) 
+      description: Create a new identification type
+      operationId: createIdentificationType
       requestBody:
-        description: Create a new pet in the store
+        description: Identification type object
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Pet'
+              $ref: '#/components/schemas/IdentificationtypeNew'
           application/xml:
             schema:
-              $ref: '#/components/schemas/Pet'
+              $ref: '#/components/schemas/IdentificationtypeNew'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Pet'
+              $ref: '#/components/schemas/IdentificationtypeNew'
         required: true
       responses:
-        '200':
-          description: Successful operation
+        '201':
+          description: Identification type created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'          
+                $ref: '#/components/schemas/Identificationtype'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/Pet'
-        '405':
-          description: Invalid input
+                $ref: '#/components/schemas/Identificationtype'
+                
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+                
+        '403':
+          description: Client doesn´t have enough permissions to access this resource
+          
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+                
       security:
         - petstore_auth:
             - write:pets
             - read:pets
+  
+  /admissions/identification-types/{id}:
+    get:
+      tags:
+        - admissions
+      summary: Find an identification type by ID
+      description: Find an identification type by ID
+      operationId: findIdentificationTypeById
+      parameters:
+        - name: id
+          in: path
+          description: Identification type ID
+          required: true
+          schema:
+            type: integer
+            format: int16
+      responses:
+        '200':
+          description: Identification type found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Identificationtype'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Identificationtype'
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Identification type not found
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+            
+    put:
+      tags:
+        - admissions
+      summary: Update an existing identification type
+      description: Update an existing identification type
+      operationId: updateIdentificationType
+      parameters:
+        - name: id
+          in: path
+          description: Identification type ID
+          required: true
+          schema:
+            type: integer
+            format: int16
+      requestBody:
+        description: Identification type object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Identificationtype'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Identificationtype'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Identificationtype'
+        required: true
+      responses:
+        '200':
+          description: Identification type updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Identificationtype'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Identificationtype'
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Identification type not found
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+            
+    delete:
+      tags:
+        - admissions
+      summary: Delete an existing identification type
+      description: Delete an existing identification type
+      operationId: deleteIdentificationType
+      parameters:
+        - name: id
+          in: path
+          description: Identification type ID
+          required: true
+          schema:
+            type: integer
+            format: int16
+      responses:
+        '200':
+          description: Identification type deleted
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Identification type not found
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+    
   /pet/findByStatus:
     get:
       tags:
@@ -583,6 +776,41 @@ paths:
           description: User not found
 components:
   schemas:
+  
+    ErrorModel:
+      type: object
+      properties: 
+        code: 
+          type: string
+          description: Error code
+          example: ERR-0100
+        message: 
+          type: string
+          description: Descriptive error message
+          example: We found that...
+        
+    IdentificationtypeNew:
+      type: object
+      properties:
+        name: 
+          type: string
+          example: CC
+          
+    Identificationtype:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int16
+          example: 1
+        name: 
+          type: string
+          example: CC
+        version:
+          type: integer
+          format: int16
+          example: 1
+    
     Order:
       type: object
       properties:
