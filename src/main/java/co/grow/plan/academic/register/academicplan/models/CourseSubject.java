@@ -1,6 +1,9 @@
 package co.grow.plan.academic.register.academicplan.models;
 
+import co.grow.plan.academic.register.admissions.models.Teacher;
+
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(
@@ -16,6 +19,7 @@ import javax.persistence.*;
 public class CourseSubject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
     private int id;
 
     @ManyToOne
@@ -26,12 +30,16 @@ public class CourseSubject {
     @Column(nullable = false)
     private Subject subject;
 
+    @ManyToOne
+    private Teacher teacher;
+
     public CourseSubject() {
     }
 
-    public CourseSubject(Course course, Subject subject) {
+    public CourseSubject(Course course, Subject subject, Teacher teacher) {
         this.course = course;
         this.subject = subject;
+        this.teacher = teacher;
     }
 
     public int getId() {
@@ -56,5 +64,36 @@ public class CourseSubject {
 
     public void setSubject(Subject subject) {
         this.subject = subject;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
+
+    @Override
+    public String toString() {
+        return "CourseSubject{" +
+                "id=" + id +
+                ", course=" + course +
+                ", subject=" + subject +
+                ", teacher=" + teacher +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CourseSubject that = (CourseSubject) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

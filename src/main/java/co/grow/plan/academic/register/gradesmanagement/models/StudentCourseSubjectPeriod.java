@@ -1,7 +1,9 @@
-package co.grow.plan.academic.register.academicplan.models;
+package co.grow.plan.academic.register.gradesmanagement.models;
 
 
-import co.grow.plan.academic.register.admissions.models.Person;
+import co.grow.plan.academic.register.academicplan.models.CourseSubject;
+import co.grow.plan.academic.register.academicplan.models.Period;
+import co.grow.plan.academic.register.admissions.models.Student;
 
 import javax.persistence.*;
 
@@ -21,6 +23,7 @@ public class StudentCourseSubjectPeriod {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
     private int id;
 
     @ManyToOne
@@ -29,7 +32,7 @@ public class StudentCourseSubjectPeriod {
 
     @ManyToOne
     @Column(nullable = false)
-    private Person student;
+    private Student student;
 
     @ManyToOne
     @Column(nullable = false)
@@ -41,7 +44,9 @@ public class StudentCourseSubjectPeriod {
     public StudentCourseSubjectPeriod() {
     }
 
-    public StudentCourseSubjectPeriod(CourseSubject courseSubject, Person student, Period period, double score) {
+    public StudentCourseSubjectPeriod(CourseSubject courseSubject,
+        Student student, Period period, double score) {
+
         this.courseSubject = courseSubject;
         this.student = student;
         this.period = period;
@@ -64,11 +69,11 @@ public class StudentCourseSubjectPeriod {
         this.courseSubject = courseSubject;
     }
 
-    public Person getStudent() {
+    public Student getStudent() {
         return student;
     }
 
-    public void setStudent(Person student) {
+    public void setStudent(Student student) {
         this.student = student;
     }
 

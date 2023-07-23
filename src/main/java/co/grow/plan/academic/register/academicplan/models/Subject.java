@@ -1,11 +1,13 @@
 package co.grow.plan.academic.register.academicplan.models;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
     private int id;
 
     @Column(unique = true, nullable = false)
@@ -40,5 +42,18 @@ public class Subject {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Subject subject = (Subject) o;
+        return id == subject.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
