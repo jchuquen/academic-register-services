@@ -1,7 +1,5 @@
 package co.grow.plan.academic.register.admissions.models;
 
-import co.grow.plan.academic.register.academicplan.models.Course;
-
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -45,10 +43,6 @@ public abstract class Person {
     @Column(nullable = false)
     private String address;
 
-    //TODO: Add Not NUll
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Course course;
-
     //TODO: Add control for lost update
     public Person() {
     }
@@ -56,7 +50,7 @@ public abstract class Person {
     public Person(int id, IdentificationType identificationType,
                   String identificationNumber, String firstName,
                   String lastName, String phone, String emailAddress,
-                  String address, Course course) {
+                  String address) {
         this.id = id;
         this.identificationType = identificationType;
         this.identificationNumber = identificationNumber;
@@ -65,7 +59,6 @@ public abstract class Person {
         this.phone = phone;
         this.emailAddress = emailAddress;
         this.address = address;
-        this.course = course;
     }
 
     public int getId() {
@@ -132,14 +125,6 @@ public abstract class Person {
         this.address = address;
     }
 
-    public Course getCourse() {
-        return course;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
     @Override
     public String toString() {
         return "Student{" +
@@ -151,7 +136,6 @@ public abstract class Person {
                 ", phone='" + phone + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +
                 ", address='" + address + '\'' +
-                ", course=" + course +
                 '}';
     }
 

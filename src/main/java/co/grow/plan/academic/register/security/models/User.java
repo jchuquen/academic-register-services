@@ -1,5 +1,6 @@
 package co.grow.plan.academic.register.security.models;
 
+import co.grow.plan.academic.register.admissions.models.IdentificationType;
 import co.grow.plan.academic.register.admissions.models.Person;
 
 import javax.persistence.Column;
@@ -20,6 +21,16 @@ public abstract class User extends Person {
     private Rol rol;
 
     public User() {
+    }
+
+    public User(int id, IdentificationType identificationType,
+                String identificationNumber, String firstName,
+                String lastName, String phone, String emailAddress,
+                String address, String password, boolean isActive){
+        super(id, identificationType, identificationNumber, firstName,
+                lastName, phone, emailAddress, address);
+        this.password = password;
+        this.isActive = isActive;
     }
 
     public String getPassword() {
@@ -49,7 +60,6 @@ public abstract class User extends Person {
                 ", phone='" + super.getPhone() + '\'' +
                 ", emailAddress='" + super.getEmailAddress() + '\'' +
                 ", address='" + super.getAddress() + '\'' +
-                ", course=" + super.getCourse() + + '\'' +
                 ", isActive=" + isActive +
                 '}';
     }
