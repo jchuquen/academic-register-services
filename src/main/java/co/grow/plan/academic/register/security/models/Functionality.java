@@ -1,10 +1,10 @@
-package co.grow.plan.academic.register.admissions.models;
+package co.grow.plan.academic.register.security.models;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class IdentificationType {
+public class Functionality {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
@@ -13,10 +13,10 @@ public class IdentificationType {
     @Column(unique = true, nullable = false)
     private String name;
 
-    public IdentificationType() {
+    public Functionality() {
     }
 
-    public IdentificationType(String name) {
+    public Functionality(String name) {
         this.name = name;
     }
 
@@ -38,7 +38,7 @@ public class IdentificationType {
 
     @Override
     public String toString() {
-        return "IdentificationType{" +
+        return "Functionality{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
@@ -48,7 +48,7 @@ public class IdentificationType {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IdentificationType that = (IdentificationType) o;
+        Functionality that = (Functionality) o;
         return id == that.id;
     }
 

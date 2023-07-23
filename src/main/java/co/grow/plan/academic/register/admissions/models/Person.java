@@ -3,8 +3,8 @@ package co.grow.plan.academic.register.admissions.models;
 import co.grow.plan.academic.register.academicplan.models.Course;
 
 import javax.persistence.*;
+import java.util.Objects;
 
-//TODO: Mark required fields
 @Entity
 @Table(
         uniqueConstraints = {
@@ -13,14 +13,15 @@ import javax.persistence.*;
                                 "identification_type_id",
                                 "identification_number"
                         }
-                ),
-
+                )
         }
 )
-public class Student {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
     private int id;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -33,31 +34,37 @@ public class Student {
     private String firstName;
 
     @Column(nullable = false)
-    private  String lastName;
+    private String lastName;
 
     @Column(nullable = false)
-    private  String phone;
+    private String phone;
 
     @Column(nullable = false, unique = true)
     private String emailAddress;
+
+    @Column(nullable = false)
+    private String address;
 
     //TODO: Add Not NUll
     @ManyToOne(fetch = FetchType.LAZY)
     private Course course;
 
-    public Student() {
+    //TODO: Add control for lost update
+    public Person() {
     }
 
-    public Student(IdentificationType identificationType,
-               String identificationNumber, String firstName,
-               String lastName, String phone, String emailAddress,
-               Course course) {
+    public Person(int id, IdentificationType identificationType,
+                  String identificationNumber, String firstName,
+                  String lastName, String phone, String emailAddress,
+                  String address, Course course) {
+        this.id = id;
         this.identificationType = identificationType;
         this.identificationNumber = identificationNumber;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.emailAddress = emailAddress;
+        this.address = address;
         this.course = course;
     }
 
@@ -117,6 +124,14 @@ public class Student {
         this.emailAddress = emailAddress;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public Course getCourse() {
         return course;
     }
@@ -129,13 +144,27 @@ public class Student {
     public String toString() {
         return "Student{" +
                 "id=" + id +
-                ", identificationType='" + identificationType.getName() + '\'' +
+                ", identificationType=" + identificationType +
                 ", identificationNumber='" + identificationNumber + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +
-                ", course='" + course.getName() + '\'' +
+                ", address='" + address + '\'' +
+                ", course=" + course +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return id == person.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

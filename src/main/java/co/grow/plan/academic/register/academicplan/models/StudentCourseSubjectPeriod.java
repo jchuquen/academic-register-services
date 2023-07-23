@@ -1,7 +1,7 @@
 package co.grow.plan.academic.register.academicplan.models;
 
 
-import co.grow.plan.academic.register.admissions.models.Student;
+import co.grow.plan.academic.register.admissions.models.Person;
 
 import javax.persistence.*;
 
@@ -29,7 +29,7 @@ public class StudentCourseSubjectPeriod {
 
     @ManyToOne
     @Column(nullable = false)
-    private Student student;
+    private Person student;
 
     @ManyToOne
     @Column(nullable = false)
@@ -41,7 +41,7 @@ public class StudentCourseSubjectPeriod {
     public StudentCourseSubjectPeriod() {
     }
 
-    public StudentCourseSubjectPeriod(CourseSubject courseSubject, Student student, Period period, double score) {
+    public StudentCourseSubjectPeriod(CourseSubject courseSubject, Person student, Period period, double score) {
         this.courseSubject = courseSubject;
         this.student = student;
         this.period = period;
@@ -64,11 +64,11 @@ public class StudentCourseSubjectPeriod {
         this.courseSubject = courseSubject;
     }
 
-    public Student getStudent() {
+    public Person getStudent() {
         return student;
     }
 
-    public void setStudent(Student student) {
+    public void setStudent(Person student) {
         this.student = student;
     }
 
