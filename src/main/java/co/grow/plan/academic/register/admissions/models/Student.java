@@ -3,7 +3,6 @@ package co.grow.plan.academic.register.admissions.models;
 import co.grow.plan.academic.register.academicplan.models.Course;
 import co.grow.plan.academic.register.security.models.User;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -11,8 +10,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public final class Student extends User {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Column(nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Course course;
 
     public Student() {

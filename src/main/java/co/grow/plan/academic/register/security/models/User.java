@@ -3,10 +3,7 @@ package co.grow.plan.academic.register.security.models;
 import co.grow.plan.academic.register.admissions.models.IdentificationType;
 import co.grow.plan.academic.register.admissions.models.Person;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public abstract class User extends Person {

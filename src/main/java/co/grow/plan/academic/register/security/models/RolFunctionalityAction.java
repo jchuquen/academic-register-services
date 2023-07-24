@@ -8,6 +8,7 @@ import java.util.Objects;
         uniqueConstraints = {
                 @UniqueConstraint(
                         columnNames = {
+                                "rol_id",
                                 "functionality_id",
                                 "action_id"
                         }
@@ -19,18 +20,20 @@ public class RolFunctionalityAction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
-    @Column(nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Rol rol;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Functionality functionality;
 
-    @ManyToOne
-    @Column(nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Action action;
 
     public RolFunctionalityAction() {
     }
 
-    public RolFunctionalityAction(Functionality functionality, Action action) {
+    public RolFunctionalityAction(Rol rol, Functionality functionality, Action action) {
+        this.rol = rol;
         this.functionality = functionality;
         this.action = action;
     }
@@ -41,6 +44,14 @@ public class RolFunctionalityAction {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 
     public Functionality getFunctionality() {
@@ -63,6 +74,7 @@ public class RolFunctionalityAction {
     public String toString() {
         return "RolFunctionalityAction{" +
                 "id=" + id +
+                ", rol=" + rol +
                 ", functionality=" + functionality +
                 ", action=" + action +
                 '}';

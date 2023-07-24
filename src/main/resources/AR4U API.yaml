@@ -7,7 +7,7 @@ info:
     email: jorge.chuquen@perficient.com
   version: 1.0.0
 servers:
-  - url: http://localhost:1500/ar4u/api/v1
+  - url: http://localhost:1500/ar4u/api
 tags:
   - name: admissions
     description: Everything related to the admission process
@@ -22,7 +22,7 @@ tags:
     description: Enpoints for managing security settings
   
 paths:
-  /admissions/identification-types:
+  /v1/admissions/identification-types:
     get:
       tags:
         - admissions
@@ -37,12 +37,12 @@ paths:
               schema:
                 type: array
                 items: 
-                  $ref: '#/components/schemas/Identificationtype'          
+                  $ref: '#/components/schemas/IdentificationType'          
             application/xml:
               schema:
                 type: array
                 items: 
-                  $ref: '#/components/schemas/Identificationtype'
+                  $ref: '#/components/schemas/IdentificationType'
                 
         '204':
           description: No identification types were found
@@ -83,13 +83,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IdentificationtypeNew'
+              $ref: '#/components/schemas/IdentificationTypeNew'
           application/xml:
             schema:
-              $ref: '#/components/schemas/IdentificationtypeNew'
+              $ref: '#/components/schemas/IdentificationTypeNew'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/IdentificationtypeNew'
+              $ref: '#/components/schemas/IdentificationTypeNew'
         required: true
       responses:
         '201':
@@ -97,10 +97,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Identificationtype'          
+                $ref: '#/components/schemas/IdentificationType'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/Identificationtype'
+                $ref: '#/components/schemas/IdentificationType'
                 
         '400':
           description: Invalid request or content
@@ -130,7 +130,7 @@ paths:
             - write:pets
             - read:pets
   
-  /admissions/identification-types/{id}:
+  /v1/admissions/identification-types/{id}:
     get:
       tags:
         - admissions
@@ -151,10 +151,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Identificationtype'          
+                $ref: '#/components/schemas/IdentificationType'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/Identificationtype'
+                $ref: '#/components/schemas/IdentificationType'
         '400':
           description: Invalid request or content
           content:
@@ -201,13 +201,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Identificationtype'
+              $ref: '#/components/schemas/IdentificationTypeNew'
           application/xml:
             schema:
-              $ref: '#/components/schemas/Identificationtype'
+              $ref: '#/components/schemas/IdentificationTypeNew'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Identificationtype'
+              $ref: '#/components/schemas/IdentificationTypeNew'
         required: true
       responses:
         '200':
@@ -215,10 +215,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Identificationtype'          
+                $ref: '#/components/schemas/IdentificationType'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/Identificationtype'
+                $ref: '#/components/schemas/IdentificationType'
         '400':
           description: Invalid request or content
           content:
@@ -789,14 +789,14 @@ components:
           description: Descriptive error message
           example: We found that...
         
-    IdentificationtypeNew:
+    IdentificationTypeNew:
       type: object
       properties:
         name: 
           type: string
           example: CC
           
-    Identificationtype:
+    IdentificationType:
       type: object
       properties:
         id:
@@ -806,10 +806,6 @@ components:
         name: 
           type: string
           example: CC
-        version:
-          type: integer
-          format: int16
-          example: 1
     
     Order:
       type: object

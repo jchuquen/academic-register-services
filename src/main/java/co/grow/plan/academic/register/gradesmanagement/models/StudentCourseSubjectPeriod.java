@@ -26,16 +26,13 @@ public class StudentCourseSubjectPeriod {
     @Column(updatable = false)
     private int id;
 
-    @ManyToOne
-    @Column(nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private CourseSubject courseSubject;
 
-    @ManyToOne
-    @Column(nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Student student;
 
-    @ManyToOne
-    @Column(nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Period period;
 
     @Column(nullable = false)

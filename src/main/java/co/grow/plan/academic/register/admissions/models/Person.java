@@ -4,17 +4,18 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
                         columnNames = {
                                 "identification_type_id",
                                 "identification_number"
+
                         }
                 )
         }
 )
-@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Person {
 
     @Id
@@ -25,7 +26,7 @@ public abstract class Person {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private IdentificationType identificationType;
 
-    @Column(nullable = false)
+    @Column(name = "identification_number", nullable = false)
     private String identificationNumber;
 
     @Column(nullable = false)

@@ -22,15 +22,13 @@ public class CourseSubject {
     @Column(updatable = false)
     private int id;
 
-    @ManyToOne
-    @Column(nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Course course;
 
-    @ManyToOne
-    @Column(nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Subject subject;
 
-    @ManyToOne
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private Teacher teacher;
 
     public CourseSubject() {
