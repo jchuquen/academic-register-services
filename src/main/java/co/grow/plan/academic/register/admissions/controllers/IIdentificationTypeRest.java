@@ -1,4 +1,4 @@
-package co.grow.plan.academic.register.admissions.interfaces;
+package co.grow.plan.academic.register.admissions.controllers;
 
 import co.grow.plan.academic.register.admissions.dtos.IdentificationTypeDto;
 import co.grow.plan.academic.register.admissions.dtos.IdentificationTypeNewDto;
@@ -37,6 +37,7 @@ public interface IIdentificationTypeRest {
             consumes = { "application/json", "application/xml", "application/x-www-form-urlencoded" }
     )
     ResponseEntity<IdentificationTypeDto> updateIdentificationType(
+            @PathVariable("id") Integer id,
             @RequestBody IdentificationTypeNewDto identificationTypeNewDto);
 
     @DeleteMapping(

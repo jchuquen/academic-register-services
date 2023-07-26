@@ -2,7 +2,7 @@ package co.grow.plan.academic.register.controllers;
 
 import co.grow.plan.academic.register.admissions.controllers.IdentificationTypeRestController;
 import co.grow.plan.academic.register.admissions.models.IdentificationType;
-import co.grow.plan.academic.register.admissions.services.IdentificacionTypeService;
+import co.grow.plan.academic.register.admissions.services.IdentificationTypeService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -12,13 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
-//post()
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
-//status()
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestPropertySource("/application-test.properties")
 @SpringBootTest
@@ -26,7 +21,7 @@ import static org.mockito.Mockito.when;
 public class IdentificationTypeRestControllerTest {
 
     @Mock
-    private IdentificacionTypeService identificacionTypeServiceMock;
+    private IdentificationTypeService identificacionTypeServiceMock;
 
     @InjectMocks
     private IdentificationTypeRestController identificationTypeRestController;
@@ -39,7 +34,7 @@ public class IdentificationTypeRestControllerTest {
         IdentificationType identificationType = new IdentificationType("Cédula");
         identificationType.setId(1);
 
-        when(identificacionTypeServiceMock.createIdentificationType("Cédula")).thenReturn(identificationType);
+        //when(identificacionTypeServiceMock.createIdentificationType("Cédula")).thenReturn(identificationType);
 
         mockMvc.perform(
                 post("/api/rest/identificationType").

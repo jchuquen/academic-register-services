@@ -2,9 +2,9 @@ package co.grow.plan.academic.register.admissions.controllers;
 
 import co.grow.plan.academic.register.admissions.dtos.IdentificationTypeDto;
 import co.grow.plan.academic.register.admissions.dtos.IdentificationTypeNewDto;
-import co.grow.plan.academic.register.admissions.interfaces.IIdentificationTypeRest;
-import co.grow.plan.academic.register.admissions.services.IdentificacionTypeService;
+import co.grow.plan.academic.register.admissions.services.IIdentificationTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,36 +14,71 @@ import java.util.List;
 public class IdentificationTypeRestController implements IIdentificationTypeRest {
 
     @Autowired
-    private IdentificacionTypeService identificacionTypeService;
+    private IIdentificationTypeService identificacionTypeService;
 
     @Override
     public ResponseEntity<List<IdentificationTypeDto>> listIdentificationTypes() {
-        return null;
+        List<IdentificationTypeDto> listIdentificationTypes =
+                identificacionTypeService.listIdentificationTypes();
+
+        if (listIdentificationTypes.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(
+                    listIdentificationTypes, HttpStatus.OK
+            );
+        }
     }
 
     @Override
-    public ResponseEntity<IdentificationTypeDto> createIdentificationType(IdentificationTypeNewDto identificationTypeNewDto) {
-        return null;
+    public ResponseEntity<IdentificationTypeDto> createIdentificationType(
+            IdentificationTypeNewDto identificationTypeNewDto) {
+
+        //TODO: Pending to handle 409 error
+        return new ResponseEntity<>(
+                identificacionTypeService.createIdentificationType(
+                        identificationTypeNewDto),
+                HttpStatus.OK
+        );
     }
 
     @Override
     public ResponseEntity<IdentificationTypeDto> findIdentificationTypeById(Integer id) {
-        return null;
+
+        IdentificationTypeDto identificationTypeDto =
+                identificacionTypeService.findIdentificationTypeById(id);
+
+        if (identificationTypeDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(identificationTypeDto,HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<IdentificationTypeDto> updateIdentificationType(IdentificationTypeNewDto identificationTypeNewDto) {
-        return null;
+    public ResponseEntity<IdentificationTypeDto> updateIdentificationType(
+            Integer id,
+            IdentificationTypeNewDto identificationTypeNewDto) {
+
+        IdentificationTypeDto identificationTypeDto =
+                identificacionTypeService.updateIdentificationType(
+                        id, identificationTypeNewDto);
+
+        //TODO: Pending to handle 409 error
+        if (identificationTypeDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(
+                identificacionTypeService.findIdentificationTypeById(id),
+                HttpStatus.OK
+        );
     }
 
     @Override
     public ResponseEntity<Void> deleteIdentificationType(Integer id) {
-        return null;
+        //TODO: Pending to throw 404 error when no resource
+        identificacionTypeService.deleteIdentificationType(id);
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
-
-    /*@PostMapping("/api/rest/identificationType")
-    public IdentificationType createIdentificacionType(@RequestParam String name) {
-        return identificacionTypeService.createIdentificationType(name);
-    }*/
-
 }

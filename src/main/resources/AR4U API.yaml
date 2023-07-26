@@ -114,6 +114,16 @@ paths:
                 
         '403':
           description: Client doesn´t have enough permissions to access this resource
+        
+        '409':
+          description: Identification type already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
           
         '500': 
           description: Internal Server Error
@@ -232,6 +242,15 @@ paths:
           description: Not enough permissions to access this resource
         '404':
           description: Identification type not found
+        '409':
+          description: Identification type already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
         '500': 
           description: Internal Server Error
           content:
