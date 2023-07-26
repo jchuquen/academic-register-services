@@ -43,5 +43,5 @@ public interface IIdentificationTypeRest {
             value = "/v1/admissions/identification-types/{id}",
             produces = { "application/json", "application/xml" }
     )
-    ResponseEntity<Void> deleteIdentificationType(@PathVariable("id") Integer id)
+    ResponseEntity<Void> deleteIdentificationType(@PathVariable("id") Integer id);
 }
