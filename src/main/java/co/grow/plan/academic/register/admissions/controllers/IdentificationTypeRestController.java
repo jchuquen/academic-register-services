@@ -34,11 +34,10 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
     public ResponseEntity<IdentificationTypeDto> createIdentificationType(
             IdentificationTypeNewDto identificationTypeNewDto) {
 
-        //TODO: Pending to handle 409 error
         return new ResponseEntity<>(
                 identificacionTypeService.createIdentificationType(
                         identificationTypeNewDto),
-                HttpStatus.OK
+                HttpStatus.CREATED
         );
     }
 

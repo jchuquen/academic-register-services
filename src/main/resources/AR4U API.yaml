@@ -51,10 +51,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorModel'          
+                $ref: '#/components/schemas/ApiError'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/ErrorModel'
+                $ref: '#/components/schemas/ApiError'
         '403':
           description: Not enough permissions to access this resource
         '404':
@@ -64,10 +64,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorModel'          
+                $ref: '#/components/schemas/ApiError'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/ErrorModel'
+                $ref: '#/components/schemas/ApiError'
       security:
         - petstore_auth:
             - write:pets
@@ -107,10 +107,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorModel'          
+                $ref: '#/components/schemas/ApiError'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/ErrorModel'
+                $ref: '#/components/schemas/ApiError'
                 
         '403':
           description: Client doesn´t have enough permissions to access this resource
@@ -120,20 +120,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorModel'          
+                $ref: '#/components/schemas/ApiError'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/ErrorModel'
+                $ref: '#/components/schemas/ApiError'
           
         '500': 
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorModel'          
+                $ref: '#/components/schemas/ApiError'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/ErrorModel'
+                $ref: '#/components/schemas/ApiError'
                 
       security:
         - petstore_auth:
@@ -170,10 +170,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorModel'          
+                $ref: '#/components/schemas/ApiError'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/ErrorModel'
+                $ref: '#/components/schemas/ApiError'
         '403':
           description: Not enough permissions to access this resource
         '404':
@@ -183,10 +183,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorModel'          
+                $ref: '#/components/schemas/ApiError'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/ErrorModel'
+                $ref: '#/components/schemas/ApiError'
       security:
         - petstore_auth:
             - write:pets
@@ -234,10 +234,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorModel'          
+                $ref: '#/components/schemas/ApiError'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/ErrorModel'
+                $ref: '#/components/schemas/ApiError'
         '403':
           description: Not enough permissions to access this resource
         '404':
@@ -247,19 +247,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorModel'          
+                $ref: '#/components/schemas/ApiError'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/ErrorModel'
+                $ref: '#/components/schemas/ApiError'
         '500': 
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorModel'          
+                $ref: '#/components/schemas/ApiError'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/ErrorModel'
+                $ref: '#/components/schemas/ApiError'
       security:
         - petstore_auth:
             - write:pets
@@ -287,10 +287,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorModel'          
+                $ref: '#/components/schemas/ApiError'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/ErrorModel'
+                $ref: '#/components/schemas/ApiError'
         '403':
           description: Not enough permissions to access this resource
         '404':
@@ -300,10 +300,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorModel'          
+                $ref: '#/components/schemas/ApiError'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/ErrorModel'
+                $ref: '#/components/schemas/ApiError'
       security:
         - petstore_auth:
             - write:pets
@@ -796,17 +796,25 @@ paths:
 components:
   schemas:
   
-    ErrorModel:
+    ApiError:
       type: object
       properties: 
-        code: 
+        errorCode: 
           type: string
           description: Error code
-          example: ERR-0100
-        message: 
+          example: ERR-01-00
+        mainMessage: 
           type: string
-          description: Descriptive error message
-          example: We found that...
+          description: Main error message
+          example: Identification type with same name already exists
+        detailedErrors:
+          type: array
+          items:
+            type: string
+          example: 
+              - Field x is required
+              - Field y is required
+            
         
     IdentificationTypeNew:
       type: object

@@ -4,6 +4,9 @@ import co.grow.plan.academic.register.admissions.dtos.IdentificationTypeDto;
 import co.grow.plan.academic.register.admissions.dtos.IdentificationTypeNewDto;
 import co.grow.plan.academic.register.admissions.models.IdentificationType;
 import co.grow.plan.academic.register.admissions.repositories.IdentificationTypeDao;
+import co.grow.plan.academic.register.exceptions.ApiError;
+import co.grow.plan.academic.register.exceptions.ApiException;
+import co.grow.plan.academic.register.exceptions.ErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +24,7 @@ public class IdentificationTypeService implements IIdentificationTypeService{
     IdentificationTypeDao identificationTypeDao;
 
 
-    //TODO: Use Spring validations to check incoming information
+    //TODO: Use Spring validations in all methods to check incoming information
     @Override
     public List<IdentificationTypeDto> listIdentificationTypes() {
         Iterable<IdentificationType> identificationTypeList =
@@ -35,6 +38,8 @@ public class IdentificationTypeService implements IIdentificationTypeService{
     public IdentificationTypeDto createIdentificationType(
             IdentificationTypeNewDto identificationTypeNewDto) {
 
+        validateIdentificationTypeInfo(identificationTypeNewDto);
+
         IdentificationType identificationType =
                 new IdentificationType(
                         identificationTypeNewDto.getName()
@@ -43,6 +48,23 @@ public class IdentificationTypeService implements IIdentificationTypeService{
         identificationType = identificationTypeDao.save(identificationType);
 
         return identificationTypeToIdentificationTypeDto(identificationType);
+    }
+
+    private void validateIdentificationTypeInfo(
+            IdentificationTypeNewDto identificationTypeNewDto) {
+
+        if (identificationTypeNewDto.getName() == null ||
+                identificationTypeNewDto.getName().trim().isEmpty()) {
+            throw new ApiException(new ApiError(ErrorCode.MISSING_INFORMATION,
+                "Field 'name' is required in Information type"));
+        }
+
+        IdentificationType identificationType =
+                identificationTypeDao.getByName(identificationTypeNewDto.getName());
+        if (identificationType != null) {
+            throw new ApiException(new ApiError(ErrorCode.CONFLICT,
+                "Identification type with same name already exists"));
+        }
     }
 
     @Override
