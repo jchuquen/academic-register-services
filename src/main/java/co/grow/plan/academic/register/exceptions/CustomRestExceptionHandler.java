@@ -39,8 +39,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         }
 
         ApiError apiError =
-                new ApiError(ErrorCode.MISSING_INFORMATION,
-                        ex.getLocalizedMessage(), errors);
+                new ApiError(ex.getLocalizedMessage(), errors);
 
         return handleExceptionInternal(
                 ex, apiError, headers, HttpStatus.BAD_REQUEST, request);
@@ -53,8 +52,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         String error = ex.getParameterName() + " parameter is missing";
 
         ApiError apiError =
-                new ApiError(ErrorCode.MISSING_INFORMATION, ex.getLocalizedMessage(),
-                        Arrays.asList(error));
+                new ApiError(ex.getLocalizedMessage(), Arrays.asList(error));
 
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
@@ -85,8 +83,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
                 ex.getName() + " should be of type " + ex.getRequiredType().getName();
 
         ApiError apiError =
-                new ApiError(ErrorCode.WRONG_INFORMATION, ex.getLocalizedMessage(),
-                        Arrays.asList(error));
+                new ApiError(ex.getLocalizedMessage(), Arrays.asList(error));
 
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
@@ -100,8 +97,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
                 "No handler found for " + ex.getHttpMethod() +
                     " " + ex.getRequestURL();
 
-        ApiError apiError = new ApiError(ErrorCode.UNDEFINED, ex.getLocalizedMessage(),
-                Arrays.asList(error));
+        ApiError apiError = new ApiError(ex.getLocalizedMessage(), Arrays.asList(error));
 
         return new ResponseEntity<>(apiError, new HttpHeaders(),
                 HttpStatus.NOT_FOUND);
@@ -121,8 +117,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
         ex.getSupportedHttpMethods().forEach(t -> builder.append(t + " "));
 
-        ApiError apiError = new ApiError(ErrorCode.UNDEFINED,
-                ex.getLocalizedMessage(), Arrays.asList(builder.toString()));
+        ApiError apiError = new ApiError(ex.getLocalizedMessage(), Arrays.asList(builder.toString()));
 
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), HttpStatus.METHOD_NOT_ALLOWED);
@@ -141,29 +136,44 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
         ex.getSupportedMediaTypes().forEach(t -> builder.append(t + ", "));
 
-        ApiError apiError = new ApiError(ErrorCode.UNDEFINED,
-                ex.getLocalizedMessage(),
+        ApiError apiError = new ApiError(ex.getLocalizedMessage(),
                 Arrays.asList(builder.substring(0, builder.length() - 2)));
 
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
-    @ExceptionHandler({ Exception.class })
-    public ResponseEntity<ApiError> handleAll(Exception ex, WebRequest request) {
-        if (ex instanceof ApiException) {
-            ApiException apiException = (ApiException) ex;
-            return new ResponseEntity<ApiError>(apiException.getApiError(),
-                    RestApiErrorsHelpers.convertApiErrorToHttpStatus(
-                            apiException.getApiError()
-                    ));
-        } else {
-            ApiError apiError = new ApiError(ErrorCode.UNDEFINED,
-                    ex.getLocalizedMessage(),
-                    Arrays.asList("An unexpected error has occurred"));
+    @ExceptionHandler({ ApiMissingInformationException.class })
+    public ResponseEntity<ApiError> handleApiMissingInformationException(
+        ApiMissingInformationException ex) {
 
-            return new ResponseEntity<ApiError>(
-                    apiError, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(ex.getApiError(),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ ApiConflictException.class })
+    public ResponseEntity<ApiError> handleApiConflictException(
+            ApiConflictException ex) {
+
+        return new ResponseEntity<>(ex.getApiError(),
+                HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler({ ApiNoEntityException.class })
+    public ResponseEntity<ApiError> handleApiNoEntityException(
+            ApiNoEntityException ex) {
+
+        return new ResponseEntity<>(ex.getApiError(),
+                HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({ Exception.class })
+    public ResponseEntity<ApiError> handleAll(Exception ex) {
+
+        ApiError apiError = new ApiError(ex.getLocalizedMessage(),
+                Arrays.asList("An unexpected error has occurred"));
+
+        return new ResponseEntity<>(
+                apiError, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

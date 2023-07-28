@@ -4,21 +4,21 @@ import co.grow.plan.academic.register.admissions.dtos.IdentificationTypeDto;
 import co.grow.plan.academic.register.admissions.dtos.IdentificationTypeNewDto;
 import co.grow.plan.academic.register.admissions.models.IdentificationType;
 import co.grow.plan.academic.register.admissions.repositories.IdentificationTypeDao;
+import co.grow.plan.academic.register.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.exceptions.ApiError;
-import co.grow.plan.academic.register.exceptions.ApiException;
-import co.grow.plan.academic.register.exceptions.ErrorCode;
+import co.grow.plan.academic.register.exceptions.ApiMissingInformationException;
+import co.grow.plan.academic.register.exceptions.ApiNoEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
-public class IdentificationTypeService implements IIdentificationTypeService{
+public class IdentificationTypeService implements IIdentificationTypeService {
 
     @Autowired
     IdentificationTypeDao identificationTypeDao;
@@ -28,125 +28,132 @@ public class IdentificationTypeService implements IIdentificationTypeService{
     @Override
     public List<IdentificationTypeDto> listIdentificationTypes() {
         Iterable<IdentificationType> identificationTypeList =
-                identificationTypeDao.findAll();
+            identificationTypeDao.findAll();
 
         return listIdentificationTypeToListIdentificationTypeDto(
-                        identificationTypeList);
+            identificationTypeList);
     }
 
     @Override
     public IdentificationTypeDto createIdentificationType(
-            IdentificationTypeNewDto identificationTypeNewDto) {
+        IdentificationTypeNewDto identificationTypeNewDto) {
 
         validateIdentificationTypeInfo(identificationTypeNewDto);
 
         IdentificationType identificationType =
-                new IdentificationType(
-                        identificationTypeNewDto.getName()
-                );
+            new IdentificationType(
+                identificationTypeNewDto.getName()
+            );
 
         identificationType = identificationTypeDao.save(identificationType);
 
         return identificationTypeToIdentificationTypeDto(identificationType);
     }
 
-    private void validateIdentificationTypeInfo(
-            IdentificationTypeNewDto identificationTypeNewDto) {
-
-        if (identificationTypeNewDto.getName() == null ||
-                identificationTypeNewDto.getName().trim().isEmpty()) {
-            throw new ApiException(new ApiError(ErrorCode.MISSING_INFORMATION,
-                "Field 'name' is required in Information type"));
-        }
-
-        IdentificationType identificationType =
-                identificationTypeDao.getByName(identificationTypeNewDto.getName());
-        if (identificationType != null) {
-            throw new ApiException(new ApiError(ErrorCode.CONFLICT,
-                "Identification type with same name already exists"));
-        }
-    }
-
     @Override
     public IdentificationTypeDto findIdentificationTypeById(Integer id) {
-        Optional<IdentificationType> optionalIdentificationType =
-                identificationTypeDao.findById(id);
-        if (optionalIdentificationType.isEmpty()) {
-            return null;
-        }
-        else {
-            return identificationTypeToIdentificationTypeDto(
-                    optionalIdentificationType.get());
-        }
+
+        IdentificationType identificationType =
+            validateIdentificationTypeIfExistsAndReturn(id);
+
+        return identificationTypeToIdentificationTypeDto(
+            identificationType);
     }
 
     @Override
     public IdentificationTypeDto updateIdentificationType(
-            Integer id,
-            IdentificationTypeNewDto identificationTypeNewDto) {
-
-        Optional<IdentificationType> optionalIdentificationType =
-                identificationTypeDao.findById(id);
-
-        if (optionalIdentificationType.isEmpty()) {
-            return null;
-        }
+        Integer id, IdentificationTypeNewDto identificationTypeNewDto) {
 
         IdentificationType identificationType =
-                identificationTypeDao.save(
-                        updateIdentificationTypeFromIdentificationTypeDto(
-                                optionalIdentificationType.get(),
-                                identificationTypeNewDto
-                        )
-                );
+            validateIdentificationTypeIfExistsAndReturn(id);
+
+        validateIdentificationTypeInfo(identificationTypeNewDto);
+
+        identificationType =
+            identificationTypeDao.save(
+                updateIdentificationTypeFromIdentificationTypeDto(
+                    identificationType,
+                    identificationTypeNewDto
+                )
+            );
 
         return identificationTypeToIdentificationTypeDto(identificationType);
     }
 
     @Override
     public void deleteIdentificationType(Integer id) {
-        Optional<IdentificationType> optionalIdentificationType =
-                identificationTypeDao.findById(id);
-
-        //TODO: Pending to throw 404 error when no resource
-        if (optionalIdentificationType.isEmpty()) {
-            return;
-        }
-
+        validateIdentificationTypeIfExistsAndReturn(id);
         identificationTypeDao.deleteById(id);
     }
 
+    // Validations
+    private void validateIdentificationTypeInfo(
+        IdentificationTypeNewDto identificationTypeNewDto) {
+
+        if (identificationTypeNewDto.getName() == null ||
+            identificationTypeNewDto.getName().trim().isEmpty()) {
+            throw new ApiMissingInformationException(
+                new ApiError(
+                    "Field 'name' is required in Information type"
+                )
+            );
+        }
+
+        IdentificationType identificationType =
+            identificationTypeDao.getByName(identificationTypeNewDto.getName());
+        if (identificationType != null) {
+            throw new ApiConflictException(
+                new ApiError(
+                    "Identification type with same name already exists"
+                )
+            );
+        }
+    }
+
+    private IdentificationType validateIdentificationTypeIfExistsAndReturn(
+        Integer id) {
+
+        Optional<IdentificationType> optionalIdentificationType =
+            identificationTypeDao.findById(id);
+
+        if (optionalIdentificationType.isEmpty()) {
+            throw new ApiNoEntityException(
+                new ApiError(
+                    String.format(
+                        "Identification type with id %s doesn't exist",
+                        id)
+                )
+            );
+        }
+        return optionalIdentificationType.get();
+    }
 
     // Mappers
     private List<IdentificationTypeDto> listIdentificationTypeToListIdentificationTypeDto(Iterable<IdentificationType> identificationTypeList) {
         List<IdentificationTypeDto> listDto = new ArrayList<>();
-        Iterator<IdentificationType> iterator = identificationTypeList.iterator();
-        while (iterator.hasNext()) {
-            IdentificationType identificationType = iterator.next();
+        for (IdentificationType identificationType : identificationTypeList) {
             IdentificationTypeDto identificationTypeDto =
-                    new IdentificationTypeDto(
-                            identificationType.getId(),
-                            identificationType.getName()
-                    );
+                new IdentificationTypeDto(
+                    identificationType.getId(),
+                    identificationType.getName()
+                );
             listDto.add(identificationTypeDto);
         }
         return listDto;
     }
 
     private IdentificationTypeDto identificationTypeToIdentificationTypeDto(
-            IdentificationType identificationType) {
+        IdentificationType identificationType) {
 
-        IdentificationTypeDto identificationTypeDto =
-                new IdentificationTypeDto(
-                        identificationType.getId(),
-                        identificationType.getName()
-                );
-        return identificationTypeDto;
+        return new IdentificationTypeDto(
+            identificationType.getId(),
+            identificationType.getName()
+        );
     }
 
     private IdentificationType updateIdentificationTypeFromIdentificationTypeDto(
-            IdentificationType identificationType,
-            IdentificationTypeNewDto identificationTypeNewDto) {
+        IdentificationType identificationType,
+        IdentificationTypeNewDto identificationTypeNewDto) {
         identificationType.setName(identificationTypeNewDto.getName());
 
         return identificationType;

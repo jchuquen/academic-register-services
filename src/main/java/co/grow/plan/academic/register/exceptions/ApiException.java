@@ -1,8 +1,8 @@
 package co.grow.plan.academic.register.exceptions;
 
-public class ApiException extends RuntimeException{
+public abstract class ApiException extends RuntimeException{
 
-    private ApiError apiError;
+    private final ApiError apiError;
 
     public ApiException(ApiError apiError) {
         super();

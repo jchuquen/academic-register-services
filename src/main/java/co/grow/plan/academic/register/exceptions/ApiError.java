@@ -3,28 +3,18 @@ package co.grow.plan.academic.register.exceptions;
 import java.util.List;
 
 public class ApiError {
-    private ErrorCode errorCode;
+
     private String mainMessage;
 
     private List<String> detailedErrors;
 
-    public ApiError(ErrorCode errorCode, String mainMessage) {
-        this.errorCode = errorCode;
+    public ApiError(String mainMessage) {
         this.mainMessage = mainMessage;
     }
 
-    public ApiError(ErrorCode errorCode, String mainMessage, List<String> detailedErrors) {
-        this.errorCode = errorCode;
+    public ApiError(String mainMessage, List<String> detailedErrors) {
         this.mainMessage = mainMessage;
         this.detailedErrors = detailedErrors;
-    }
-
-    public ErrorCode getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(ErrorCode errorCode) {
-        this.errorCode = errorCode;
     }
 
     public String getMainMessage() {
@@ -46,8 +36,7 @@ public class ApiError {
     @Override
     public String toString() {
         return "ApiError{" +
-                "errorCode=" + errorCode +
-                ", mainMessage='" + mainMessage + '\'' +
+                "mainMessage='" + mainMessage + '\'' +
                 ", detailedErrors=" + detailedErrors +
                 '}';
     }
