@@ -1,6 +1,7 @@
 package co.grow.plan.academic.register.exceptions;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -17,8 +18,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @ControllerAdvice
 public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -52,12 +53,13 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         String error = ex.getParameterName() + " parameter is missing";
 
         ApiError apiError =
-                new ApiError(ex.getLocalizedMessage(), Arrays.asList(error));
+                new ApiError(ex.getLocalizedMessage(), List.of(error));
 
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
+    //TODO: Check if this is useful or not.
     /*@ExceptionHandler({ ConstraintViolationException.class })
     public ResponseEntity<Object> handleConstraintViolation(
             ConstraintViolationException ex, WebRequest request) {
@@ -79,14 +81,21 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleMethodArgumentTypeMismatch(
             MethodArgumentTypeMismatchException ex, WebRequest request) {
 
-        String error =
-                ex.getName() + " should be of type " + ex.getRequiredType().getName();
+        Class<?> requiredType = ex.getRequiredType();
+        if (requiredType != null) {
+            String error =
+                ex.getName() + " should be of type " + requiredType.getName();
 
-        ApiError apiError =
-                new ApiError(ex.getLocalizedMessage(), Arrays.asList(error));
+            ApiError apiError =
+                new ApiError(ex.getLocalizedMessage(), List.of(error));
+
+            return new ResponseEntity<>(
+                apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity<>(
-                apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+            new ApiError("Error handling MethodArgumentTypeMismatch. No requiredType"),
+            new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
@@ -97,7 +106,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
                 "No handler found for " + ex.getHttpMethod() +
                     " " + ex.getRequestURL();
 
-        ApiError apiError = new ApiError(ex.getLocalizedMessage(), Arrays.asList(error));
+        ApiError apiError = new ApiError(ex.getLocalizedMessage(), List.of(error));
 
         return new ResponseEntity<>(apiError, new HttpHeaders(),
                 HttpStatus.NOT_FOUND);
@@ -115,12 +124,20 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         builder.append(
                 " method is not supported for this request. Supported methods are ");
 
-        ex.getSupportedHttpMethods().forEach(t -> builder.append(t + " "));
+        Set<HttpMethod> supportedHttpMethods = ex.getSupportedHttpMethods();
+        if(supportedHttpMethods != null) {
+            ex.getSupportedHttpMethods().forEach(t -> builder.append(t).append(" "));
 
-        ApiError apiError = new ApiError(ex.getLocalizedMessage(), Arrays.asList(builder.toString()));
+            ApiError apiError = new ApiError(ex.getLocalizedMessage(),
+                List.of(builder.toString()));
+
+            return new ResponseEntity<>(
+                apiError, new HttpHeaders(), HttpStatus.METHOD_NOT_ALLOWED);
+        }
 
         return new ResponseEntity<>(
-                apiError, new HttpHeaders(), HttpStatus.METHOD_NOT_ALLOWED);
+            new ApiError("Error handling HttpRequestMethodNotSupported. No supportedHttpMethods"),
+            new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
@@ -134,10 +151,10 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         builder.append(ex.getContentType());
         builder.append(" media type is not supported. Supported media types are ");
 
-        ex.getSupportedMediaTypes().forEach(t -> builder.append(t + ", "));
+        ex.getSupportedMediaTypes().forEach(t -> builder.append(t).append(", "));
 
         ApiError apiError = new ApiError(ex.getLocalizedMessage(),
-                Arrays.asList(builder.substring(0, builder.length() - 2)));
+            List.of(builder.substring(0, builder.length() - 2)));
 
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
@@ -171,7 +188,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ApiError> handleAll(Exception ex) {
 
         ApiError apiError = new ApiError(ex.getLocalizedMessage(),
-                Arrays.asList("An unexpected error has occurred"));
+                List.of("An unexpected error has occurred"));
 
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
