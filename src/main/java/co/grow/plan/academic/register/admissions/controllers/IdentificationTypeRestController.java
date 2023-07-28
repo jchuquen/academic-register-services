@@ -63,7 +63,6 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
                 identificacionTypeService.updateIdentificationType(
                         id, identificationTypeNewDto);
 
-        //TODO: Pending to handle 409 error
         if (identificationTypeDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -76,7 +75,6 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
 
     @Override
     public ResponseEntity<Void> deleteIdentificationType(Integer id) {
-        //TODO: Pending to throw 404 error when no resource
         identificacionTypeService.deleteIdentificationType(id);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
