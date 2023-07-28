@@ -799,21 +799,17 @@ components:
     ApiError:
       type: object
       properties: 
-        errorCode: 
-          type: string
-          description: Error code
-          example: ERR-01-00
         mainMessage: 
           type: string
           description: Main error message
-          example: Identification type with same name already exists
+          example: This is a main error message
         detailedErrors:
           type: array
           items:
             type: string
           example: 
-              - Field x is required
-              - Field y is required
+              - Specific error 1
+              - Specific error 2
             
         
     IdentificationTypeNew:

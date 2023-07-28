@@ -14,12 +14,12 @@ import java.util.List;
 public class IdentificationTypeRestController implements IIdentificationTypeRest {
 
     @Autowired
-    private IIdentificationTypeService identificacionTypeService;
+    private IIdentificationTypeService identificationTypeService;
 
     @Override
     public ResponseEntity<List<IdentificationTypeDto>> listIdentificationTypes() {
         List<IdentificationTypeDto> listIdentificationTypes =
-                identificacionTypeService.listIdentificationTypes();
+                identificationTypeService.listIdentificationTypes();
 
         if (listIdentificationTypes.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -35,7 +35,7 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
             IdentificationTypeNewDto identificationTypeNewDto) {
 
         return new ResponseEntity<>(
-                identificacionTypeService.createIdentificationType(
+                identificationTypeService.createIdentificationType(
                         identificationTypeNewDto),
                 HttpStatus.CREATED
         );
@@ -45,7 +45,7 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
     public ResponseEntity<IdentificationTypeDto> findIdentificationTypeById(Integer id) {
 
         IdentificationTypeDto identificationTypeDto =
-                identificacionTypeService.findIdentificationTypeById(id);
+                identificationTypeService.findIdentificationTypeById(id);
 
         if (identificationTypeDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -60,7 +60,7 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
             IdentificationTypeNewDto identificationTypeNewDto) {
 
         IdentificationTypeDto identificationTypeDto =
-                identificacionTypeService.updateIdentificationType(
+                identificationTypeService.updateIdentificationType(
                         id, identificationTypeNewDto);
 
         if (identificationTypeDto == null) {
@@ -68,14 +68,14 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
         }
 
         return new ResponseEntity<>(
-                identificacionTypeService.findIdentificationTypeById(id),
+                identificationTypeService.findIdentificationTypeById(id),
                 HttpStatus.OK
         );
     }
 
     @Override
     public ResponseEntity<Void> deleteIdentificationType(Integer id) {
-        identificacionTypeService.deleteIdentificationType(id);
+        identificationTypeService.deleteIdentificationType(id);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 }
