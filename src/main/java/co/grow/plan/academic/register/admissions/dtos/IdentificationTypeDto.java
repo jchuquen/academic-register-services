@@ -1,15 +1,16 @@
 package co.grow.plan.academic.register.admissions.dtos;
 
-public class IdentificationTypeDto {
+public class IdentificationTypeDto extends IdentificationTypeNewDto{
     private int id;
-    private String name;
+    private long version;
 
     public IdentificationTypeDto() {
     }
 
-    public IdentificationTypeDto(int id, String name) {
+    public IdentificationTypeDto(int id, String name, long version) {
+        super(name);
         this.id = id;
-        this.name = name;
+        this.version = version;
     }
 
     public int getId() {
@@ -20,19 +21,20 @@ public class IdentificationTypeDto {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public long getVersion() {
+        return version;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setVersion(long version) {
+        this.version = version;
     }
 
     @Override
     public String toString() {
         return "IdentificationTypeDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+            "id=" + id +
+            ", name='" + super.getName() + '\'' +
+            ", version=" + version +
+            '}';
     }
 }

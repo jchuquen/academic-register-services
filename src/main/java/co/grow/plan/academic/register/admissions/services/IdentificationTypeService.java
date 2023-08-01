@@ -4,10 +4,11 @@ import co.grow.plan.academic.register.admissions.dtos.IdentificationTypeDto;
 import co.grow.plan.academic.register.admissions.dtos.IdentificationTypeNewDto;
 import co.grow.plan.academic.register.admissions.models.IdentificationType;
 import co.grow.plan.academic.register.admissions.repositories.IdentificationTypeDao;
-import co.grow.plan.academic.register.exceptions.ApiConflictException;
-import co.grow.plan.academic.register.exceptions.ApiError;
-import co.grow.plan.academic.register.exceptions.ApiMissingInformationException;
-import co.grow.plan.academic.register.exceptions.ApiNoEntityException;
+import co.grow.plan.academic.register.shared.exceptions.ApiConflictException;
+import co.grow.plan.academic.register.shared.exceptions.ApiError;
+import co.grow.plan.academic.register.shared.exceptions.ApiMissingInformationException;
+import co.grow.plan.academic.register.shared.exceptions.ApiNoEntityException;
+import co.grow.plan.academic.register.shared.helpers.ValidationsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,7 @@ public class IdentificationTypeService implements IIdentificationTypeService {
         IdentificationTypeNewDto identificationTypeNewDto) {
 
         validateIdentificationTypeInfo(identificationTypeNewDto);
+        validateConstrains(null, identificationTypeNewDto);
 
         IdentificationType identificationType =
             new IdentificationType(
@@ -62,18 +64,29 @@ public class IdentificationTypeService implements IIdentificationTypeService {
 
     @Override
     public IdentificationTypeDto updateIdentificationType(
-        Integer id, IdentificationTypeNewDto identificationTypeNewDto) {
+        Integer id, IdentificationTypeDto identificationTypeDto) {
+
+        ValidationsHelper.validateIdsMatchingOrException(
+            id, identificationTypeDto.getId());
 
         IdentificationType identificationType =
             validateIdentificationTypeIfExistsAndReturn(id);
 
-        validateIdentificationTypeInfo(identificationTypeNewDto);
+        validateVersionsMatchOrException(
+            identificationTypeDto, identificationType);
+
+        validateIdentificationTypeInfo(identificationTypeDto);
+
+        validateConstrains(id, identificationTypeDto);
+
+        validateVersionsMatchOrException(identificationTypeDto,
+            identificationType);
 
         identificationType =
             identificationTypeDao.save(
                 updateIdentificationTypeFromIdentificationTypeDto(
                     identificationType,
-                    identificationTypeNewDto
+                    identificationTypeDto
                 )
             );
 
@@ -98,15 +111,32 @@ public class IdentificationTypeService implements IIdentificationTypeService {
                 )
             );
         }
+    }
+
+    private void validateConstrains(Integer id,
+        IdentificationTypeNewDto identificationTypeNewDto) {
 
         IdentificationType identificationType =
             identificationTypeDao.getByName(identificationTypeNewDto.getName());
-        if (identificationType != null) {
-            throw new ApiConflictException(
-                new ApiError(
-                    "Identification type with same name already exists"
-                )
-            );
+
+        if (id == null) { // It's creating
+            if (identificationType != null) {
+                throw new ApiConflictException(
+                    new ApiError(
+                        "Identification type with same name already exists"
+                    )
+                );
+            }
+
+        } else { // It's updating
+            if (identificationType != null &&
+                !id.equals(identificationType.getId())) {
+                throw new ApiConflictException(
+                    new ApiError(
+                        "Identification type with same name already exists"
+                    )
+                );
+            }
         }
     }
 
@@ -128,16 +158,29 @@ public class IdentificationTypeService implements IIdentificationTypeService {
         return optionalIdentificationType.get();
     }
 
+    private void validateVersionsMatchOrException(
+        IdentificationTypeDto identificationTypeDto,
+        IdentificationType identificationType) {
+
+        if (identificationTypeDto.getVersion() !=
+            identificationType.getVersion()) {
+            throw new ApiConflictException(
+                new ApiError(
+                    String.format(
+                        "Information version is different. Try to refresh it")
+                )
+            );
+        }
+    }
+
     // Mappers
-    private List<IdentificationTypeDto> listIdentificationTypeToListIdentificationTypeDto(Iterable<IdentificationType> identificationTypeList) {
+    private List<IdentificationTypeDto> listIdentificationTypeToListIdentificationTypeDto(
+        Iterable<IdentificationType> identificationTypeList) {
+
         List<IdentificationTypeDto> listDto = new ArrayList<>();
         for (IdentificationType identificationType : identificationTypeList) {
-            IdentificationTypeDto identificationTypeDto =
-                new IdentificationTypeDto(
-                    identificationType.getId(),
-                    identificationType.getName()
-                );
-            listDto.add(identificationTypeDto);
+            listDto.add(
+                identificationTypeToIdentificationTypeDto(identificationType));
         }
         return listDto;
     }
@@ -147,14 +190,16 @@ public class IdentificationTypeService implements IIdentificationTypeService {
 
         return new IdentificationTypeDto(
             identificationType.getId(),
-            identificationType.getName()
+            identificationType.getName(),
+            identificationType.getVersion()
         );
     }
 
     private IdentificationType updateIdentificationTypeFromIdentificationTypeDto(
         IdentificationType identificationType,
-        IdentificationTypeNewDto identificationTypeNewDto) {
-        identificationType.setName(identificationTypeNewDto.getName());
+        IdentificationTypeDto identificationTypeDto) {
+
+        identificationType.setName(identificationTypeDto.getName());
 
         return identificationType;
     }

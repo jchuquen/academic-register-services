@@ -38,7 +38,7 @@ public interface IIdentificationTypeRest {
     )
     ResponseEntity<IdentificationTypeDto> updateIdentificationType(
             @PathVariable("id") Integer id,
-            @RequestBody IdentificationTypeNewDto identificationTypeNewDto);
+            @RequestBody IdentificationTypeDto identificationTypeDto);
 
     @DeleteMapping(
             value = "/v1/admissions/identification-types/{id}",

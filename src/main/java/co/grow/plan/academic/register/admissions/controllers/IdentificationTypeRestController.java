@@ -57,11 +57,11 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
     @Override
     public ResponseEntity<IdentificationTypeDto> updateIdentificationType(
             Integer id,
-            IdentificationTypeNewDto identificationTypeNewDto) {
+            IdentificationTypeDto identificationTypeDto) {
 
-        IdentificationTypeDto identificationTypeDto =
+        identificationTypeDto =
                 identificationTypeService.updateIdentificationType(
-                        id, identificationTypeNewDto);
+                        id, identificationTypeDto);
 
         if (identificationTypeDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -76,6 +76,6 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
     @Override
     public ResponseEntity<Void> deleteIdentificationType(Integer id) {
         identificationTypeService.deleteIdentificationType(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

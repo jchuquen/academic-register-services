@@ -211,13 +211,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IdentificationTypeNew'
+              $ref: '#/components/schemas/IdentificationType'
           application/xml:
             schema:
-              $ref: '#/components/schemas/IdentificationTypeNew'
+              $ref: '#/components/schemas/IdentificationType'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/IdentificationTypeNew'
+              $ref: '#/components/schemas/IdentificationType'
         required: true
       responses:
         '200':
@@ -829,6 +829,10 @@ components:
         name: 
           type: string
           example: CC
+        version:
+          type: number
+          format: double
+          example: 25
     
     Order:
       type: object

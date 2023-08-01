@@ -1,4 +1,4 @@
-package co.grow.plan.academic.register.exceptions;
+package co.grow.plan.academic.register.shared.exceptions;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package co.grow.plan.academic.register.exceptions;
+package co.grow.plan.academic.register.shared.exceptions;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -166,6 +166,14 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(ex.getApiError(),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ ApiBadInformationException.class })
+    public ResponseEntity<ApiError> handleApiBadInformationException(
+        ApiBadInformationException ex) {
+
+        return new ResponseEntity<>(ex.getApiError(),
+            HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({ ApiConflictException.class })

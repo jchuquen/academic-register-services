@@ -15,6 +15,6 @@ public interface IIdentificationTypeService {
 
     IdentificationTypeDto updateIdentificationType(
             Integer id,
-            IdentificationTypeNewDto identificationTypeNewDto);
+            IdentificationTypeDto identificationTypeDto);
     void deleteIdentificationType(Integer id);
 }

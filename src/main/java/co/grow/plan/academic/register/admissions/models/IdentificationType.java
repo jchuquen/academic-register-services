@@ -3,7 +3,7 @@ package co.grow.plan.academic.register.admissions.models;
 import javax.persistence.*;
 import java.util.Objects;
 
-@Entity
+@Entity()
 public class IdentificationType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,6 +12,9 @@ public class IdentificationType {
 
     @Column(unique = true, nullable = false)
     private String name;
+
+    @Version
+    private long version;
 
     public IdentificationType() {
     }
@@ -36,12 +39,21 @@ public class IdentificationType {
         this.name = name;
     }
 
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
+    }
+
     @Override
     public String toString() {
         return "IdentificationType{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", version=" + version +
+            '}';
     }
 
     @Override
