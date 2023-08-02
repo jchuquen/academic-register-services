@@ -12,7 +12,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 @TestPropertySource("/application-test.properties")
-@SpringBootTest
+@SpringBootTest(classes = AcademicRegisterServicesApplication.class)
 @AutoConfigureMockMvc
 public class IdentificationTypeRestControllerTest {
 

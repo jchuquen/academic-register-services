@@ -23,6 +23,12 @@ public class IdentificationType {
         this.name = name;
     }
 
+    public IdentificationType(int id, String name, long version) {
+        this.id = id;
+        this.name = name;
+        this.version = version;
+    }
+
     public int getId() {
         return id;
     }

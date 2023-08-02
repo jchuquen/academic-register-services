@@ -2,10 +2,7 @@ package co.grow.plan.academic.register.admissions.identificationtype.application
 
 import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationType;
 import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationTypeDao;
-import co.grow.plan.academic.register.shared.exceptions.ApiConflictException;
-import co.grow.plan.academic.register.shared.exceptions.ApiError;
-import co.grow.plan.academic.register.shared.exceptions.ApiMissingInformationException;
-import co.grow.plan.academic.register.shared.exceptions.ApiNoEntityException;
+import co.grow.plan.academic.register.shared.exceptions.*;
 import co.grow.plan.academic.register.shared.helpers.ValidationsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +17,7 @@ import java.util.Optional;
 public class IdentificationTypeService implements IIdentificationTypeService {
 
     @Autowired
-    IdentificationTypeDao identificationTypeDao;
+    private IdentificationTypeDao identificationTypeDao;
 
 
     //TODO: Use Spring validations in all methods to check incoming information
@@ -101,6 +98,14 @@ public class IdentificationTypeService implements IIdentificationTypeService {
     private void validateIdentificationTypeInfo(
         IdentificationTypeNewDto identificationTypeNewDto) {
 
+        if (identificationTypeNewDto == null) {
+            throw new ApiBadInformationException(
+                new ApiError(
+                    "IdentificationType object is required"
+                )
+            );
+        }
+
         if (identificationTypeNewDto.getName() == null ||
             identificationTypeNewDto.getName().trim().isEmpty()) {
             throw new ApiMissingInformationException(
@@ -140,6 +145,14 @@ public class IdentificationTypeService implements IIdentificationTypeService {
 
     private IdentificationType validateIdentificationTypeIfExistsAndReturn(
         Integer id) {
+
+        if (id == null) {
+            throw new ApiBadInformationException(
+                new ApiError(
+                    "ID parameter is required"
+                )
+            );
+        }
 
         Optional<IdentificationType> optionalIdentificationType =
             identificationTypeDao.findById(id);
