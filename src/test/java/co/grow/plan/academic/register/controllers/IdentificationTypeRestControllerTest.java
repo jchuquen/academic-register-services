@@ -1,8 +1,8 @@
 package co.grow.plan.academic.register.controllers;
 
-import co.grow.plan.academic.register.admissions.controllers.IdentificationTypeRestController;
-import co.grow.plan.academic.register.admissions.models.IdentificationType;
-import co.grow.plan.academic.register.admissions.services.IdentificationTypeService;
+import co.grow.plan.academic.register.admissions.identificationtype.infrastructure.IdentificationTypeRestController;
+import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationType;
+import co.grow.plan.academic.register.admissions.identificationtype.application.IdentificationTypeService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
