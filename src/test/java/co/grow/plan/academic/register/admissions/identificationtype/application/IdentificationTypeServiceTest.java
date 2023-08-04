@@ -7,6 +7,7 @@ import co.grow.plan.academic.register.admissions.identificationtype.domain.Ident
 import co.grow.plan.academic.register.shared.exceptions.ApiBadInformationException;
 import co.grow.plan.academic.register.shared.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.shared.exceptions.ApiMissingInformationException;
+import co.grow.plan.academic.register.shared.exceptions.ApiNoEntityException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -55,12 +57,10 @@ public class IdentificationTypeServiceTest {
 
         assertEquals(expectedList.size(), currentList.size());
         for (int i = 0; i < expectedList.size(); i++) {
-            IdentificationTypeDto expectedItem = expectedList.get(i);
-            IdentificationTypeDto currentItem = currentList.get(i);
+            IdentificationTypeDto expected = expectedList.get(i);
+            IdentificationTypeDto current = currentList.get(i);
 
-            assertEquals(expectedItem.getId(), currentItem.getId());
-            assertEquals(expectedItem.getName(), currentItem.getName());
-            assertEquals(expectedItem.getVersion(), currentItem.getVersion());
+            assertEntityWithDto(expected, current);
         }
     }
 
@@ -117,7 +117,7 @@ public class IdentificationTypeServiceTest {
 
         when(
             identificationTypeDao.getByName(identificationTypeNewDto.getName())
-        ).thenReturn(identificationTypeConflict);
+        ).thenReturn(Optional.of(identificationTypeConflict));
 
         assertThrows(
             ApiConflictException.class,
@@ -138,22 +138,286 @@ public class IdentificationTypeServiceTest {
         IdentificationType identificationType = new IdentificationType(
           15, "CC", 0);
 
+        IdentificationTypeDto expected =
+            new IdentificationTypeDto(15, "CC", 0);
+
         when(
             identificationTypeDao.save(any(IdentificationType.class))
         ).thenReturn(identificationType);
 
-        IdentificationTypeDto identificationTypeSaved =
+        IdentificationTypeDto current =
             identificationTypeService.createIdentificationType(identificationTypeNewDto);
 
-        assertEquals(identificationType.getId(), identificationTypeSaved.getId());
-        assertEquals(identificationType.getName(), identificationTypeSaved.getName());
-        assertEquals(identificationType.getVersion(), identificationTypeSaved.getVersion());
+        assertEntityWithDto(expected, current);
     }
 
     @Test
-    @DisplayName("IdentificationTypeServiceTest - Find - Must generate exception " +
+    @DisplayName("IdentificationTypeServiceTest - FindById - Must generate exception " +
         "when ID is null")
-    public void testFindIdentificationTypeByIdBadRequest1() {
-        //TODO
+    public void testFindIdentificationTypeByIdNullId() {
+        assertThrows(
+            ApiBadInformationException.class,
+            () -> identificationTypeService.findIdentificationTypeById(null)
+        );
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeServiceTest - FindById - Must generate exception " +
+        "when ID doesn't exist")
+    public void testFindIdentificationTypeByIdIdDoesNotExist() {
+        assertThrows(
+            ApiNoEntityException.class,
+            () -> identificationTypeService.findIdentificationTypeById(9)
+        );
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeServiceTest - FindById - Must return dto " +
+        "when ID does exist")
+    public void testFindIdentificationTypeById() {
+        IdentificationType identificationType = new IdentificationType(
+            15, "CC", 0);
+
+        IdentificationTypeDto expected = new IdentificationTypeDto(
+            15, "CC", 0);
+
+        when(
+            identificationTypeDao.findById(15)
+        ).thenReturn(Optional.of(identificationType));
+
+        IdentificationTypeDto identificationTypeDto =
+            identificationTypeService.findIdentificationTypeById(15);
+
+        assertEntityWithDto(expected, identificationTypeDto);
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeServiceTest - UpdateIdentificationType - " +
+        "Must generate exception when ID is null")
+    public void testUpdateIdentificationTypeIdNull() {
+        assertThrows(
+            ApiBadInformationException.class,
+            () -> identificationTypeService.updateIdentificationType(
+                null, null)
+        );
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeServiceTest - UpdateIdentificationType - " +
+        "Must generate exception when IdentificationType object is null")
+    public void testUpdateIdentificationTypeObjectNull() {
+        assertThrows(
+            ApiBadInformationException.class,
+            () -> identificationTypeService.updateIdentificationType(
+                5, null)
+        );
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeServiceTest - UpdateIdentificationType - " +
+        "Must generate exception when IDs doesn't match")
+    public void testUpdateIdentificationTypeIdsDoesNotMatch() {
+        Integer id = 5;
+        IdentificationTypeDto identificationTypeDto = new IdentificationTypeDto(
+            15, "CC", 0);
+
+        assertThrows(
+            ApiBadInformationException.class,
+            () -> identificationTypeService.updateIdentificationType(
+                id, identificationTypeDto)
+        );
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeServiceTest - UpdateIdentificationType - " +
+        "Must generate exception when ID doesn't exist")
+    public void testUpdateIdentificationTypeIdDoesNotExist() {
+        Integer id = 5;
+        IdentificationTypeDto identificationTypeDto = new IdentificationTypeDto(
+            5, "CC", 0);
+
+        assertThrows(
+            ApiNoEntityException.class,
+            () -> identificationTypeService.updateIdentificationType(
+                id, identificationTypeDto)
+        );
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeServiceTest - UpdateIdentificationType - " +
+        "Must generate exception when Versions doesn't match")
+    public void testUpdateIdentificationTypeVersionsDoesNotMatch() {
+        Integer id = 5;
+
+        IdentificationTypeDto identificationTypeDto = new IdentificationTypeDto(
+            5, "CC", 1);
+
+        IdentificationType identificationType = new IdentificationType(
+            5, "CC", 3);
+
+        when(
+            identificationTypeDao.findById(5)
+        ).thenReturn(Optional.of(identificationType));
+
+        assertThrows(
+            ApiConflictException.class,
+            () -> identificationTypeService.updateIdentificationType(
+                id, identificationTypeDto)
+        );
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeServiceTest - UpdateIdentificationType - " +
+        "Must generate exception when Name is null")
+    public void testUpdateIdentificationTypeNullName() {
+        Integer id = 5;
+
+        IdentificationTypeDto identificationTypeDto = new IdentificationTypeDto(
+            5, null, 1);
+
+        IdentificationType identificationType = new IdentificationType(
+            5, "CC", 1);
+
+        when(
+            identificationTypeDao.findById(5)
+        ).thenReturn(Optional.of(identificationType));
+
+        assertThrows(
+            ApiMissingInformationException.class,
+            () -> identificationTypeService.updateIdentificationType(
+                id, identificationTypeDto)
+        );
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeServiceTest - UpdateIdentificationType - " +
+        "Must generate exception when Name is empty")
+    public void testUpdateIdentificationTypeEmptyName() {
+        Integer id = 5;
+
+        IdentificationTypeDto identificationTypeDto = new IdentificationTypeDto(
+            5, " ", 1);
+
+        IdentificationType identificationType = new IdentificationType(
+            5, "CC", 1);
+
+        when(
+            identificationTypeDao.findById(5)
+        ).thenReturn(Optional.of(identificationType));
+
+        assertThrows(
+            ApiMissingInformationException.class,
+            () -> identificationTypeService.updateIdentificationType(
+                id, identificationTypeDto)
+        );
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeServiceTest - UpdateIdentificationType - " +
+        "Must generate exception when Name already exists")
+    public void testUpdateIdentificationTypeNameExists() {
+        Integer id = 5;
+
+        IdentificationTypeDto identificationTypeDto = new IdentificationTypeDto(
+            5, "TI", 1);
+
+        IdentificationType identificationType = new IdentificationType(
+            5, "CC", 1);
+
+        IdentificationType identificationTypeExists = new IdentificationType(
+            15, "TI", 12);
+
+        when(
+            identificationTypeDao.findById(5)
+        ).thenReturn(Optional.of(identificationType));
+
+        when(
+            identificationTypeDao.getByName(identificationTypeDto.getName())
+        ).thenReturn(Optional.of(identificationTypeExists));
+
+        assertThrows(
+            ApiConflictException.class,
+            () -> identificationTypeService.updateIdentificationType(
+                id, identificationTypeDto)
+        );
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeServiceTest - UpdateIdentificationType - " +
+        "Must update and return new persisted info")
+    public void testUpdateIdentificationType() {
+        Integer id = 5;
+
+        IdentificationTypeDto identificationTypeDto = new IdentificationTypeDto(
+            5, "TI", 1);
+
+        IdentificationType identificationType = new IdentificationType(
+            5, "CC", 1);
+
+        IdentificationType newIdentificationType = new IdentificationType(
+            5, "TI", 2);
+
+        IdentificationTypeDto expected = new IdentificationTypeDto(
+            5, "TI", 2);
+
+        when(
+            identificationTypeDao.findById(5)
+        ).thenReturn(Optional.of(identificationType));
+
+        when(
+            identificationTypeDao.save(any(IdentificationType.class))
+        ).thenReturn(newIdentificationType);
+
+        IdentificationTypeDto current =
+            identificationTypeService.updateIdentificationType(
+                id, identificationTypeDto);
+
+        assertEntityWithDto(expected, current);
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeServiceTest - DeleteIdentificationType - " +
+        "Must generate exception when ID is null")
+    public void testDeleteIdentificationTypeIdNull() {
+        assertThrows(
+            ApiBadInformationException.class,
+            () -> identificationTypeService.deleteIdentificationType(null)
+        );
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeServiceTest - DeleteIdentificationType - " +
+        "Must generate exception when ID doesn't exist")
+    public void testDeleteIdentificationTypeIdDoesNotExist() {
+        assertThrows(
+            ApiNoEntityException.class,
+            () -> identificationTypeService.deleteIdentificationType(7)
+        );
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeServiceTest - DeleteIdentificationType - " +
+        "Must delete the identification type")
+    public void testDeleteIdentificationType() {
+        Integer id = 7;
+
+        IdentificationType identificationType = new IdentificationType(
+            7, "CC", 1);
+
+        when(
+            identificationTypeDao.findById(id)
+        ).thenReturn(Optional.of(identificationType));
+
+        identificationTypeService.deleteIdentificationType(id);
+    }
+
+    //Utils
+    private static void assertEntityWithDto(
+        IdentificationTypeDto expected,
+        IdentificationTypeDto current) {
+
+        assertEquals(expected.getId(), current.getId());
+        assertEquals(expected.getName(), current.getName());
+        assertEquals(expected.getVersion(), current.getVersion());
     }
 }

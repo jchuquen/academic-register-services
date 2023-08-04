@@ -34,6 +34,9 @@ public class IdentificationTypeService implements IIdentificationTypeService {
     public IdentificationTypeDto createIdentificationType(
         IdentificationTypeNewDto identificationTypeNewDto) {
 
+        ValidationsHelper.validateNotNull(identificationTypeNewDto,
+            "IdentificationType Object");
+
         validateIdentificationTypeInfo(identificationTypeNewDto);
         validateConstrains(null, identificationTypeNewDto);
 
@@ -49,6 +52,7 @@ public class IdentificationTypeService implements IIdentificationTypeService {
 
     @Override
     public IdentificationTypeDto findIdentificationTypeById(Integer id) {
+        ValidationsHelper.validateNotNull(id, "ID");
 
         IdentificationType identificationType =
             validateIdentificationTypeIfExistsAndReturn(id);
@@ -60,6 +64,10 @@ public class IdentificationTypeService implements IIdentificationTypeService {
     @Override
     public IdentificationTypeDto updateIdentificationType(
         Integer id, IdentificationTypeDto identificationTypeDto) {
+
+        ValidationsHelper.validateNotNull(id, "ID");
+        ValidationsHelper.validateNotNull(identificationTypeDto,
+            "IdentificationType Object");
 
         ValidationsHelper.validateIdsMatchingOrException(
             id, identificationTypeDto.getId());
@@ -74,9 +82,6 @@ public class IdentificationTypeService implements IIdentificationTypeService {
 
         validateConstrains(id, identificationTypeDto);
 
-        validateVersionsMatchOrException(identificationTypeDto,
-            identificationType);
-
         identificationType =
             identificationTypeDao.save(
                 updateIdentificationTypeFromIdentificationTypeDto(
@@ -90,6 +95,7 @@ public class IdentificationTypeService implements IIdentificationTypeService {
 
     @Override
     public void deleteIdentificationType(Integer id) {
+        ValidationsHelper.validateNotNull(id, "ID");
         validateIdentificationTypeIfExistsAndReturn(id);
         identificationTypeDao.deleteById(id);
     }
@@ -97,14 +103,6 @@ public class IdentificationTypeService implements IIdentificationTypeService {
     // Validations
     private void validateIdentificationTypeInfo(
         IdentificationTypeNewDto identificationTypeNewDto) {
-
-        if (identificationTypeNewDto == null) {
-            throw new ApiBadInformationException(
-                new ApiError(
-                    "IdentificationType object is required"
-                )
-            );
-        }
 
         if (identificationTypeNewDto.getName() == null ||
             identificationTypeNewDto.getName().trim().isEmpty()) {
@@ -119,11 +117,11 @@ public class IdentificationTypeService implements IIdentificationTypeService {
     private void validateConstrains(Integer id,
         IdentificationTypeNewDto identificationTypeNewDto) {
 
-        IdentificationType identificationType =
+        Optional<IdentificationType> optionalIdentificationType =
             identificationTypeDao.getByName(identificationTypeNewDto.getName());
 
         if (id == null) { // It's creating
-            if (identificationType != null) {
+            if (!optionalIdentificationType.isEmpty()) {
                 throw new ApiConflictException(
                     new ApiError(
                         "Identification type with same name already exists"
@@ -132,8 +130,8 @@ public class IdentificationTypeService implements IIdentificationTypeService {
             }
 
         } else { // It's updating
-            if (identificationType != null &&
-                !id.equals(identificationType.getId())) {
+            if (!optionalIdentificationType.isEmpty() &&
+                !id.equals(optionalIdentificationType.get().getId())) {
                 throw new ApiConflictException(
                     new ApiError(
                         "Identification type with same name already exists"
@@ -145,14 +143,6 @@ public class IdentificationTypeService implements IIdentificationTypeService {
 
     private IdentificationType validateIdentificationTypeIfExistsAndReturn(
         Integer id) {
-
-        if (id == null) {
-            throw new ApiBadInformationException(
-                new ApiError(
-                    "ID parameter is required"
-                )
-            );
-        }
 
         Optional<IdentificationType> optionalIdentificationType =
             identificationTypeDao.findById(id);
@@ -184,6 +174,7 @@ public class IdentificationTypeService implements IIdentificationTypeService {
         }
     }
 
+    //TODO: Change this for MappStruct
     // Mappers
     private List<IdentificationTypeDto> listIdentificationTypeToListIdentificationTypeDto(
         Iterable<IdentificationType> identificationTypeList) {

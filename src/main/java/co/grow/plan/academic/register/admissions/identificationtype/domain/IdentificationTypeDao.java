@@ -1,8 +1,9 @@
 package co.grow.plan.academic.register.admissions.identificationtype.domain;
 
-import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationType;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Optional;
+
 public interface IdentificationTypeDao extends CrudRepository<IdentificationType, Integer> {
-    IdentificationType getByName(String name);
+    Optional<IdentificationType>  getByName(String name);
 }

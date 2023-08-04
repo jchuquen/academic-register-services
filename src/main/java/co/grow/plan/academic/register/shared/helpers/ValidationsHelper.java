@@ -29,4 +29,14 @@ public class ValidationsHelper {
             );
         }
     }
+
+    public static void validateNotNull(Object object, String name) {
+        if (object == null) {
+            throw new ApiBadInformationException(
+                new ApiError(
+                    String.format("Parameter %s cannot be null", name)
+                )
+            );
+        }
+    }
 }
