@@ -15,12 +15,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(classes = AcademicRegisterServicesApplication.class)
@@ -62,6 +63,8 @@ public class IdentificationTypeServiceTest {
 
             assertEntityWithDto(expected, current);
         }
+
+        verify(identificationTypeDao, times(1)).findAll();
     }
 
     @Test
@@ -80,6 +83,7 @@ public class IdentificationTypeServiceTest {
             identificationTypeService.listIdentificationTypes();
 
         assertIterableEquals(expectedList, currentList);
+        verify(identificationTypeDao, times(1)).findAll();
     }
 
     @Test
@@ -106,7 +110,7 @@ public class IdentificationTypeServiceTest {
 
     @Test
     @DisplayName("IdentificationTypeServiceTest - Create - Must generate exception when " +
-        "breaking name constrain")
+        "breaking name constraint")
     public void testCreateIdentificationTypeBreakingConstrain1() {
 
         IdentificationTypeNewDto identificationTypeNewDto =
@@ -125,6 +129,9 @@ public class IdentificationTypeServiceTest {
                 identificationTypeNewDto
             )
         );
+
+        verify(identificationTypeDao, times(1)).
+            getByName(identificationTypeNewDto.getName());
     }
 
     @Test
@@ -149,6 +156,9 @@ public class IdentificationTypeServiceTest {
             identificationTypeService.createIdentificationType(identificationTypeNewDto);
 
         assertEntityWithDto(expected, current);
+
+        verify(identificationTypeDao, times(1)).
+            save(any(IdentificationType.class));
     }
 
     @Test
@@ -189,6 +199,9 @@ public class IdentificationTypeServiceTest {
             identificationTypeService.findIdentificationTypeById(15);
 
         assertEntityWithDto(expected, identificationTypeDto);
+
+        verify(identificationTypeDao, times(1)).
+            findById(15);
     }
 
     @Test
@@ -264,6 +277,9 @@ public class IdentificationTypeServiceTest {
             () -> identificationTypeService.updateIdentificationType(
                 id, identificationTypeDto)
         );
+
+        verify(identificationTypeDao, times(1)).
+            findById(5);
     }
 
     @Test
@@ -287,6 +303,9 @@ public class IdentificationTypeServiceTest {
             () -> identificationTypeService.updateIdentificationType(
                 id, identificationTypeDto)
         );
+
+        verify(identificationTypeDao, times(1)).
+            findById(5);
     }
 
     @Test
@@ -310,6 +329,9 @@ public class IdentificationTypeServiceTest {
             () -> identificationTypeService.updateIdentificationType(
                 id, identificationTypeDto)
         );
+
+        verify(identificationTypeDao, times(1)).
+            findById(5);
     }
 
     @Test
@@ -340,6 +362,12 @@ public class IdentificationTypeServiceTest {
             () -> identificationTypeService.updateIdentificationType(
                 id, identificationTypeDto)
         );
+
+        verify(identificationTypeDao, times(1)).
+            findById(5);
+
+        verify(identificationTypeDao, times(1)).
+            getByName(identificationTypeDto.getName());
     }
 
     @Test
@@ -373,6 +401,12 @@ public class IdentificationTypeServiceTest {
                 id, identificationTypeDto);
 
         assertEntityWithDto(expected, current);
+
+        verify(identificationTypeDao, times(1)).
+            findById(5);
+
+        verify(identificationTypeDao, times(1)).
+            save(any(IdentificationType.class));
     }
 
     @Test
@@ -409,6 +443,13 @@ public class IdentificationTypeServiceTest {
         ).thenReturn(Optional.of(identificationType));
 
         identificationTypeService.deleteIdentificationType(id);
+
+        verify(identificationTypeDao, times(1)).
+            findById(id);
+
+        assertTimeoutPreemptively(Duration.ofSeconds(3),
+            () -> identificationTypeService.deleteIdentificationType(id),
+            "Should execute in less than 3 seconds");
     }
 
     //Utils

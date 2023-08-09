@@ -101,6 +101,7 @@ public class IdentificationTypeService implements IIdentificationTypeService {
     }
 
     // Validations
+    //TODO: Maybe move this to the DTO
     private void validateIdentificationTypeInfo(
         IdentificationTypeNewDto identificationTypeNewDto) {
 
