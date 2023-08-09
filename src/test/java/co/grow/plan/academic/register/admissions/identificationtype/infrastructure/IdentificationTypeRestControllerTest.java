@@ -66,13 +66,6 @@ public class IdentificationTypeRestControllerTest {
     @DisplayName("IdentificationTypeRestControllerTest - List - Must return a list of many objects")
     public void testListIdentificationTypesManyObjects() throws Exception {
 
-        List<IdentificationTypeDto> expectedList =
-            List.of(
-                new IdentificationTypeDto(1, "CC", 0),
-                new IdentificationTypeDto(2, "TI", 1),
-                new IdentificationTypeDto(3, "RC", 0)
-            );
-
         mockMvc.perform(get("/v1/admissions/identification-types")).
             andExpect(status().isOk()).
             andExpect(content().contentType(MediaType.APPLICATION_JSON)).
