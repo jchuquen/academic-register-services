@@ -59,17 +59,10 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
             Integer id,
             IdentificationTypeDto identificationTypeDto) {
 
-        identificationTypeDto =
-                identificationTypeService.updateIdentificationType(
-                        id, identificationTypeDto);
-
-        if (identificationTypeDto == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
         return new ResponseEntity<>(
-                identificationTypeService.findIdentificationTypeById(id),
-                HttpStatus.OK
+            identificationTypeService.updateIdentificationType(
+                id, identificationTypeDto),
+            HttpStatus.OK
         );
     }
 

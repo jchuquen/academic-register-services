@@ -52,6 +52,7 @@ public class IdentificationTypeService implements IIdentificationTypeService {
 
     @Override
     public IdentificationTypeDto findIdentificationTypeById(Integer id) {
+
         ValidationsHelper.validateNotNull(id, "ID");
 
         IdentificationType identificationType =

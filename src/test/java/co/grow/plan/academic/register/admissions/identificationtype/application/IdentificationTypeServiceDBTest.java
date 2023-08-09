@@ -119,6 +119,16 @@ public class IdentificationTypeServiceDBTest {
     }
 
     @Test
+    @DisplayName("IdentificationTypeServiceTest - FindById - Must generate exception " +
+        "when ID doesn't exist")
+    public void testFindIdentificationTypeByIdIdDoesNotExist() {
+        assertThrows(
+            ApiNoEntityException.class,
+            () -> identificationTypeService.findIdentificationTypeById(9)
+        );
+    }
+
+    @Test
     @DisplayName("IdentificationTypeServiceTest - FindById - Must return dto " +
         "when ID does exist")
     public void testFindIdentificationTypeById() {
@@ -237,6 +247,12 @@ public class IdentificationTypeServiceDBTest {
         Integer id = 3;
 
         identificationTypeService.deleteIdentificationType(id);
+
+        assertThrows(
+            ApiNoEntityException.class,
+            () -> identificationTypeService.findIdentificationTypeById(3)
+        );
+
     }
 
     @AfterEach

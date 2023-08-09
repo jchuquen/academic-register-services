@@ -21,9 +21,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @TestPropertySource("/application-test.properties")
@@ -172,33 +170,164 @@ public class IdentificationTypeRestControllerTest {
             andExpect(status().isNotFound());
     }
 
+    @Test
+    @DisplayName("IdentificationTypeRestControllerTest - FindById - Must return dto " +
+        "when ID does exist")
+    public void testFindIdentificationTypeById() throws Exception {
+        mockMvc.perform(get("/v1/admissions/identification-types/{id}", 2)).
+            andExpect(status().isOk()).
+            andExpect(jsonPath("$.id", is(2))).
+            andExpect(jsonPath("$.name", is("TI"))).
+            andExpect(jsonPath("$.version", is(1)));
+    }
 
+    @Test
+    @DisplayName("IdentificationTypeRestControllerTest - UpdateIdentificationType - " +
+        "Must generate exception when IdentificationType object is null")
+    public void testUpdateIdentificationTypeObjectNull() throws Exception {
+        mockMvc.perform(
+                put("/v1/admissions/identification-types/{id}", 3).
+                    contentType(MediaType.APPLICATION_JSON)
+            ).andExpect(status().isBadRequest());
+    }
 
+    @Test
+    @DisplayName("IdentificationTypeRestControllerTest - UpdateIdentificationType - " +
+        "Must generate exception when IDs doesn't match")
+    public void testUpdateIdentificationTypeIdsDoesNotMatch() throws Exception {
+        Integer id = 5;
+        IdentificationTypeDto identificationTypeDto = new IdentificationTypeDto(
+            15, "CC", 0);
 
+        mockMvc.perform(
+            put("/v1/admissions/identification-types/{id}", id).
+                contentType(MediaType.APPLICATION_JSON).
+                content(objectMapper.writeValueAsString(identificationTypeDto))
+        ).andExpect(status().isBadRequest());
+    }
 
+    @Test
+    @DisplayName("IdentificationTypeRestControllerTest - UpdateIdentificationType - " +
+        "Must generate exception when ID doesn't exist")
+    public void testUpdateIdentificationTypeIdDoesNotExist() throws Exception {
+        Integer id = 5;
+        IdentificationTypeDto identificationTypeDto = new IdentificationTypeDto(
+            5, "CC", 0);
 
+        mockMvc.perform(
+            put("/v1/admissions/identification-types/{id}", id).
+                contentType(MediaType.APPLICATION_JSON).
+                content(objectMapper.writeValueAsString(identificationTypeDto))
+        ).andExpect(status().isNotFound());
+    }
 
+    @Test
+    @DisplayName("IdentificationTypeRestControllerTest - UpdateIdentificationType - " +
+        "Must generate exception when Versions doesn't match")
+    public void testUpdateIdentificationTypeVersionsDoesNotMatch() throws Exception {
+        Integer id = 3;
 
+        IdentificationTypeDto identificationTypeDto = new IdentificationTypeDto(
+            3, "RD", 3);
 
+        mockMvc.perform(
+            put("/v1/admissions/identification-types/{id}", id).
+                contentType(MediaType.APPLICATION_JSON).
+                content(objectMapper.writeValueAsString(identificationTypeDto))
+        ).andExpect(status().isConflict());
+    }
 
+    @Test
+    @DisplayName("IdentificationTypeRestControllerTest - UpdateIdentificationType - " +
+        "Must generate exception when Name is null")
+    public void testUpdateIdentificationTypeNullName() throws Exception {
+        Integer id = 3;
 
+        IdentificationTypeDto identificationTypeDto = new IdentificationTypeDto(
+            3, null, 3);
 
+        mockMvc.perform(
+            put("/v1/admissions/identification-types/{id}", id).
+                contentType(MediaType.APPLICATION_JSON).
+                content(objectMapper.writeValueAsString(identificationTypeDto))
+        ).andExpect(status().isConflict());
+    }
 
+    @Test
+    @DisplayName("IdentificationTypeRestControllerTest - UpdateIdentificationType - " +
+        "Must generate exception when Name is empty")
+    public void testUpdateIdentificationTypeEmptyName() throws Exception {
+        Integer id = 3;
 
+        IdentificationTypeDto identificationTypeDto = new IdentificationTypeDto(
+            3, "   ", 3);
 
+        mockMvc.perform(
+            put("/v1/admissions/identification-types/{id}", id).
+                contentType(MediaType.APPLICATION_JSON).
+                content(objectMapper.writeValueAsString(identificationTypeDto))
+        ).andExpect(status().isConflict());
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeRestControllerTest - UpdateIdentificationType - " +
+        "Must generate exception when Name already exists")
+    public void testUpdateIdentificationTypeNameExists() throws Exception{
+        Integer id = 3;
+
+        IdentificationTypeDto identificationTypeDto = new IdentificationTypeDto(
+            3, "CC", 3);
+
+        mockMvc.perform(
+            put("/v1/admissions/identification-types/{id}", id).
+                contentType(MediaType.APPLICATION_JSON).
+                content(objectMapper.writeValueAsString(identificationTypeDto))
+        ).andExpect(status().isConflict());
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeRestControllerTest - UpdateIdentificationType - " +
+        "Must update and return new persisted info")
+    public void testUpdateIdentificationType() throws Exception {
+        Integer id = 2;
+
+        IdentificationTypeDto identificationTypeDto = new IdentificationTypeDto(
+            2, "TT", 1);
+
+        mockMvc.perform(
+            put("/v1/admissions/identification-types/{id}", id).
+                contentType(MediaType.APPLICATION_JSON).
+                content(objectMapper.writeValueAsString(identificationTypeDto))
+        ).andExpect(status().isOk()).
+            andExpect(jsonPath("$.id", is(2))).
+            andExpect(jsonPath("$.name", is("TT"))).
+            andExpect(jsonPath("$.version", is(1)));
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeRestControllerTest - DeleteIdentificationType - " +
+        "Must generate exception when ID doesn't exist")
+    public void testDeleteIdentificationTypeIdDoesNotExist() throws Exception{
+        mockMvc.perform(
+            delete("/v1/admissions/identification-types/{id}", 9)
+        ).andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("IdentificationTypeRestControllerTest - DeleteIdentificationType - " +
+        "Must delete the identification type")
+    public void testDeleteIdentificationType() throws Exception {
+        mockMvc.perform(
+            delete("/v1/admissions/identification-types/{id}", 2)
+        ).andExpect(status().isOk());
+
+        mockMvc.perform(
+            get("/v1/admissions/identification-types/{id}", 2)
+        ).andExpect(status().isNotFound());
+    }
 
     @AfterEach
     public void clearDatabase() {
         jdbcTemplate.execute(deleteAllIdentificationTypes);
-    }
-
-    //Utils
-    private static void assertEntityWithDto(
-        IdentificationTypeDto expected,
-        IdentificationTypeDto current) {
-
-        assertEquals(expected.getId(), current.getId());
-        assertEquals(expected.getName(), current.getName());
-        assertEquals(expected.getVersion(), current.getVersion());
     }
 }
