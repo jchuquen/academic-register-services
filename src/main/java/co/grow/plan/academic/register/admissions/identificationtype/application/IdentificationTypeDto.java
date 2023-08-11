@@ -1,6 +1,10 @@
 package co.grow.plan.academic.register.admissions.identificationtype.application;
 
-public class IdentificationTypeDto extends IdentificationTypeNewDto{
+import co.grow.plan.academic.register.shared.generics.IIdentificableAndVersionable;
+
+public class IdentificationTypeDto
+    extends IdentificationTypeNewDto
+    implements IIdentificableAndVersionable {
     private int id;
     private long version;
 
@@ -13,6 +17,7 @@ public class IdentificationTypeDto extends IdentificationTypeNewDto{
         this.version = version;
     }
 
+    @Override
     public int getId() {
         return id;
     }
@@ -21,6 +26,7 @@ public class IdentificationTypeDto extends IdentificationTypeNewDto{
         this.id = id;
     }
 
+    @Override
     public long getVersion() {
         return version;
     }

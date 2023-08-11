@@ -1,6 +1,7 @@
 package co.grow.plan.academic.register.shared.helpers;
 
 import co.grow.plan.academic.register.shared.exceptions.ApiBadInformationException;
+import co.grow.plan.academic.register.shared.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.shared.exceptions.ApiError;
 
 public class ValidationsHelper {
@@ -25,6 +26,18 @@ public class ValidationsHelper {
             throw new ApiBadInformationException(
                 new ApiError(
                     "Parameter ID and object ID must match"
+                )
+            );
+        }
+    }
+
+    public static void validateVersionsMatchOrException(long version1, long version2) {
+
+        if (version1 != version2) {
+            throw new ApiConflictException(
+                new ApiError(
+                    String.format(
+                        "Information version is different. ¡Try to refresh it!")
                 )
             );
         }

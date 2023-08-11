@@ -2,13 +2,14 @@ package co.grow.plan.academic.register.admissions.identificationtype.application
 
 import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationType;
 import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationTypeDao;
-import co.grow.plan.academic.register.shared.exceptions.*;
+import co.grow.plan.academic.register.shared.exceptions.ApiConflictException;
+import co.grow.plan.academic.register.shared.exceptions.ApiError;
+import co.grow.plan.academic.register.shared.exceptions.ApiNoEntityException;
 import co.grow.plan.academic.register.shared.helpers.ValidationsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,9 @@ public class IdentificationTypeService implements IIdentificationTypeService {
     @Autowired
     private IdentificationTypeDao identificationTypeDao;
 
+    @Autowired
+    private IIdentificationTypeMapper mapper;
+
 
     //TODO: Use Spring validations in all methods to check incoming information
     @Override
@@ -26,8 +30,7 @@ public class IdentificationTypeService implements IIdentificationTypeService {
         Iterable<IdentificationType> identificationTypeList =
             identificationTypeDao.findAll();
 
-        return listIdentificationTypeToListIdentificationTypeDto(
-            identificationTypeList);
+        return mapper.enityListToFullDtoList(identificationTypeList);
     }
 
     @Override
@@ -37,17 +40,16 @@ public class IdentificationTypeService implements IIdentificationTypeService {
         ValidationsHelper.validateNotNull(identificationTypeNewDto,
             "IdentificationType Object");
 
-        validateIdentificationTypeInfo(identificationTypeNewDto);
+        identificationTypeNewDto.validateInfo();
+
         validateConstrains(null, identificationTypeNewDto);
 
         IdentificationType identificationType =
-            new IdentificationType(
-                identificationTypeNewDto.getName()
-            );
+            mapper.noIdAndVersionDtoToEntity(identificationTypeNewDto);
 
         identificationType = identificationTypeDao.save(identificationType);
 
-        return identificationTypeToIdentificationTypeDto(identificationType);
+        return mapper.entityToFullDto(identificationType);
     }
 
     @Override
@@ -56,10 +58,9 @@ public class IdentificationTypeService implements IIdentificationTypeService {
         ValidationsHelper.validateNotNull(id, "ID");
 
         IdentificationType identificationType =
-            validateIdentificationTypeIfExistsAndReturn(id);
+            validateInstanceIfExistsAndReturn(id);
 
-        return identificationTypeToIdentificationTypeDto(
-            identificationType);
+        return mapper.entityToFullDto(identificationType);
     }
 
     @Override
@@ -74,48 +75,32 @@ public class IdentificationTypeService implements IIdentificationTypeService {
             id, identificationTypeDto.getId());
 
         IdentificationType identificationType =
-            validateIdentificationTypeIfExistsAndReturn(id);
+            validateInstanceIfExistsAndReturn(id);
 
-        validateVersionsMatchOrException(
-            identificationTypeDto, identificationType);
+        ValidationsHelper.validateVersionsMatchOrException(
+            identificationTypeDto.getVersion(), identificationType.getVersion());
 
-        validateIdentificationTypeInfo(identificationTypeDto);
+        identificationTypeDto.validateInfo();
 
         validateConstrains(id, identificationTypeDto);
 
         identificationType =
             identificationTypeDao.save(
-                updateIdentificationTypeFromIdentificationTypeDto(
-                    identificationType,
-                    identificationTypeDto
-                )
+                mapper.updateEntityFromNoIdAndVersionDto(identificationType,
+                    mapper.fullDtoToNoIdAndVersionDto(identificationTypeDto))
             );
 
-        return identificationTypeToIdentificationTypeDto(identificationType);
+        return mapper.entityToFullDto(identificationType);
     }
 
     @Override
     public void deleteIdentificationType(Integer id) {
         ValidationsHelper.validateNotNull(id, "ID");
-        validateIdentificationTypeIfExistsAndReturn(id);
+        validateInstanceIfExistsAndReturn(id);
         identificationTypeDao.deleteById(id);
     }
 
     // Validations
-    //TODO: Maybe move this to the DTO
-    private void validateIdentificationTypeInfo(
-        IdentificationTypeNewDto identificationTypeNewDto) {
-
-        if (identificationTypeNewDto.getName() == null ||
-            identificationTypeNewDto.getName().trim().isEmpty()) {
-            throw new ApiMissingInformationException(
-                new ApiError(
-                    "Field 'name' is required in Information type"
-                )
-            );
-        }
-    }
-
     private void validateConstrains(Integer id,
         IdentificationTypeNewDto identificationTypeNewDto) {
 
@@ -143,7 +128,7 @@ public class IdentificationTypeService implements IIdentificationTypeService {
         }
     }
 
-    private IdentificationType validateIdentificationTypeIfExistsAndReturn(
+    private IdentificationType validateInstanceIfExistsAndReturn(
         Integer id) {
 
         Optional<IdentificationType> optionalIdentificationType =
@@ -159,52 +144,5 @@ public class IdentificationTypeService implements IIdentificationTypeService {
             );
         }
         return optionalIdentificationType.get();
-    }
-
-    private void validateVersionsMatchOrException(
-        IdentificationTypeDto identificationTypeDto,
-        IdentificationType identificationType) {
-
-        if (identificationTypeDto.getVersion() !=
-            identificationType.getVersion()) {
-            throw new ApiConflictException(
-                new ApiError(
-                    String.format(
-                        "Information version is different. Try to refresh it")
-                )
-            );
-        }
-    }
-
-    //TODO: Change this for MappStruct
-    // Mappers
-    private List<IdentificationTypeDto> listIdentificationTypeToListIdentificationTypeDto(
-        Iterable<IdentificationType> identificationTypeList) {
-
-        List<IdentificationTypeDto> listDto = new ArrayList<>();
-        for (IdentificationType identificationType : identificationTypeList) {
-            listDto.add(
-                identificationTypeToIdentificationTypeDto(identificationType));
-        }
-        return listDto;
-    }
-
-    private IdentificationTypeDto identificationTypeToIdentificationTypeDto(
-        IdentificationType identificationType) {
-
-        return new IdentificationTypeDto(
-            identificationType.getId(),
-            identificationType.getName(),
-            identificationType.getVersion()
-        );
-    }
-
-    private IdentificationType updateIdentificationTypeFromIdentificationTypeDto(
-        IdentificationType identificationType,
-        IdentificationTypeDto identificationTypeDto) {
-
-        identificationType.setName(identificationTypeDto.getName());
-
-        return identificationType;
     }
 }
