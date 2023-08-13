@@ -1,6 +1,6 @@
 package co.grow.plan.academic.register.shared.generics;
 
-public interface IIdentificableAndVersionable {
+public interface IIdentifiableAndVersionable {
     int getId();
     long getVersion();
 }

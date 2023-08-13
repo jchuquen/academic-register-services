@@ -59,7 +59,7 @@ public class IdentificationTypeServiceDBTest {
             );
 
         List<IdentificationTypeDto> currentList =
-            identificationTypeService.listIdentificationTypes();
+            identificationTypeService.list();
 
         assertEquals(expectedList.size(), currentList.size());
         for (int i = 0; i < expectedList.size(); i++) {
@@ -80,7 +80,7 @@ public class IdentificationTypeServiceDBTest {
             List.of();
 
         List<IdentificationTypeDto> currentList =
-            identificationTypeService.listIdentificationTypes();
+            identificationTypeService.list();
 
         assertIterableEquals(expectedList, currentList);
     }
@@ -95,7 +95,7 @@ public class IdentificationTypeServiceDBTest {
 
         assertThrows(
             ApiConflictException.class,
-            () -> identificationTypeService.createIdentificationType(
+            () -> identificationTypeService.create(
                 identificationTypeNewDto
             )
         );
@@ -113,7 +113,7 @@ public class IdentificationTypeServiceDBTest {
             new IdentificationTypeDto(4, "CE", 0);
 
         IdentificationTypeDto current =
-            identificationTypeService.createIdentificationType(identificationTypeNewDto);
+            identificationTypeService.create(identificationTypeNewDto);
 
         assertEntityWithDto(expected, current);
     }
@@ -124,7 +124,7 @@ public class IdentificationTypeServiceDBTest {
     public void testFindIdentificationTypeByIdIdDoesNotExist() {
         assertThrows(
             ApiNoEntityException.class,
-            () -> identificationTypeService.findIdentificationTypeById(9)
+            () -> identificationTypeService.findById(9)
         );
     }
 
@@ -137,7 +137,7 @@ public class IdentificationTypeServiceDBTest {
             3, "RC", 0);
 
         IdentificationTypeDto identificationTypeDto =
-            identificationTypeService.findIdentificationTypeById(expected.getId());
+            identificationTypeService.findById(expected.getId());
 
         assertEntityWithDto(expected, identificationTypeDto);
     }
@@ -152,7 +152,7 @@ public class IdentificationTypeServiceDBTest {
 
         assertThrows(
             ApiNoEntityException.class,
-            () -> identificationTypeService.updateIdentificationType(
+            () -> identificationTypeService.update(
                 id, identificationTypeDto)
         );
     }
@@ -168,7 +168,7 @@ public class IdentificationTypeServiceDBTest {
 
         assertThrows(
             ApiConflictException.class,
-            () -> identificationTypeService.updateIdentificationType(
+            () -> identificationTypeService.update(
                 id, identificationTypeDto)
         );
     }
@@ -184,7 +184,7 @@ public class IdentificationTypeServiceDBTest {
 
         assertThrows(
             ApiMissingInformationException.class,
-            () -> identificationTypeService.updateIdentificationType(
+            () -> identificationTypeService.update(
                 id, identificationTypeDto)
         );
     }
@@ -200,7 +200,7 @@ public class IdentificationTypeServiceDBTest {
 
         assertThrows(
             ApiMissingInformationException.class,
-            () -> identificationTypeService.updateIdentificationType(
+            () -> identificationTypeService.update(
                 id, identificationTypeDto)
         );
     }
@@ -216,7 +216,7 @@ public class IdentificationTypeServiceDBTest {
 
         assertThrows(
             ApiConflictException.class,
-            () -> identificationTypeService.updateIdentificationType(
+            () -> identificationTypeService.update(
                 id, identificationTypeDto)
         );
     }
@@ -231,11 +231,11 @@ public class IdentificationTypeServiceDBTest {
             3, "RR", 0);
 
         IdentificationTypeDto current =
-            identificationTypeService.updateIdentificationType(
+            identificationTypeService.update(
                 id, identificationTypeDto);
 
         IdentificationTypeDto expected = new IdentificationTypeDto(
-            3, "RR", 0);
+            3, "RR", 1);
 
         assertEntityWithDto(expected, current);
     }
@@ -246,11 +246,11 @@ public class IdentificationTypeServiceDBTest {
     public void testDeleteIdentificationType() {
         Integer id = 3;
 
-        identificationTypeService.deleteIdentificationType(id);
+        identificationTypeService.delete(id);
 
         assertThrows(
             ApiNoEntityException.class,
-            () -> identificationTypeService.findIdentificationTypeById(3)
+            () -> identificationTypeService.findById(3)
         );
 
     }

@@ -19,7 +19,7 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
     @Override
     public ResponseEntity<List<IdentificationTypeDto>> listIdentificationTypes() {
         List<IdentificationTypeDto> listIdentificationTypes =
-                identificationTypeService.listIdentificationTypes();
+                identificationTypeService.list();
 
         if (listIdentificationTypes.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -35,7 +35,7 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
             IdentificationTypeNewDto identificationTypeNewDto) {
 
         return new ResponseEntity<>(
-                identificationTypeService.createIdentificationType(
+                identificationTypeService.create(
                         identificationTypeNewDto),
                 HttpStatus.CREATED
         );
@@ -45,7 +45,7 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
     public ResponseEntity<IdentificationTypeDto> findIdentificationTypeById(Integer id) {
 
         IdentificationTypeDto identificationTypeDto =
-                identificationTypeService.findIdentificationTypeById(id);
+                identificationTypeService.findById(id);
 
         if (identificationTypeDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -60,7 +60,7 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
             IdentificationTypeDto identificationTypeDto) {
 
         return new ResponseEntity<>(
-            identificationTypeService.updateIdentificationType(
+            identificationTypeService.update(
                 id, identificationTypeDto),
             HttpStatus.OK
         );
@@ -68,7 +68,7 @@ public class IdentificationTypeRestController implements IIdentificationTypeRest
 
     @Override
     public ResponseEntity<Void> deleteIdentificationType(Integer id) {
-        identificationTypeService.deleteIdentificationType(id);
+        identificationTypeService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

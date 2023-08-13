@@ -1,10 +1,10 @@
 package co.grow.plan.academic.register.admissions.identificationtype.application;
 
-import co.grow.plan.academic.register.shared.generics.IIdentificableAndVersionable;
+import co.grow.plan.academic.register.shared.generics.IIdentifiableAndVersionable;
 
 public class IdentificationTypeDto
     extends IdentificationTypeNewDto
-    implements IIdentificableAndVersionable {
+    implements IIdentifiableAndVersionable {
     private int id;
     private long version;
 

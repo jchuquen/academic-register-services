@@ -54,7 +54,7 @@ public class IdentificationTypeServiceTest {
             );
 
         List<IdentificationTypeDto> currentList =
-            identificationTypeService.listIdentificationTypes();
+            identificationTypeService.list();
 
         assertEquals(expectedList.size(), currentList.size());
         for (int i = 0; i < expectedList.size(); i++) {
@@ -80,7 +80,7 @@ public class IdentificationTypeServiceTest {
             List.of();
 
         List<IdentificationTypeDto> currentList =
-            identificationTypeService.listIdentificationTypes();
+            identificationTypeService.list();
 
         assertIterableEquals(expectedList, currentList);
         verify(identificationTypeDao, times(1)).findAll();
@@ -92,7 +92,7 @@ public class IdentificationTypeServiceTest {
     public void testCreateIdentificationTypeBadRequest1() {
         assertThrows(
             ApiBadInformationException.class,
-            () -> identificationTypeService.createIdentificationType(null)
+            () -> identificationTypeService.create(null)
         );
     }
 
@@ -102,7 +102,7 @@ public class IdentificationTypeServiceTest {
     public void testCreateIdentificationTypeBadRequest2() {
         assertThrows(
             ApiMissingInformationException.class,
-            () -> identificationTypeService.createIdentificationType(
+            () -> identificationTypeService.create(
                 new IdentificationTypeNewDto(null)
             )
         );
@@ -125,7 +125,7 @@ public class IdentificationTypeServiceTest {
 
         assertThrows(
             ApiConflictException.class,
-            () -> identificationTypeService.createIdentificationType(
+            () -> identificationTypeService.create(
                 identificationTypeNewDto
             )
         );
@@ -153,7 +153,7 @@ public class IdentificationTypeServiceTest {
         ).thenReturn(identificationType);
 
         IdentificationTypeDto current =
-            identificationTypeService.createIdentificationType(identificationTypeNewDto);
+            identificationTypeService.create(identificationTypeNewDto);
 
         assertEntityWithDto(expected, current);
 
@@ -167,7 +167,7 @@ public class IdentificationTypeServiceTest {
     public void testFindIdentificationTypeByIdNullId() {
         assertThrows(
             ApiBadInformationException.class,
-            () -> identificationTypeService.findIdentificationTypeById(null)
+            () -> identificationTypeService.findById(null)
         );
     }
 
@@ -177,7 +177,7 @@ public class IdentificationTypeServiceTest {
     public void testFindIdentificationTypeByIdIdDoesNotExist() {
         assertThrows(
             ApiNoEntityException.class,
-            () -> identificationTypeService.findIdentificationTypeById(9)
+            () -> identificationTypeService.findById(9)
         );
     }
 
@@ -196,7 +196,7 @@ public class IdentificationTypeServiceTest {
         ).thenReturn(Optional.of(identificationType));
 
         IdentificationTypeDto identificationTypeDto =
-            identificationTypeService.findIdentificationTypeById(15);
+            identificationTypeService.findById(15);
 
         assertEntityWithDto(expected, identificationTypeDto);
 
@@ -210,7 +210,7 @@ public class IdentificationTypeServiceTest {
     public void testUpdateIdentificationTypeIdNull() {
         assertThrows(
             ApiBadInformationException.class,
-            () -> identificationTypeService.updateIdentificationType(
+            () -> identificationTypeService.update(
                 null, null)
         );
     }
@@ -221,7 +221,7 @@ public class IdentificationTypeServiceTest {
     public void testUpdateIdentificationTypeObjectNull() {
         assertThrows(
             ApiBadInformationException.class,
-            () -> identificationTypeService.updateIdentificationType(
+            () -> identificationTypeService.update(
                 5, null)
         );
     }
@@ -236,7 +236,7 @@ public class IdentificationTypeServiceTest {
 
         assertThrows(
             ApiBadInformationException.class,
-            () -> identificationTypeService.updateIdentificationType(
+            () -> identificationTypeService.update(
                 id, identificationTypeDto)
         );
     }
@@ -251,7 +251,7 @@ public class IdentificationTypeServiceTest {
 
         assertThrows(
             ApiNoEntityException.class,
-            () -> identificationTypeService.updateIdentificationType(
+            () -> identificationTypeService.update(
                 id, identificationTypeDto)
         );
     }
@@ -274,7 +274,7 @@ public class IdentificationTypeServiceTest {
 
         assertThrows(
             ApiConflictException.class,
-            () -> identificationTypeService.updateIdentificationType(
+            () -> identificationTypeService.update(
                 id, identificationTypeDto)
         );
 
@@ -300,7 +300,7 @@ public class IdentificationTypeServiceTest {
 
         assertThrows(
             ApiMissingInformationException.class,
-            () -> identificationTypeService.updateIdentificationType(
+            () -> identificationTypeService.update(
                 id, identificationTypeDto)
         );
 
@@ -326,7 +326,7 @@ public class IdentificationTypeServiceTest {
 
         assertThrows(
             ApiMissingInformationException.class,
-            () -> identificationTypeService.updateIdentificationType(
+            () -> identificationTypeService.update(
                 id, identificationTypeDto)
         );
 
@@ -359,7 +359,7 @@ public class IdentificationTypeServiceTest {
 
         assertThrows(
             ApiConflictException.class,
-            () -> identificationTypeService.updateIdentificationType(
+            () -> identificationTypeService.update(
                 id, identificationTypeDto)
         );
 
@@ -397,7 +397,7 @@ public class IdentificationTypeServiceTest {
         ).thenReturn(newIdentificationType);
 
         IdentificationTypeDto current =
-            identificationTypeService.updateIdentificationType(
+            identificationTypeService.update(
                 id, identificationTypeDto);
 
         assertEntityWithDto(expected, current);
@@ -415,7 +415,7 @@ public class IdentificationTypeServiceTest {
     public void testDeleteIdentificationTypeIdNull() {
         assertThrows(
             ApiBadInformationException.class,
-            () -> identificationTypeService.deleteIdentificationType(null)
+            () -> identificationTypeService.delete(null)
         );
     }
 
@@ -425,7 +425,7 @@ public class IdentificationTypeServiceTest {
     public void testDeleteIdentificationTypeIdDoesNotExist() {
         assertThrows(
             ApiNoEntityException.class,
-            () -> identificationTypeService.deleteIdentificationType(7)
+            () -> identificationTypeService.delete(7)
         );
     }
 
@@ -442,13 +442,13 @@ public class IdentificationTypeServiceTest {
             identificationTypeDao.findById(id)
         ).thenReturn(Optional.of(identificationType));
 
-        identificationTypeService.deleteIdentificationType(id);
+        identificationTypeService.delete(id);
 
         verify(identificationTypeDao, times(1)).
             findById(id);
 
         assertTimeoutPreemptively(Duration.ofSeconds(3),
-            () -> identificationTypeService.deleteIdentificationType(id),
+            () -> identificationTypeService.delete(id),
             "Should execute in less than 3 seconds");
     }
 

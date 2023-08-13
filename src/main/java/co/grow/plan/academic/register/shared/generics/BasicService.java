@@ -4,31 +4,30 @@ import co.grow.plan.academic.register.shared.exceptions.ApiError;
 import co.grow.plan.academic.register.shared.exceptions.ApiNoEntityException;
 import co.grow.plan.academic.register.shared.helpers.ValidationsHelper;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@Transactional
-public abstract class BaseEntityService<
-    E, //The entity
+public abstract class BasicService<
+    E extends IIdentifiableAndVersionable, //The entity
     D extends CrudRepository<E, Integer>, // The Repository
-    //TODO: Verify how I am using this
-    F extends IIdentificableAndVersionable & INoIdAndVersionEntityDto, // The full DTO
-    N extends INoIdAndVersionEntityDto, // The DTO without ID and Version
-    M extends IBaseEntityMapper<E, F, N> // The mapper
+    F extends IIdentifiableAndVersionable & IValidable, // The full DTO
+    N extends INoIdentifiableAndVersionable & IValidable, // The DTO without ID and Version
+    M extends IBasicMapper<E, F, N> // The mapper
     > {
 
-    private D dao;
-    private M mapper;
+    protected D dao;
+    protected M mapper;
 
+    public BasicService(D dao, M mapper) {
+        this.dao = dao;
+        this.mapper = mapper;
+    }
 
     //TODO: Use Spring validations in all methods to check incoming information
     //@Override
     public List<F> list() {
-        return mapper.enityListToFullDtoList(
+        return mapper.entityListToIdentifiableAndVersionableDtoList(
             dao.findAll());
     }
 
@@ -38,13 +37,13 @@ public abstract class BaseEntityService<
         ValidationsHelper.validateNotNull(dto,
             "IdentificationType Object");
 
-        dto.validateInfo();
+        dto.validate();
         validateConstrains(null, dto);
 
-        E entity = mapper.noIdAndVersionDtoToEntity(dto);
+        E entity = mapper.noIdentifiableAndVersionableDtoToEntity(dto);
         entity = dao.save(entity);
 
-        return mapper.entityToFullDto(entity);
+        return mapper.entityToIdentifiableAndVersionableDto(entity);
     }
 
     //@Override
@@ -52,7 +51,7 @@ public abstract class BaseEntityService<
 
         ValidationsHelper.validateNotNull(id, "ID");
 
-        return mapper.entityToFullDto(
+        return mapper.entityToIdentifiableAndVersionableDto(
             validateInstanceIfExistsAndReturn(id));
     }
 
@@ -71,17 +70,17 @@ public abstract class BaseEntityService<
         ValidationsHelper.validateVersionsMatchOrException(
             dto.getVersion(), entity.getVersion());
 
-        dto.validateInfo();
+        dto.validate();
 
         validateConstrains(id, dto);
 
         entity =
             dao.save(
-                mapper.updateEntityFromNoIdAndVersionDto(entity,
-                    mapper.fullDtoToNoIdAndVersionDto(dto))
+                mapper.updateEntityFromNoIdentifiableAndVersionableDto(entity,
+                    mapper.identifiableAndVersionableDtoToNoIdentifiableAndVersionableDto(dto))
             );
 
-        return mapper.entityToFullDto(entity);
+        return mapper.entityToIdentifiableAndVersionableDto(entity);
     }
 
     //@Override
@@ -92,7 +91,7 @@ public abstract class BaseEntityService<
     }
 
     // Validations
-    abstract void validateConstrains(Integer id,N dto);
+    protected abstract void validateConstrains(Integer id, IValidable dto);
 
     private E validateInstanceIfExistsAndReturn(Integer id) {
 

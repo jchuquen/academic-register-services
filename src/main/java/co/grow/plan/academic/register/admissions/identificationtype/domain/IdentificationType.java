@@ -1,10 +1,12 @@
 package co.grow.plan.academic.register.admissions.identificationtype.domain;
 
+import co.grow.plan.academic.register.shared.generics.IIdentifiableAndVersionable;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity()
-public class IdentificationType {
+public class IdentificationType implements IIdentifiableAndVersionable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)

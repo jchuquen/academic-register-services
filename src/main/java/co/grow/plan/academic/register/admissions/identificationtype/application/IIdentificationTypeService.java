@@ -3,15 +3,16 @@ package co.grow.plan.academic.register.admissions.identificationtype.application
 import java.util.List;
 
 public interface IIdentificationTypeService {
-    List<IdentificationTypeDto> listIdentificationTypes();
+    List<IdentificationTypeDto> list();
 
-    IdentificationTypeDto createIdentificationType(
+    IdentificationTypeDto create(
             IdentificationTypeNewDto identificationTypeNewDto);
 
-    IdentificationTypeDto findIdentificationTypeById (Integer id);
+    IdentificationTypeDto findById (Integer id);
 
-    IdentificationTypeDto updateIdentificationType(
+    IdentificationTypeDto update(
             Integer id,
             IdentificationTypeDto identificationTypeDto);
-    void deleteIdentificationType(Integer id);
+
+    void delete(Integer id);
 }

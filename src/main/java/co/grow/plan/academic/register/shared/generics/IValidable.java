@@ -1,7 +1,6 @@
 package co.grow.plan.academic.register.shared.generics;
 
-public interface INoIdAndVersionEntityDto {
-
+public interface IValidable {
     // Applying Tell Don´t Ask principle
-    void validateInfo();
+    void validate();
 }
