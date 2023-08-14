@@ -4,6 +4,7 @@ import co.grow.plan.academic.register.shared.exceptions.ApiError;
 import co.grow.plan.academic.register.shared.exceptions.ApiNoEntityException;
 import co.grow.plan.academic.register.shared.helpers.ValidationsHelper;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,8 @@ public abstract class BasicService<
     F extends IIdentifiableAndVersionable & IValidable, // The full DTO
     N extends INoIdentifiableAndVersionable & IValidable, // The DTO without ID and Version
     M extends IBasicMapper<E, F, N> // The mapper
-    > {
+    >
+    implements IBasicService<F, N>{
 
     protected D dao;
     protected M mapper;
@@ -25,13 +27,14 @@ public abstract class BasicService<
     }
 
     //TODO: Use Spring validations in all methods to check incoming information
-    //@Override
+    @Override
     public List<F> list() {
         return mapper.entityListToIdentifiableAndVersionableDtoList(
             dao.findAll());
     }
 
-    //@Override
+    @Override
+    @Transactional
     public F create(N dto) {
 
         ValidationsHelper.validateNotNull(dto,
@@ -46,7 +49,7 @@ public abstract class BasicService<
         return mapper.entityToIdentifiableAndVersionableDto(entity);
     }
 
-    //@Override
+    @Override
     public F findById(Integer id) {
 
         ValidationsHelper.validateNotNull(id, "ID");
@@ -55,7 +58,8 @@ public abstract class BasicService<
             validateInstanceIfExistsAndReturn(id));
     }
 
-    //@Override
+    @Override
+    @Transactional
     public F update(Integer id, F dto) {
 
         ValidationsHelper.validateNotNull(id, "ID");
@@ -83,7 +87,8 @@ public abstract class BasicService<
         return mapper.entityToIdentifiableAndVersionableDto(entity);
     }
 
-    //@Override
+    @Override
+    @Transactional
     public void delete(Integer id) {
         ValidationsHelper.validateNotNull(id, "ID");
         validateInstanceIfExistsAndReturn(id);

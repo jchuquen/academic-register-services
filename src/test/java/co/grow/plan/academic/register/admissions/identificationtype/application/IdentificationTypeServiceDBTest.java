@@ -235,7 +235,7 @@ public class IdentificationTypeServiceDBTest {
                 id, identificationTypeDto);
 
         IdentificationTypeDto expected = new IdentificationTypeDto(
-            3, "RR", 1);
+            3, "RR", 0);
 
         assertEntityWithDto(expected, current);
     }

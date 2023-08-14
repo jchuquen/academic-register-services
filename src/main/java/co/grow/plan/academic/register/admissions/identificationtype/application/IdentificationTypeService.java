@@ -8,12 +8,10 @@ import co.grow.plan.academic.register.shared.generics.BasicService;
 import co.grow.plan.academic.register.shared.generics.IValidable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
-@Transactional
 public class IdentificationTypeService
     extends BasicService<
         IdentificationType,

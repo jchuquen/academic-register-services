@@ -292,7 +292,7 @@ public class IdentificationTypeRestControllerTest {
         ).andExpect(status().isOk()).
             andExpect(jsonPath("$.id", is(2))).
             andExpect(jsonPath("$.name", is("TT"))).
-            andExpect(jsonPath("$.version", is(2)));
+            andExpect(jsonPath("$.version", is(1)));
     }
 
     @Test

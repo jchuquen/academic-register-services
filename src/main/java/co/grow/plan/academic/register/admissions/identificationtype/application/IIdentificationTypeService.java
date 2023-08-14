@@ -1,8 +1,12 @@
 package co.grow.plan.academic.register.admissions.identificationtype.application;
 
+import co.grow.plan.academic.register.shared.generics.IBasicService;
+
 import java.util.List;
 
-public interface IIdentificationTypeService {
+public interface IIdentificationTypeService
+    extends IBasicService<IdentificationTypeDto, IdentificationTypeNewDto> {
+
     List<IdentificationTypeDto> list();
 
     IdentificationTypeDto create(
