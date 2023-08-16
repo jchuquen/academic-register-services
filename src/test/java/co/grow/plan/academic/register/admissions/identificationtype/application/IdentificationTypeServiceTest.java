@@ -57,9 +57,13 @@ public class IdentificationTypeServiceTest {
             identificationTypeService.list();
 
         assertEquals(expectedList.size(), currentList.size());
+
+        IdentificationTypeDto expected;
+        IdentificationTypeDto current;
+
         for (int i = 0; i < expectedList.size(); i++) {
-            IdentificationTypeDto expected = expectedList.get(i);
-            IdentificationTypeDto current = currentList.get(i);
+            expected = expectedList.get(i);
+            current = currentList.get(i);
 
             assertEntityWithDto(expected, current);
         }
@@ -431,7 +435,7 @@ public class IdentificationTypeServiceTest {
 
     @Test
     @DisplayName("IdentificationTypeServiceTest - DeleteIdentificationType - " +
-        "Must delete the identification type")
+        "Must delete the information found")
     public void testDeleteIdentificationType() {
         Integer id = 7;
 

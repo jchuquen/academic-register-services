@@ -1,10 +1,12 @@
 package co.grow.plan.academic.register.academicplan.subject.domain;
 
+import co.grow.plan.academic.register.shared.generics.IIdentifiableAndVersionable;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class Subject {
+public class Subject implements IIdentifiableAndVersionable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
@@ -13,11 +15,20 @@ public class Subject {
     @Column(unique = true, nullable = false)
     private String name;
 
+    @Version
+    private long version;
+
     public Subject() {
     }
 
     public Subject(String name) {
         this.name = name;
+    }
+
+    public Subject(int id, String name, long version) {
+        this.id = id;
+        this.name = name;
+        this.version = version;
     }
 
     public int getId() {
@@ -37,11 +48,21 @@ public class Subject {
     }
 
     @Override
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
+    }
+
+    @Override
     public String toString() {
         return "Subject{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", version=" + version +
+            '}';
     }
 
     @Override

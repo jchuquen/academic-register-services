@@ -5,7 +5,7 @@ import co.grow.plan.academic.register.shared.generics.IIdentifiableAndVersionabl
 import javax.persistence.*;
 import java.util.Objects;
 
-@Entity()
+@Entity
 public class IdentificationType implements IIdentifiableAndVersionable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +47,7 @@ public class IdentificationType implements IIdentifiableAndVersionable {
         this.name = name;
     }
 
+    @Override
     public long getVersion() {
         return version;
     }

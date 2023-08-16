@@ -308,6 +308,879 @@ paths:
         - petstore_auth:
             - write:pets
             - read:pets
+            
+  /v1/academic-plans/subjects:
+    get:
+      tags:
+        - academic-plans
+      summary: List registered subjects
+      description: List registered subjects
+      operationId: listSubjects
+      responses:
+        '200':
+          description: Subjects found
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Subject'          
+            application/xml:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Subject'
+                
+        '204':
+          description: No subjects were found
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Resource not found
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+    
+    post:
+      tags:
+        - academic-plans
+      summary: Create a new subject (e.g Chemestry, Maths, Physics,...) 
+      description: Create a new subject
+      operationId: createSubject
+      requestBody:
+        description: Subject object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubjectNew'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/SubjectNew'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SubjectNew'
+        required: true
+      responses:
+        '201':
+          description: Subject created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Subject'
+                
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+        '403':
+          description: Client doesn´t have enough permissions to access this resource
+        
+        '409':
+          description: Subject already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  
+  /v1/academic-plans/subjects/{id}:
+  
+    get:
+      tags:
+        - academic-plans
+      summary: Find a subject by ID
+      description: Find a subject by ID
+      operationId: findSubjectById
+      parameters:
+        - name: id
+          in: path
+          description: Subject ID
+          required: true
+          schema:
+            type: integer
+            format: int16
+      responses:
+        '200':
+          description: Subject found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Subject'
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Subject not found
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  
+    put:
+      tags:
+        - academic-plans
+      summary: Update an existing subject
+      description: Update an existing subject
+      operationId: updateSubject
+      parameters:
+        - name: id
+          in: path
+          description: Subject ID
+          required: true
+          schema:
+            type: integer
+            format: int16
+      requestBody:
+        description: Subject object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subject'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Subject'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Subject'
+        required: true
+      responses:
+        '200':
+          description: Subject updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Subject'
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Subject not found
+        '409':
+          description: Subject already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  
+    delete:
+      tags:
+        - academic-plans
+      summary: Delete an existing subject
+      description: Delete an existing subject
+      operationId: deleteSubject
+      parameters:
+        - name: id
+          in: path
+          description: Subject ID
+          required: true
+          schema:
+            type: integer
+            format: int16
+      responses:
+        '200':
+          description: Subject deleted
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Subject not found
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  
+  /v1/academic-plans/courses:
+    get:
+      tags:
+        - academic-plans
+      summary: List registered courses
+      description: List registered courses
+      operationId: listCourses
+      responses:
+        '200':
+          description: Courses found
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Course'          
+            application/xml:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Course'
+                
+        '204':
+          description: No courses were found
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Resource not found
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+    
+    post:
+      tags:
+        - academic-plans
+      summary: Create a new course (e.g Software Development, MathLab, Social studies,...) 
+      description: Create a new course
+      operationId: createCourse
+      requestBody:
+        description: Course object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseNew'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/CourseNew'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CourseNew'
+        required: true
+      responses:
+        '201':
+          description: Course created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Course'
+                
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+        '403':
+          description: Client doesn´t have enough permissions to access this resource
+        
+        '409':
+          description: Course already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  
+  /v1/academic-plans/courses/{id}:
+  
+    get:
+      tags:
+        - academic-plans
+      summary: Find a course by ID
+      description: Find a course by ID
+      operationId: findCourseById
+      parameters:
+        - name: id
+          in: path
+          description: Course ID
+          required: true
+          schema:
+            type: integer
+            format: int16
+      responses:
+        '200':
+          description: Course found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Course not found
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  
+    put:
+      tags:
+        - academic-plans
+      summary: Update an existing course
+      description: Update an existing course
+      operationId: updateCourse
+      parameters:
+        - name: id
+          in: path
+          description: Course ID
+          required: true
+          schema:
+            type: integer
+            format: int16
+      requestBody:
+        description: Course object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Course'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Course'
+        required: true
+      responses:
+        '200':
+          description: Course updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Course not found
+        '409':
+          description: Course already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  
+    delete:
+      tags:
+        - academic-plans
+      summary: Delete an existing course
+      description: Delete an existing course
+      operationId: deleteCourse
+      parameters:
+        - name: id
+          in: path
+          description: Course ID
+          required: true
+          schema:
+            type: integer
+            format: int16
+      responses:
+        '200':
+          description: Course deleted
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Course not found
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+
+  /v1/academic-plans/periods:
+    get:
+      tags:
+        - academic-plans
+      summary: List registered periods
+      description: List registered periods
+      operationId: listPeriods
+      responses:
+        '200':
+          description: Periods found
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Period'          
+            application/xml:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Period'
+                
+        '204':
+          description: No periods were found
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Resource not found
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+    
+    post:
+      tags:
+        - academic-plans
+      summary: Create a new period (e.g I/2023, II/2023, IV/2023,...) 
+      description: Create a new period
+      operationId: createPeriod
+      requestBody:
+        description: Period object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PeriodNew'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PeriodNew'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PeriodNew'
+        required: true
+      responses:
+        '201':
+          description: Period created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Period'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Period'
+                
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+        '403':
+          description: Client doesn´t have enough permissions to access this resource
+        
+        '409':
+          description: Period already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+                
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  
+  /v1/academic-plans/periods/{id}:
+  
+    get:
+      tags:
+        - academic-plans
+      summary: Find a period by ID
+      description: Find a period by ID
+      operationId: findPeriodById
+      parameters:
+        - name: id
+          in: path
+          description: Period ID
+          required: true
+          schema:
+            type: integer
+            format: int16
+      responses:
+        '200':
+          description: Period found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Period'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Period'
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Period not found
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  
+    put:
+      tags:
+        - academic-plans
+      summary: Update an existing period
+      description: Update an existing period
+      operationId: updatePeriod
+      parameters:
+        - name: id
+          in: path
+          description: Period ID
+          required: true
+          schema:
+            type: integer
+            format: int16
+      requestBody:
+        description: Period object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Period'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Period'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Period'
+        required: true
+      responses:
+        '200':
+          description: Period updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Period'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Period'
+        '400':
+          description: Invalid request or content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Period not found
+        '409':
+          description: Period already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  
+    delete:
+      tags:
+        - academic-plans
+      summary: Delete an existing period
+      description: Delete an existing period
+      operationId: deletePeriod
+      parameters:
+        - name: id
+          in: path
+          description: Period ID
+          required: true
+          schema:
+            type: integer
+            format: int16
+      responses:
+        '200':
+          description: Period deleted
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Not enough permissions to access this resource
+        '404':
+          description: Period not found
+        '500': 
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+
+
+
+
     
   /pet/findByStatus:
     get:
@@ -833,6 +1706,91 @@ components:
           type: number
           format: double
           example: 25
+    
+    SubjectNew:
+      type: object
+      properties:
+        name: 
+          type: string
+          example: Maths    
+    
+    Subject:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int16
+          example: 15
+        name: 
+          type: string
+          example: Maths
+        version:
+          type: number
+          format: double
+          example: 2
+          
+    CourseNew:
+      type: object
+      properties:
+        name: 
+          type: string
+          example: Software Development    
+    
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int16
+          example: 2
+        name: 
+          type: string
+          example: Software Development
+        version:
+          type: number
+          format: double
+          example: 1
+          
+    PeriodNew:
+      type: object
+      properties:
+        name: 
+          type: string
+          example: I/2023    
+        isActive: 
+          type: boolean
+          example: true
+    
+    Period:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int16
+          example: 33
+        name: 
+          type: string
+          example: I/2023    
+        isActive: 
+          type: boolean
+          example: true
+        version:
+          type: number
+          format: double
+          example: 2
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
     
     Order:
       type: object

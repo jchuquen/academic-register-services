@@ -11,7 +11,8 @@ public abstract class BasicRestController<
     F extends IIdentifiableAndVersionable & IValidable, // The full DTO
     N extends INoIdentifiableAndVersionable & IValidable, // The DTO without ID and Version
     S extends IBasicService<F,N>
-    >{
+    >
+    implements IBasicRestController<F, N>{
 
     protected S service;
 
