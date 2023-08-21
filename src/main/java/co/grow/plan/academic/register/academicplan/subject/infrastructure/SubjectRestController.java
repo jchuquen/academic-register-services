@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+//TODO: Revisar si la versión iría aquí, en el properties o dónde
 @RequestMapping("/v1/academic-plans/subjects")
 public class SubjectRestController
     extends BasicRestController<

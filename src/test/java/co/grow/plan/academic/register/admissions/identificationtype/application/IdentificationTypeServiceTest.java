@@ -1,7 +1,6 @@
 package co.grow.plan.academic.register.admissions.identificationtype.application;
 
 
-import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
 import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationType;
 import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationTypeDao;
 import co.grow.plan.academic.register.shared.exceptions.ApiBadInformationException;
@@ -10,9 +9,10 @@ import co.grow.plan.academic.register.shared.exceptions.ApiMissingInformationExc
 import co.grow.plan.academic.register.shared.exceptions.ApiNoEntityException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.Duration;
@@ -24,14 +24,18 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @TestPropertySource("/application-test.properties")
-@SpringBootTest(classes = AcademicRegisterServicesApplication.class)
+// To use mockito without loading the heavy spring context
+@ExtendWith(MockitoExtension.class)
 public class IdentificationTypeServiceTest {
 
-    @MockBean
+    @Mock
     private IdentificationTypeDao identificationTypeDao;
 
-    @Autowired
-    private IIdentificationTypeService identificationTypeService;
+    @Mock
+    private IIdentificationTypeMapper iIdentificationTypeMapper;
+
+    @InjectMocks
+    private IdentificationTypeService identificationTypeService;
 
     @Test
     @DisplayName("IdentificationTypeServiceTest - List - Must return a list of many objects")
@@ -52,6 +56,12 @@ public class IdentificationTypeServiceTest {
                 new IdentificationTypeDto(2, "TI", 1),
                 new IdentificationTypeDto(3, "RC", 0)
             );
+
+        when(
+            iIdentificationTypeMapper.entityListToIdentifiableAndVersionableDtoList(
+                any(Iterable.class)
+            )
+        ).thenReturn(expectedList);
 
         List<IdentificationTypeDto> currentList =
             identificationTypeService.list();
@@ -146,15 +156,28 @@ public class IdentificationTypeServiceTest {
         IdentificationTypeNewDto identificationTypeNewDto =
             new IdentificationTypeNewDto("CC");
 
+        IdentificationType identificationTypeNoPersisted =
+            new IdentificationType(identificationTypeNewDto.getName());
+
+        when(
+            iIdentificationTypeMapper.noIdentifiableAndVersionableDtoToEntity(
+                identificationTypeNewDto
+            )
+        ).thenReturn(identificationTypeNoPersisted);
+
         IdentificationType identificationType = new IdentificationType(
           15, "CC", 0);
+
+        when(
+            identificationTypeDao.save(any(IdentificationType.class))
+        ).thenReturn(identificationType);
 
         IdentificationTypeDto expected =
             new IdentificationTypeDto(15, "CC", 0);
 
         when(
-            identificationTypeDao.save(any(IdentificationType.class))
-        ).thenReturn(identificationType);
+            iIdentificationTypeMapper.entityToIdentifiableAndVersionableDto(any(IdentificationType.class))
+        ).thenReturn(expected);
 
         IdentificationTypeDto current =
             identificationTypeService.create(identificationTypeNewDto);
@@ -189,15 +212,22 @@ public class IdentificationTypeServiceTest {
     @DisplayName("IdentificationTypeServiceTest - FindById - Must return dto " +
         "when ID does exist")
     public void testFindIdentificationTypeById() {
-        IdentificationType identificationType = new IdentificationType(
-            15, "CC", 0);
 
-        IdentificationTypeDto expected = new IdentificationTypeDto(
+        IdentificationType identificationType = new IdentificationType(
             15, "CC", 0);
 
         when(
             identificationTypeDao.findById(15)
         ).thenReturn(Optional.of(identificationType));
+
+        IdentificationTypeDto expected = new IdentificationTypeDto(
+            15, "CC", 0);
+
+        when(
+            iIdentificationTypeMapper.entityToIdentifiableAndVersionableDto(
+                any(IdentificationType.class)
+            )
+        ).thenReturn(expected);
 
         IdentificationTypeDto identificationTypeDto =
             identificationTypeService.findById(15);
@@ -386,15 +416,38 @@ public class IdentificationTypeServiceTest {
         IdentificationType identificationType = new IdentificationType(
             5, "CC", 1);
 
-        IdentificationType newIdentificationType = new IdentificationType(
-            5, "TI", 2);
+        when(
+            identificationTypeDao.findById(5)
+        ).thenReturn(Optional.of(identificationType));
+
+        IdentificationTypeNewDto identificationTypeNewDto =
+            new IdentificationTypeNewDto(identificationTypeDto.getName());
+
+        when(
+            iIdentificationTypeMapper.identifiableAndVersionableDtoToNoIdentifiableAndVersionableDto(
+                identificationTypeDto
+            )
+        ).thenReturn(identificationTypeNewDto);
+
+        IdentificationType identificationTypeUpdatedNoPersisted = new IdentificationType(
+            5, "TI", 1);
+
+        when(
+            iIdentificationTypeMapper.updateEntityFromNoIdentifiableAndVersionableDto(
+                any(IdentificationType.class),
+                any(IdentificationTypeNewDto.class)
+            )
+        ).thenReturn(identificationTypeUpdatedNoPersisted);
 
         IdentificationTypeDto expected = new IdentificationTypeDto(
             5, "TI", 2);
 
         when(
-            identificationTypeDao.findById(5)
-        ).thenReturn(Optional.of(identificationType));
+            iIdentificationTypeMapper.entityToIdentifiableAndVersionableDto(any(IdentificationType.class))
+        ).thenReturn(expected);
+
+        IdentificationType newIdentificationType = new IdentificationType(
+            5, "TI", 2);
 
         when(
             identificationTypeDao.save(any(IdentificationType.class))

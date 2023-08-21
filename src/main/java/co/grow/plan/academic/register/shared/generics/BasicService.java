@@ -4,7 +4,6 @@ import co.grow.plan.academic.register.shared.exceptions.ApiError;
 import co.grow.plan.academic.register.shared.exceptions.ApiNoEntityException;
 import co.grow.plan.academic.register.shared.helpers.ValidationsHelper;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +33,7 @@ public abstract class BasicService<
     }
 
     @Override
-    @Transactional
+    //@Transactional
     public F create(N dto) {
 
         ValidationsHelper.validateNotNull(dto,
@@ -59,7 +58,7 @@ public abstract class BasicService<
     }
 
     @Override
-    @Transactional
+    //@Transactional
     public F update(Integer id, F dto) {
 
         ValidationsHelper.validateNotNull(id, "ID");
@@ -88,7 +87,7 @@ public abstract class BasicService<
     }
 
     @Override
-    @Transactional
+    //@Transactional
     public void delete(Integer id) {
         ValidationsHelper.validateNotNull(id, "ID");
         validateInstanceIfExistsAndReturn(id);

@@ -1,7 +1,6 @@
 package co.grow.plan.academic.register.academicplan.subject.infrastructure;
 
 import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
-import co.grow.plan.academic.register.academicplan.subject.application.ISubjectService;
 import co.grow.plan.academic.register.academicplan.subject.application.SubjectDto;
 import co.grow.plan.academic.register.academicplan.subject.application.SubjectNewDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,19 +24,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(classes = AcademicRegisterServicesApplication.class)
 @AutoConfigureMockMvc
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) // Fix problem with autoincrement but has performance issues
 public class SubjectRestControllerTest {
 
     // Inserts
-    private final String insertSubjectMaths =
+    private static final String insertSubjectMaths =
         "insert into subject (id, name, version) values(1, 'Maths', 0)";
-    private final String insertSubjectPhysics =
+    private static final String insertSubjectPhysics =
         "insert into subject (id, name, version) values(2, 'Physics', 1)";
-    private final String insertSubjectSocialStudies =
+    private static final String insertSubjectSocialStudies =
         "insert into subject (id, name, version) values(3, 'Social Studies', 0)";
 
     //Deletes
-    private final String deleteAllSubjects =
+    private static final String deleteAllSubjects =
         "delete from subject";
+
+    // AutoIncrement restarter
+    private static final String restartAutoincrement =
+        "ALTER TABLE subject ALTER COLUMN id RESTART WITH 1";
 
     // Test Utilities
     @Autowired
@@ -49,12 +53,9 @@ public class SubjectRestControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    //Java Services
-    @Autowired
-    private ISubjectService subjectService;
-
     @BeforeEach
     public void setupDatabase() {
+        jdbcTemplate.execute(restartAutoincrement);
         jdbcTemplate.execute(insertSubjectMaths);
         jdbcTemplate.execute(insertSubjectPhysics);
         jdbcTemplate.execute(insertSubjectSocialStudies);
@@ -149,7 +150,6 @@ public class SubjectRestControllerTest {
             andExpect(jsonPath("$.id", is(4))).
             andExpect(jsonPath("$.name", is("Painting"))).
             andExpect(jsonPath("$.version", is(0)));
-
     }
 
     @Test
@@ -291,7 +291,7 @@ public class SubjectRestControllerTest {
             ).andExpect(status().isOk()).
             andExpect(jsonPath("$.id", is(2))).
             andExpect(jsonPath("$.name", is("TT"))).
-            andExpect(jsonPath("$.version", is(1)));
+            andExpect(jsonPath("$.version", is(2)));
     }
 
     @Test

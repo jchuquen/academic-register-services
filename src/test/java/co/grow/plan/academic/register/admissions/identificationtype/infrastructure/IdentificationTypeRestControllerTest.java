@@ -1,7 +1,6 @@
 package co.grow.plan.academic.register.admissions.identificationtype.infrastructure;
 
 import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
-import co.grow.plan.academic.register.admissions.identificationtype.application.IIdentificationTypeService;
 import co.grow.plan.academic.register.admissions.identificationtype.application.IdentificationTypeDto;
 import co.grow.plan.academic.register.admissions.identificationtype.application.IdentificationTypeNewDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,16 +27,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class IdentificationTypeRestControllerTest {
 
     // Inserts
-    private final String insertIdentificationTypeCC =
+    private static final String insertIdentificationTypeCC =
         "insert into identification_type (id, name, version) values(1, 'CC', 0)";
-    private final String insertIdentificationTypeTI =
+    private static final String insertIdentificationTypeTI =
         "insert into identification_type (id, name, version) values(2, 'TI', 1)";
-    private final String insertIdentificationTypeRC =
+    private static final String insertIdentificationTypeRC =
         "insert into identification_type (id, name, version) values(3, 'RC', 0)";
 
     //Deletes
-    private final String deleteAllIdentificationTypes =
+    private static final String deleteAllIdentificationTypes =
         "delete from identification_type";
+
+    // AutoIncrement restarter
+    private static final String restartAutoincrement =
+        "ALTER TABLE identification_type ALTER COLUMN id RESTART WITH 1";
 
     // Test Utilities
     @Autowired
@@ -49,12 +52,9 @@ public class IdentificationTypeRestControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    //Java Services
-    @Autowired
-    private IIdentificationTypeService identificationTypeService;
-
     @BeforeEach
     public void setupDatabase() {
+        jdbcTemplate.execute(restartAutoincrement);
         jdbcTemplate.execute(insertIdentificationTypeCC);
         jdbcTemplate.execute(insertIdentificationTypeTI);
         jdbcTemplate.execute(insertIdentificationTypeRC);
@@ -292,7 +292,7 @@ public class IdentificationTypeRestControllerTest {
         ).andExpect(status().isOk()).
             andExpect(jsonPath("$.id", is(2))).
             andExpect(jsonPath("$.name", is("TT"))).
-            andExpect(jsonPath("$.version", is(1)));
+            andExpect(jsonPath("$.version", is(2)));
     }
 
     @Test

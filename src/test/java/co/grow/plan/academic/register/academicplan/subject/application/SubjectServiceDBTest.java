@@ -4,10 +4,7 @@ import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
 import co.grow.plan.academic.register.shared.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.shared.exceptions.ApiMissingInformationException;
 import co.grow.plan.academic.register.shared.exceptions.ApiNoEntityException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,16 +19,20 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SubjectServiceDBTest {
 
     // Inserts
-    private final String insertSubjectMaths =
+    private static final String insertSubjectMaths =
         "insert into subject (id, name, version) values(1, 'Maths', 0)";
-    private final String insertSubjectPhysics =
+    private static final String insertSubjectPhysics =
         "insert into subject (id, name, version) values(2, 'Physics', 1)";
-    private final String insertSubjectSocialStudies =
+    private static final String insertSubjectSocialStudies =
         "insert into subject (id, name, version) values(3, 'Social Studies', 0)";
 
     //Deletes
-    private final String deleteAllSubjects =
+    private static final String deleteAllSubjects =
         "delete from subject";
+
+    // AutoIncrement restarter
+    private static final String restartAutoincrement =
+        "ALTER TABLE subject ALTER COLUMN id RESTART WITH 1";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -41,6 +42,7 @@ public class SubjectServiceDBTest {
 
     @BeforeEach
     public void setupDatabase() {
+        jdbcTemplate.execute(restartAutoincrement);
         jdbcTemplate.execute(insertSubjectMaths);
         jdbcTemplate.execute(insertSubjectPhysics);
         jdbcTemplate.execute(insertSubjectSocialStudies);
@@ -227,7 +229,7 @@ public class SubjectServiceDBTest {
             subjectService.update(id, subjectDto);
 
         SubjectDto expected = new SubjectDto(
-            3, "Mobile", 0);
+            3, "Mobile", 1);
 
         assertEntityWithDto(expected, current);
     }

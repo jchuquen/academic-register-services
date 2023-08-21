@@ -1,6 +1,5 @@
 package co.grow.plan.academic.register.academicplan.subject.application;
 
-import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
 import co.grow.plan.academic.register.academicplan.subject.domain.Subject;
 import co.grow.plan.academic.register.academicplan.subject.domain.SubjectDao;
 import co.grow.plan.academic.register.shared.exceptions.ApiBadInformationException;
@@ -9,9 +8,10 @@ import co.grow.plan.academic.register.shared.exceptions.ApiMissingInformationExc
 import co.grow.plan.academic.register.shared.exceptions.ApiNoEntityException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.Duration;
@@ -23,14 +23,18 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @TestPropertySource("/application-test.properties")
-@SpringBootTest(classes = AcademicRegisterServicesApplication.class)
+// To use mockito without loading the heavy spring context
+@ExtendWith(MockitoExtension.class)
 public class SubjectServiceTest {
 
-    @MockBean
+    @Mock
     private SubjectDao subjectDao;
 
-    @Autowired
-    private ISubjectService subjectService;
+    @Mock
+    private ISubjectMapper subjectMapper;
+
+    @InjectMocks
+    private SubjectService subjectService;
 
     @Test
     @DisplayName("SubjectServiceTest - List - Must return a list of many objects")
@@ -51,6 +55,10 @@ public class SubjectServiceTest {
                 new SubjectDto(2, "Physics", 1),
                 new SubjectDto(3, "Social Studies", 0)
             );
+
+        when(
+            subjectMapper.entityListToIdentifiableAndVersionableDtoList(any(Iterable.class))
+        ).thenReturn(expectedList);
 
         List<SubjectDto> currentList = subjectService.list();
 
@@ -137,15 +145,25 @@ public class SubjectServiceTest {
         SubjectNewDto subjectNewDto =
             new SubjectNewDto("Maths");
 
+        Subject subjectNoPersisted = new Subject(subjectNewDto.getName());
+
+        when(
+            subjectMapper.noIdentifiableAndVersionableDtoToEntity(subjectNewDto)
+        ).thenReturn(subjectNoPersisted);
+
         Subject subject = new Subject(
             15, "Maths", 0);
+
+        when(
+            subjectDao.save(any(Subject.class))
+        ).thenReturn(subject);
 
         SubjectDto expected =
             new SubjectDto(15, "Maths", 0);
 
         when(
-            subjectDao.save(any(Subject.class))
-        ).thenReturn(subject);
+            subjectMapper.entityToIdentifiableAndVersionableDto(any(Subject.class))
+        ).thenReturn(expected);
 
         SubjectDto current =
             subjectService.create(subjectNewDto);
@@ -180,15 +198,20 @@ public class SubjectServiceTest {
     @DisplayName("SubjectServiceTest - FindById - Must return dto " +
         "when ID does exist")
     public void testFindSubjectById() {
-        Subject subject = new Subject(
-            15, "Maths", 0);
 
-        SubjectDto expected = new SubjectDto(
+        Subject subject = new Subject(
             15, "Maths", 0);
 
         when(
             subjectDao.findById(15)
         ).thenReturn(Optional.of(subject));
+
+        SubjectDto expected = new SubjectDto(
+            15, "Maths", 0);
+
+        when(
+            subjectMapper.entityToIdentifiableAndVersionableDto(any(Subject.class))
+        ).thenReturn(expected);
 
         SubjectDto subjectDto =
             subjectService.findById(15);
@@ -365,15 +388,35 @@ public class SubjectServiceTest {
         Subject subject = new Subject(
             5, "Maths", 1);
 
-        Subject newSubject = new Subject(
-            5, "Physics", 2);
+        when(
+            subjectDao.findById(5)
+        ).thenReturn(Optional.of(subject));
+
+        SubjectNewDto subjectNewDto = new SubjectNewDto(subjectDto.getName());
+
+        when(
+          subjectMapper.identifiableAndVersionableDtoToNoIdentifiableAndVersionableDto(subjectDto)
+        ).thenReturn(subjectNewDto);
+
+        Subject subjectUpdatedNoPersisted = new Subject(
+            5, "Physics", 1);
+
+        when(
+            subjectMapper.updateEntityFromNoIdentifiableAndVersionableDto(
+                any(Subject.class),
+                any(SubjectNewDto.class)
+            )
+        ).thenReturn(subjectUpdatedNoPersisted);
 
         SubjectDto expected = new SubjectDto(
             5, "Physics", 2);
 
         when(
-            subjectDao.findById(5)
-        ).thenReturn(Optional.of(subject));
+            subjectMapper.entityToIdentifiableAndVersionableDto(any(Subject.class))
+        ).thenReturn(expected);
+
+        Subject newSubject = new Subject(
+            5, "Physics", 2);
 
         when(
             subjectDao.save(any(Subject.class))

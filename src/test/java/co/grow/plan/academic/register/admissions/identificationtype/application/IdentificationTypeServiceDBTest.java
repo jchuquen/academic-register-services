@@ -23,16 +23,20 @@ import static org.junit.jupiter.api.Assertions.*;
 public class IdentificationTypeServiceDBTest {
 
     // Inserts
-    private final String insertIdentificationTypeCC =
+    private static final String insertIdentificationTypeCC =
         "insert into identification_type (id, name, version) values(1, 'CC', 0)";
-    private final String insertIdentificationTypeTI =
+    private static final String insertIdentificationTypeTI =
         "insert into identification_type (id, name, version) values(2, 'TI', 1)";
-    private final String insertIdentificationTypeRC =
+    private static final String insertIdentificationTypeRC =
         "insert into identification_type (id, name, version) values(3, 'RC', 0)";
 
     //Deletes
-    private final String deleteAllIdentificationTypes =
+    private static final String deleteAllIdentificationTypes =
         "delete from identification_type";
+
+    // AutoIncrement restarter
+    private static final String restartAutoincrement =
+        "ALTER TABLE identification_type ALTER COLUMN id RESTART WITH 1";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -42,6 +46,7 @@ public class IdentificationTypeServiceDBTest {
 
     @BeforeEach
     public void setupDatabase() {
+        jdbcTemplate.execute(restartAutoincrement);
         jdbcTemplate.execute(insertIdentificationTypeCC);
         jdbcTemplate.execute(insertIdentificationTypeTI);
         jdbcTemplate.execute(insertIdentificationTypeRC);
@@ -235,7 +240,7 @@ public class IdentificationTypeServiceDBTest {
                 id, identificationTypeDto);
 
         IdentificationTypeDto expected = new IdentificationTypeDto(
-            3, "RR", 0);
+            3, "RR", 1);
 
         assertEntityWithDto(expected, current);
     }
