@@ -28,7 +28,7 @@ public class SubjectDtoTest {
 
         assertThrows(
             ApiMissingInformationException.class,
-            () -> subjectDto.validate()
+            subjectDto::validate
         );
     }
 
@@ -40,18 +40,18 @@ public class SubjectDtoTest {
 
         assertThrows(
             ApiMissingInformationException.class,
-            () -> subjectDto.validate()
+            subjectDto::validate
         );
     }
 
     @Test
     @DisplayName("SubjectDtoTest - Should not throw exception " +
         "when name is not null and not empty")
-    public void testValidateObjectWhrenNameIsOk() {
+    public void testValidateObjectWhenNameIsOk() {
         SubjectDto subjectDto = new SubjectDto(1, "Some Name", 0);
 
         assertDoesNotThrow(
-            () -> subjectDto.validate()
+            subjectDto::validate
         );
     }
 }

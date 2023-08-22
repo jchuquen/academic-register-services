@@ -1,7 +1,7 @@
 package co.grow.plan.academic.register.admissions.identificationtype.application;
 
 import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationType;
-import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationTypeDao;
+import co.grow.plan.academic.register.admissions.identificationtype.domain.IIdentificationTypeDao;
 import co.grow.plan.academic.register.shared.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.shared.exceptions.ApiError;
 import co.grow.plan.academic.register.shared.generics.BasicService;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class IdentificationTypeService
     extends BasicService<
         IdentificationType,
-        IdentificationTypeDao,
+        IIdentificationTypeDao,
         IdentificationTypeDto,
         IdentificationTypeNewDto,
         IIdentificationTypeMapper
@@ -24,8 +24,8 @@ public class IdentificationTypeService
 
     @Autowired
     public IdentificationTypeService(
-        IdentificationTypeDao identificationTypeDao, IIdentificationTypeMapper mapper) {
-        super(identificationTypeDao, mapper);
+        IIdentificationTypeDao dao, IIdentificationTypeMapper mapper) {
+        super(dao, mapper);
     }
 
     // Validations
@@ -38,7 +38,7 @@ public class IdentificationTypeService
             super.dao.getByName(identificationTypeNewDto.getName());
 
         if (id == null) { // It's creating
-            if (!optionalIdentificationType.isEmpty()) {
+            if (optionalIdentificationType.isPresent()) {
                 throw new ApiConflictException(
                     new ApiError(
                         "Identification type with same name already exists"
@@ -47,7 +47,7 @@ public class IdentificationTypeService
             }
 
         } else { // It's updating
-            if (!optionalIdentificationType.isEmpty() &&
+            if (optionalIdentificationType.isPresent() &&
                 !id.equals(optionalIdentificationType.get().getId())) {
                 throw new ApiConflictException(
                     new ApiError(

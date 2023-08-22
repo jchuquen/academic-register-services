@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface CourseDao extends CrudRepository<Course, Integer> {
+public interface ICourseDao extends CrudRepository<Course, Integer> {
     Optional<Course> getByName(String name);
 }

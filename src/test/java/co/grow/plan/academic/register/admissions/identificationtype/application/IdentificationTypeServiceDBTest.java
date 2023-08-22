@@ -247,7 +247,7 @@ public class IdentificationTypeServiceDBTest {
 
     @Test
     @DisplayName("IdentificationTypeServiceTest - DeleteIdentificationType - " +
-        "Must delete the identification type")
+        "Must delete the information")
     public void testDeleteIdentificationType() {
         Integer id = 3;
 

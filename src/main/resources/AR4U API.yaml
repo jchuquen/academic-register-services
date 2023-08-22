@@ -1757,7 +1757,7 @@ components:
         name: 
           type: string
           example: I/2023    
-        isActive: 
+        active: 
           type: boolean
           example: true
     
@@ -1771,7 +1771,7 @@ components:
         name: 
           type: string
           example: I/2023    
-        isActive: 
+        active: 
           type: boolean
           example: true
         version:

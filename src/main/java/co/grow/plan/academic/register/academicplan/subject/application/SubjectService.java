@@ -1,7 +1,7 @@
 package co.grow.plan.academic.register.academicplan.subject.application;
 
 import co.grow.plan.academic.register.academicplan.subject.domain.Subject;
-import co.grow.plan.academic.register.academicplan.subject.domain.SubjectDao;
+import co.grow.plan.academic.register.academicplan.subject.domain.ISubjectDao;
 import co.grow.plan.academic.register.shared.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.shared.exceptions.ApiError;
 import co.grow.plan.academic.register.shared.generics.BasicService;
@@ -15,18 +15,18 @@ import java.util.Optional;
 public class SubjectService
     extends BasicService<
         Subject,
-        SubjectDao,
+    ISubjectDao,
         SubjectDto,
         SubjectNewDto,
         ISubjectMapper
         >
     implements ISubjectService {
 
-    private final String CONSTRAIN_NAME_ERROR = "Subject with same name already exists";
+    private static final String CONSTRAIN_NAME_ERROR = "Subject with same name already exists";
 
     @Autowired
     public SubjectService(
-        SubjectDao dao, ISubjectMapper mapper) {
+        ISubjectDao dao, ISubjectMapper mapper) {
         super(dao, mapper);
     }
 
@@ -40,14 +40,14 @@ public class SubjectService
             super.dao.getByName(subjectDto.getName());
 
         if (id == null) { // It's creating
-            if (!optionalSubject.isEmpty()) {
+            if (optionalSubject.isPresent()) {
                 throw new ApiConflictException(
                     new ApiError(CONSTRAIN_NAME_ERROR)
                 );
             }
 
         } else { // It's updating
-            if (!optionalSubject.isEmpty() &&
+            if (optionalSubject.isPresent() &&
                 !id.equals(optionalSubject.get().getId())) {
                 throw new ApiConflictException(
                     new ApiError(CONSTRAIN_NAME_ERROR)

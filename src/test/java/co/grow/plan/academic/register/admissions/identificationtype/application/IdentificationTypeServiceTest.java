@@ -2,7 +2,7 @@ package co.grow.plan.academic.register.admissions.identificationtype.application
 
 
 import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationType;
-import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationTypeDao;
+import co.grow.plan.academic.register.admissions.identificationtype.domain.IIdentificationTypeDao;
 import co.grow.plan.academic.register.shared.exceptions.ApiBadInformationException;
 import co.grow.plan.academic.register.shared.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.shared.exceptions.ApiMissingInformationException;
@@ -29,10 +29,10 @@ import static org.mockito.Mockito.*;
 public class IdentificationTypeServiceTest {
 
     @Mock
-    private IdentificationTypeDao identificationTypeDao;
+    private IIdentificationTypeDao identificationTypeDao;
 
     @Mock
-    private IIdentificationTypeMapper iIdentificationTypeMapper;
+    private IIdentificationTypeMapper identificationTypeMapper;
 
     @InjectMocks
     private IdentificationTypeService identificationTypeService;
@@ -58,7 +58,7 @@ public class IdentificationTypeServiceTest {
             );
 
         when(
-            iIdentificationTypeMapper.entityListToIdentifiableAndVersionableDtoList(
+            identificationTypeMapper.entityListToIdentifiableAndVersionableDtoList(
                 any(Iterable.class)
             )
         ).thenReturn(expectedList);
@@ -160,7 +160,7 @@ public class IdentificationTypeServiceTest {
             new IdentificationType(identificationTypeNewDto.getName());
 
         when(
-            iIdentificationTypeMapper.noIdentifiableAndVersionableDtoToEntity(
+            identificationTypeMapper.noIdentifiableAndVersionableDtoToEntity(
                 identificationTypeNewDto
             )
         ).thenReturn(identificationTypeNoPersisted);
@@ -176,7 +176,7 @@ public class IdentificationTypeServiceTest {
             new IdentificationTypeDto(15, "CC", 0);
 
         when(
-            iIdentificationTypeMapper.entityToIdentifiableAndVersionableDto(any(IdentificationType.class))
+            identificationTypeMapper.entityToIdentifiableAndVersionableDto(any(IdentificationType.class))
         ).thenReturn(expected);
 
         IdentificationTypeDto current =
@@ -224,7 +224,7 @@ public class IdentificationTypeServiceTest {
             15, "CC", 0);
 
         when(
-            iIdentificationTypeMapper.entityToIdentifiableAndVersionableDto(
+            identificationTypeMapper.entityToIdentifiableAndVersionableDto(
                 any(IdentificationType.class)
             )
         ).thenReturn(expected);
@@ -424,7 +424,7 @@ public class IdentificationTypeServiceTest {
             new IdentificationTypeNewDto(identificationTypeDto.getName());
 
         when(
-            iIdentificationTypeMapper.identifiableAndVersionableDtoToNoIdentifiableAndVersionableDto(
+            identificationTypeMapper.identifiableAndVersionableDtoToNoIdentifiableAndVersionableDto(
                 identificationTypeDto
             )
         ).thenReturn(identificationTypeNewDto);
@@ -433,7 +433,7 @@ public class IdentificationTypeServiceTest {
             5, "TI", 1);
 
         when(
-            iIdentificationTypeMapper.updateEntityFromNoIdentifiableAndVersionableDto(
+            identificationTypeMapper.updateEntityFromNoIdentifiableAndVersionableDto(
                 any(IdentificationType.class),
                 any(IdentificationTypeNewDto.class)
             )
@@ -443,7 +443,7 @@ public class IdentificationTypeServiceTest {
             5, "TI", 2);
 
         when(
-            iIdentificationTypeMapper.entityToIdentifiableAndVersionableDto(any(IdentificationType.class))
+            identificationTypeMapper.entityToIdentifiableAndVersionableDto(any(IdentificationType.class))
         ).thenReturn(expected);
 
         IdentificationType newIdentificationType = new IdentificationType(
@@ -488,7 +488,7 @@ public class IdentificationTypeServiceTest {
 
     @Test
     @DisplayName("IdentificationTypeServiceTest - DeleteIdentificationType - " +
-        "Must delete the information found")
+        "Must delete the information")
     public void testDeleteIdentificationType() {
         Integer id = 7;
 

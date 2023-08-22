@@ -28,7 +28,7 @@ public class IdentificationTypeDtoTest {
 
         assertThrows(
             ApiMissingInformationException.class,
-            () -> identificationTypeDto.validate()
+            identificationTypeDto::validate
         );
     }
 
@@ -41,19 +41,19 @@ public class IdentificationTypeDtoTest {
 
         assertThrows(
             ApiMissingInformationException.class,
-            () -> identificationTypeDto.validate()
+            identificationTypeDto::validate
         );
     }
 
     @Test
     @DisplayName("IdentificationTypeDtoTest - Should not throw exception " +
         "when name is not null and not empty")
-    public void testValidateObjectWhrenNameIsOk() {
+    public void testValidateObjectWhenNameIsOk() {
         IdentificationTypeDto identificationTypeDto =
             new IdentificationTypeDto(1, "Some Name", 0);
 
         assertDoesNotThrow(
-            () -> identificationTypeDto.validate()
+            identificationTypeDto::validate
         );
     }
 }

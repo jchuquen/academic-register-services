@@ -1,10 +1,12 @@
 package co.grow.plan.academic.register.academicplan.course.domain;
 
+import co.grow.plan.academic.register.shared.generics.IIdentifiableAndVersionable;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class Course {
+public class Course implements IIdentifiableAndVersionable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

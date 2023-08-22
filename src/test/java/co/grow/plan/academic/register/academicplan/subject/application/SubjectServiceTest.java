@@ -1,7 +1,7 @@
 package co.grow.plan.academic.register.academicplan.subject.application;
 
 import co.grow.plan.academic.register.academicplan.subject.domain.Subject;
-import co.grow.plan.academic.register.academicplan.subject.domain.SubjectDao;
+import co.grow.plan.academic.register.academicplan.subject.domain.ISubjectDao;
 import co.grow.plan.academic.register.shared.exceptions.ApiBadInformationException;
 import co.grow.plan.academic.register.shared.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.shared.exceptions.ApiMissingInformationException;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 public class SubjectServiceTest {
 
     @Mock
-    private SubjectDao subjectDao;
+    private ISubjectDao subjectDao;
 
     @Mock
     private ISubjectMapper subjectMapper;
