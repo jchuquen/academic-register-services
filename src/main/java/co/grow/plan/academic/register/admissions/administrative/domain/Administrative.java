@@ -3,7 +3,7 @@ package co.grow.plan.academic.register.admissions.administrative.domain;
 import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationType;
 import co.grow.plan.academic.register.security.user.domain.User;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 @Entity
 public final class Administrative extends User {

@@ -2,7 +2,7 @@ package co.grow.plan.academic.register.academicplan.period.domain;
 
 import co.grow.plan.academic.register.shared.generics.IIdentifiableAndVersionable;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 public class Period implements IIdentifiableAndVersionable {

@@ -2,7 +2,7 @@ package co.grow.plan.academic.register.admissions.person.domain;
 
 import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationType;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity

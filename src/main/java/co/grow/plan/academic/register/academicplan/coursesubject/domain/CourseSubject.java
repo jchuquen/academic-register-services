@@ -5,7 +5,7 @@ import co.grow.plan.academic.register.academicplan.subject.domain.Subject;
 import co.grow.plan.academic.register.admissions.teacher.domain.Teacher;
 import co.grow.plan.academic.register.shared.generics.IIdentifiableAndVersionable;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity

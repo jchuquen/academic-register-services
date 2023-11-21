@@ -4,7 +4,7 @@ import co.grow.plan.academic.register.admissions.identificationtype.domain.Ident
 import co.grow.plan.academic.register.admissions.person.domain.Person;
 import co.grow.plan.academic.register.security.rol.domain.Rol;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 public abstract class User extends Person {

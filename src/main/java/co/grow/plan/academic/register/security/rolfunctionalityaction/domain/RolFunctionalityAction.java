@@ -4,7 +4,7 @@ import co.grow.plan.academic.register.security.action.domain.Action;
 import co.grow.plan.academic.register.security.functionality.domain.Functionality;
 import co.grow.plan.academic.register.security.rol.domain.Rol;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity

@@ -1,6 +1,6 @@
 package co.grow.plan.academic.register.security.rol.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 public class Rol {

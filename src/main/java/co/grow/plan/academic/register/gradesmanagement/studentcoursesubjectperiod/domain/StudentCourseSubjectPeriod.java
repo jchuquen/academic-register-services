@@ -5,7 +5,7 @@ import co.grow.plan.academic.register.academicplan.coursesubject.domain.CourseSu
 import co.grow.plan.academic.register.academicplan.period.domain.Period;
 import co.grow.plan.academic.register.admissions.student.domain.Student;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(
