@@ -1,8 +1,10 @@
-package co.grow.plan.academic.register.academicplan.course.infrastructure;
+package temp.infrastructure.academicplan.course;
+
 
 import co.grow.plan.academic.register.academicplan.course.application.CourseDto;
 import co.grow.plan.academic.register.academicplan.course.application.CourseNewDto;
 import co.grow.plan.academic.register.academicplan.course.application.ICourseService;
+import co.grow.plan.academic.register.academicplan.course.infrastructure.ICourseRest;
 import co.grow.plan.academic.register.shared.generics.BasicRestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/academic-plans/courses")
 public class CourseRestController
     extends BasicRestController<
-        CourseDto,
-        CourseNewDto,
-        ICourseService
+    CourseDto,
+    CourseNewDto,
+    ICourseService
     >
     implements ICourseRest {
 

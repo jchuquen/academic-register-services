@@ -8,4 +8,6 @@ public class AcademicRegisterServicesApplication {
     public static void main(String[] args) {
         SpringApplication.run(AcademicRegisterServicesApplication.class, args);
     }
+
+
 }

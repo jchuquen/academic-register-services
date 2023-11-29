@@ -24,7 +24,6 @@ public class SubjectService
 
     private static final String CONSTRAIN_NAME_ERROR = "Subject with same name already exists";
 
-    @Autowired
     public SubjectService(
         ISubjectDao dao, ISubjectMapper mapper) {
         super(dao, mapper);

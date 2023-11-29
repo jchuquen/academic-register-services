@@ -1,4 +1,4 @@
-package co.grow.plan.academic.register.shared.helpers;
+package temp.shared.helpers;
 
 import co.grow.plan.academic.register.shared.exceptions.ApiBadInformationException;
 import co.grow.plan.academic.register.shared.exceptions.ApiConflictException;

@@ -18,7 +18,6 @@ public class PeriodRestController
     >
     implements IPeriodRest {
 
-    @Autowired
     public PeriodRestController(IPeriodService service) {
         super(service);
     }

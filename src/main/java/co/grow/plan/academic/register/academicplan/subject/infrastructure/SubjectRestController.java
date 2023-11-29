@@ -19,7 +19,6 @@ public class SubjectRestController
     >
     implements ISubjectRest {
 
-    @Autowired
     public SubjectRestController(ISubjectService service) {
         super(service);
     }

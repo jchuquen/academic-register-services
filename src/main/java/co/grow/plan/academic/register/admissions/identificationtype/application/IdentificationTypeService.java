@@ -1,12 +1,11 @@
 package co.grow.plan.academic.register.admissions.identificationtype.application;
 
-import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationType;
 import co.grow.plan.academic.register.admissions.identificationtype.domain.IIdentificationTypeDao;
+import co.grow.plan.academic.register.admissions.identificationtype.domain.IdentificationType;
 import co.grow.plan.academic.register.shared.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.shared.exceptions.ApiError;
 import co.grow.plan.academic.register.shared.generics.BasicService;
 import co.grow.plan.academic.register.shared.generics.IValidable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,7 +21,6 @@ public class IdentificationTypeService
     >
     implements IIdentificationTypeService {
 
-    @Autowired
     public IdentificationTypeService(
         IIdentificationTypeDao dao, IIdentificationTypeMapper mapper) {
         super(dao, mapper);

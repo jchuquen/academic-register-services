@@ -6,7 +6,6 @@ import co.grow.plan.academic.register.shared.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.shared.exceptions.ApiError;
 import co.grow.plan.academic.register.shared.generics.BasicService;
 import co.grow.plan.academic.register.shared.generics.IValidable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,7 +21,6 @@ public class CourseService
     >
     implements ICourseService {
 
-    @Autowired
     public CourseService(ICourseDao dao, ICourseMapper mapper) {
         super(dao, mapper);
     }
