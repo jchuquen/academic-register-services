@@ -1,7 +1,8 @@
-package temp.shared.generics;
+package temp.shared.application.generics;
+
+import temp.shared.domain.interfaces.IEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IBasicRepository<E extends IEntity> {
 
@@ -16,7 +17,7 @@ public interface IBasicRepository<E extends IEntity> {
      * @param id ID to get
      * @return Entity found
      */
-    Optional<E> findById(Integer id);
+    E findById(Integer id);
 
     /**
      * Persists or updates an entity

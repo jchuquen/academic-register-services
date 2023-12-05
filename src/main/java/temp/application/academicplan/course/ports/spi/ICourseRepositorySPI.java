@@ -1,6 +1,6 @@
 package temp.application.academicplan.course.ports.spi;
 
-import temp.shared.generics.IBasicRepository;
+import temp.shared.application.generics.IBasicRepository;
 import temp.domain.academicplan.course.model.Course;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package temp.infrastructure.academicplan.course;
+package temp.infrastructure.academicplan.course.controllers;
 
 
 import co.grow.plan.academic.register.academicplan.course.application.CourseDto;
