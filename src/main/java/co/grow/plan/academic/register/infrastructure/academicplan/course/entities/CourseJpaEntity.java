@@ -1,7 +1,7 @@
 package co.grow.plan.academic.register.infrastructure.academicplan.course.entities;
 
 import co.grow.plan.academic.register.shared.infrastructure.generics.IInfEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.*; // TODO: Avoid *
 import lombok.Data;
 
 @Entity

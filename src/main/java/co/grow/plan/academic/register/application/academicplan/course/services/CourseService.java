@@ -7,9 +7,7 @@ import co.grow.plan.academic.register.domain.academicplan.course.model.Course;
 import co.grow.plan.academic.register.shared.application.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.shared.application.exceptions.ApiError;
 import co.grow.plan.academic.register.shared.application.generics.BasicService;
-import org.springframework.stereotype.Service;
 
-@Service
 public final class CourseService extends BasicService<Course, ICourseRepositorySPI>
     implements ICourseServiceAPI {
 

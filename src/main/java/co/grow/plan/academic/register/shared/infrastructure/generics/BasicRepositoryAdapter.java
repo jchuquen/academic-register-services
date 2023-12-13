@@ -32,10 +32,10 @@ public class BasicRepositoryAdapter <
 
     @Override
     public D findById(Integer id) {
-        var course = repository.getById(id);
-        if (course != null) {
+        var course = repository.findById(id);
+        if (course.isPresent()) {
             return infrastructureVsDomainMapper
-                .infToDomCourse(course);
+                .infToDomCourse(course.get());
         } else {
             return null;
         }
