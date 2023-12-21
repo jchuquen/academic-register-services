@@ -1,6 +1,6 @@
 package co.grow.plan.academic.register.domain.academicplan.course.model;
 
-import co.grow.plan.academic.register.shared.domain.exceptions.ApiMissingInformationException;
+import co.grow.plan.academic.register.shared.application.exceptions.ApiMissingInformationException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

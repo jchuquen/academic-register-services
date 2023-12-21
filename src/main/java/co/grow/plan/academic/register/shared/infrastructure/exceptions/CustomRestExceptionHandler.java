@@ -1,7 +1,7 @@
 package co.grow.plan.academic.register.shared.infrastructure.exceptions;
 
 import co.grow.plan.academic.register.shared.application.exceptions.*;
-import co.grow.plan.academic.register.shared.domain.exceptions.ApiMissingInformationException;
+import co.grow.plan.academic.register.shared.application.exceptions.ApiMissingInformationException;
 import org.springframework.http.*;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;

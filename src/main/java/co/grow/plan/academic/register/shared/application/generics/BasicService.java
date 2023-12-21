@@ -1,8 +1,10 @@
 package co.grow.plan.academic.register.shared.application.generics;
 
 import co.grow.plan.academic.register.shared.application.exceptions.ApiError;
+import co.grow.plan.academic.register.shared.application.exceptions.ApiMissingInformationException;
 import co.grow.plan.academic.register.shared.application.exceptions.ApiNoEntityException;
 import co.grow.plan.academic.register.shared.application.helpers.EntitiesValidationsHelper;
+import co.grow.plan.academic.register.shared.domain.exceptions.EmptyPropertyException;
 import co.grow.plan.academic.register.shared.domain.interfaces.IEntity;
 import co.grow.plan.academic.register.shared.helpers.ObjectValidationsHelper;
 import lombok.Getter;
@@ -14,7 +16,7 @@ import java.util.List;
 @Getter
 public abstract class BasicService<
     E extends IEntity,
-    R extends IBasicRepository
+    R extends IBasicRepository<E>
     >
     implements IBasicService<E>
     {
@@ -35,7 +37,15 @@ public abstract class BasicService<
     @Override
     public E create(E entity) {
         ObjectValidationsHelper.validateNotNull(entity,"Entity");
-        entity.validate();
+        try {
+            entity.validate();
+        } catch (EmptyPropertyException e) {
+            throw new ApiMissingInformationException(
+                new ApiError(e.getMessage())
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         validateConstrains(null, entity);
         return (E) repository.save(entity);
     }
@@ -53,7 +63,15 @@ public abstract class BasicService<
         EntitiesValidationsHelper.validateVersionsMatchOrException(
             entity.version(), persistedEntity.version());
 
-        entity.validate();
+        try {
+            entity.validate();
+        } catch (EmptyPropertyException e) {
+            throw new ApiMissingInformationException(
+                new ApiError(e.getMessage())
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         validateConstrains(id, entity);
 
