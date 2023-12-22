@@ -47,7 +47,7 @@ public abstract class BasicService<
             throw new RuntimeException(e);
         }
         validateConstrains(null, entity);
-        return (E) repository.save(entity);
+        return repository.save(entity);
     }
 
     @Override
@@ -75,7 +75,7 @@ public abstract class BasicService<
 
         validateConstrains(id, entity);
 
-        return (E) repository.save(entity);
+        return repository.save(entity);
     }
 
     @Override
@@ -101,6 +101,6 @@ public abstract class BasicService<
                 )
             );
         }
-        return (E) entity;
+        return entity;
     }
 }

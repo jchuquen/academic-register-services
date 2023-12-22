@@ -2,7 +2,6 @@ package co.grow.plan.academic.register.shared.application.helpers;
 
 import co.grow.plan.academic.register.shared.application.exceptions.ApiBadInformationException;
 import co.grow.plan.academic.register.shared.application.exceptions.ApiError;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,7 +50,7 @@ public final class EntitiesValidationsHelperTest {
             ApiError apiError = apiException.getApiError();
             assertNotNull(apiError);
 
-            assertEquals("Parameter ID cannot be null",
+            assertEquals("ID one cannot be null",
                 apiError.getMainMessage());
 
             assertNull(apiError.getDetailedErrors());
@@ -69,7 +68,7 @@ public final class EntitiesValidationsHelperTest {
             ApiError apiError = apiException.getApiError();
             assertNotNull(apiError);
 
-            assertEquals("Parameter ID cannot be null",
+            assertEquals("ID one cannot be null",
                 apiError.getMainMessage());
 
             assertNull(apiError.getDetailedErrors());
@@ -90,7 +89,7 @@ public final class EntitiesValidationsHelperTest {
             ApiError apiError = apiException.getApiError();
             assertNotNull(apiError);
 
-            assertEquals("Object ID cannot be null",
+            assertEquals("ID two cannot be null",
                 apiError.getMainMessage());
 
             assertNull(apiError.getDetailedErrors());
@@ -111,7 +110,7 @@ public final class EntitiesValidationsHelperTest {
             ApiError apiError = apiException.getApiError();
             assertNotNull(apiError);
 
-            assertEquals("Parameter ID and object ID must match",
+            assertEquals("IDs must match",
                 apiError.getMainMessage());
 
             assertNull(apiError.getDetailedErrors());

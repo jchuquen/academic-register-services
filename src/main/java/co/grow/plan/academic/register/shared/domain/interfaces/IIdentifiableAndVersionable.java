@@ -6,11 +6,11 @@ public interface IIdentifiableAndVersionable {
      * Gets the entity's id
      * @return Entity's id
      */
-    int id();
+    Integer id();
 
     /**
      * Gets the Entity's info version
      * @return Entity's info version
      */
-    long version();
+    Long version();
 }

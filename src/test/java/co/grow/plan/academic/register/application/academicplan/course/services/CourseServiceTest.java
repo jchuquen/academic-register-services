@@ -16,7 +16,10 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,18 +36,18 @@ public final class CourseServiceTest {
 
         List<Course> courseList =
             List.of(
-                new Course(1, "Software Development", 0),
-                new Course(2, "Microprocessors", 1),
-                new Course(3, "Pure Maths", 0)
+                new Course(1, "Software Development", 0L),
+                new Course(2, "Microprocessors", 1L),
+                new Course(3, "Pure Maths", 0L)
             );
 
         when(repositorySPI.findAll()).thenReturn(courseList);
 
         List<Course> expectedList =
             List.of(
-                new Course(1, "Software Development", 0),
-                new Course(2, "Microprocessors", 1),
-                new Course(3, "Pure Maths", 0)
+                new Course(1, "Software Development", 0L),
+                new Course(2, "Microprocessors", 1L),
+                new Course(3, "Pure Maths", 0L)
             );
 
 
@@ -93,7 +96,7 @@ public final class CourseServiceTest {
         assertThrows(
             ApiMissingInformationException.class,
             () -> courseService.create(
-                new Course(1,null, 0)
+                new Course(1,null, 0L)
             )
         );
     }
@@ -102,10 +105,10 @@ public final class CourseServiceTest {
     public void shouldGenerateExceptionWhenNameExists() {
 
         Course course =
-            new Course(0, "Software Development", 0);
+            new Course(0, "Software Development", 0L);
 
         Course courseConflict =
-            new Course(99, "Software Development", 15);
+            new Course(99, "Software Development", 15L);
 
         when(
             repositorySPI.getByName(course.name())
@@ -126,11 +129,10 @@ public final class CourseServiceTest {
     public void shouldCreateNewCourseAndReturnPersistedInformation() {
 
         Course course = new Course(
-            1, "Software Development", 0
-        );
+            1, "Software Development", 0L);
 
         Course expected = new Course(
-            15, "Software Development", 0);
+            15, "Software Development", 0L);
 
         when(
             repositorySPI.save(course)
@@ -162,10 +164,10 @@ public final class CourseServiceTest {
     }
 
     @Test
-    public void shouldReturnCourseWhenItDoesExist() {
+    public void shouldReturnCourseWhenIdDoesExist() {
 
         Course course = new Course(
-            15, "Software Development", 0);
+            15, "Software Development", 0L);
 
         when(
             repositorySPI.findById(15)
@@ -202,7 +204,7 @@ public final class CourseServiceTest {
     public void shouldGenerateExceptionWhenIdsDoesNotMatchAtUpdating() {
         Integer id = 5;
         Course courseDto = new Course(
-            15, "Software Development", 0);
+            15, "Software Development", 0L);
 
         assertThrows(
             ApiBadInformationException.class,
@@ -215,7 +217,7 @@ public final class CourseServiceTest {
     public void shouldGenerateExceptionWhenIdDoesNotExistAtUpdating() {
         Integer id = 5;
         Course courseDto = new Course(
-            5, "Software Development", 0);
+            5, "Software Development", 0L);
 
         assertThrows(
             ApiNoEntityException.class,
@@ -229,10 +231,10 @@ public final class CourseServiceTest {
         Integer id = 5;
 
         Course sourceCourse = new Course(
-            5, "Software Development", 1);
+            5, "Software Development", 1L);
 
         Course targetCourse = new Course(
-            5, "Software Development", 3);
+            5, "Software Development", 3L);
 
         when(
             repositorySPI.findById(5)
@@ -253,10 +255,10 @@ public final class CourseServiceTest {
         Integer id = 5;
 
         Course sourceCourse = new Course(
-            5, null, 1);
+            5, null, 1L);
 
         Course targetCourse = new Course(
-            5, "Software Development", 1);
+            5, "Software Development", 1L);
 
         when(
             repositorySPI.findById(5)
@@ -277,10 +279,10 @@ public final class CourseServiceTest {
         Integer id = 5;
 
         Course sourceCourse = new Course(
-            5, " ", 1);
+            5, " ", 1L);
 
         Course targetCourse = new Course(
-            5, "Software Development", 1);
+            5, "Software Development", 1L);
 
         when(
             repositorySPI.findById(5)
@@ -301,13 +303,13 @@ public final class CourseServiceTest {
         Integer id = 5;
 
         Course sourceCourse = new Course(
-            5, "Microprocessors", 1);
+            5, "Microprocessors", 1L);
 
         Course targetCourse = new Course(
-            5, "Software Development", 1);
+            5, "Software Development", 1L);
 
         Course courseWithSameName = new Course(
-            15, "Microprocessors", 12);
+            15, "Microprocessors", 12L);
 
         when(
             repositorySPI.findById(5)
@@ -335,17 +337,17 @@ public final class CourseServiceTest {
         Integer id = 5;
 
         Course sourceCourse = new Course(
-            5, "Microprocessors", 1);
+            5, "Microprocessors", 1L);
 
         Course targetCourse = new Course(
-            5, "Software Development", 1);
+            5, "Software Development", 1L);
 
         when(
             repositorySPI.findById(5)
         ).thenReturn(targetCourse);
 
         Course updatedCourseRepo = new Course(
-            5, "Microprocessors", 2);
+            5, "Microprocessors", 2L);
 
         when(
             repositorySPI.save(sourceCourse)
@@ -385,7 +387,7 @@ public final class CourseServiceTest {
         Integer id = 7;
 
         Course course = new Course(
-            7, "Software Development", 1);
+            7, "Software Development", 1L);
 
         when(
             repositorySPI.findById(id)

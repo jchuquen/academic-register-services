@@ -1,8 +1,11 @@
 package co.grow.plan.academic.register.application.academicplan.course.services;
 
 import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
+import co.grow.plan.academic.register.application.academicplan.course.ports.api.ICourseServiceAPI;
+import co.grow.plan.academic.register.domain.academicplan.course.model.Course;
+import co.grow.plan.academic.register.shared.application.exceptions.ApiConflictException;
+import co.grow.plan.academic.register.shared.application.exceptions.ApiNoEntityException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,16 +34,17 @@ public class CourseServiceIntegrationTest {
 
     // AutoIncrement restarter
     private static final String restartAutoincrement =
-        "ALTER TABLE course ALTER COLUMN id RESTART WITH 1";
+        "ALTER TABLE course ALTER COLUMN id RESTART WITH 4";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ICourseService courseService;
+    private ICourseServiceAPI courseService;
 
     @BeforeEach
     public void setupDatabase() {
+        jdbcTemplate.execute(deleteAllCourses);
         jdbcTemplate.execute(restartAutoincrement);
         jdbcTemplate.execute(insertCourseSD);
         jdbcTemplate.execute(insertCourseTI);
@@ -48,80 +52,69 @@ public class CourseServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("CourseServiceTest - List - Must return a list of many objects")
-    public void testListCoursesManyObjects() {
+    public void shouldReturnAListOfCourses() {
 
-        List<CourseDto> expectedList =
+        List<Course> expectedList =
             List.of(
-                new CourseDto(1, "Software Development", 0),
-                new CourseDto(2, "Microprocessors", 1),
-                new CourseDto(3, "Pure Maths", 0)
+                new Course(1, "Software Development", 0L),
+                new Course(2, "Microprocessors", 1L),
+                new Course(3, "Pure Maths", 0L)
             );
 
-        List<CourseDto> currentList =
+        List<Course> currentList =
             courseService.list();
 
         assertEquals(expectedList.size(), currentList.size());
         for (int i = 0; i < expectedList.size(); i++) {
-            CourseDto expected = expectedList.get(i);
-            CourseDto current = currentList.get(i);
+            Course expected = expectedList.get(i);
+            Course current = currentList.get(i);
 
-            assertEntityWithDto(expected, current);
+            assertObjectProperties(expected, current);
         }
     }
-/*
+
     @Test
-    @DisplayName("CourseServiceTest - List - Must return an empty list")
-    public void testListCoursesEmptyList() {
+    public void shouldReturnAnEmptyListOfCourses() {
 
         jdbcTemplate.execute(deleteAllCourses);
 
-        List<CourseDto> expectedList =
+        List<Course> expectedList =
             List.of();
 
-        List<CourseDto> currentList =
+        List<Course> currentList =
             courseService.list();
 
         assertIterableEquals(expectedList, currentList);
     }
 
     @Test
-    @DisplayName("CourseServiceTest - Create - Must generate exception when " +
-        "breaking name constrain")
-    public void testCreateCourseBreakingConstrain1() {
+    public void shouldGenerateExceptionWhenNameExists() {
 
-        CourseNewDto courseNewDto =
-            new CourseNewDto("Software Development");
+        Course course =
+            new Course(null, "Software Development", null);
 
         assertThrows(
             ApiConflictException.class,
-            () -> courseService.create(
-                courseNewDto
-            )
+            () -> courseService.create(course)
         );
     }
 
     @Test
-    @DisplayName("CourseServiceTest - Create - Must create new record and " +
-        "return created information")
-    public void testCreateCourse() {
+    public void shouldCreateNewCourseAndReturnPersistedInformation() {
 
-        CourseNewDto courseNewDto =
-            new CourseNewDto("Astronomy");
+        Course course =
+            new Course(null, "Astronomy", null);
 
-        CourseDto expected =
-            new CourseDto(4, "Astronomy", 0);
+        Course expected =
+            new Course(4, "Astronomy", 0L);
 
-        CourseDto current =
-            courseService.create(courseNewDto);
+        Course current = courseService.create(course);
 
-        assertEntityWithDto(expected, current);
+        assertObjectProperties(expected, current);
     }
 
     @Test
-    @DisplayName("CourseServiceTest - FindById - Must generate exception " +
-        "when ID doesn't exist")
-    public void testFindCourseByIdIdDoesNotExist() {
+    public void shouldGenerateExceptionWhenIdDoesNotExistAtFindById() {
         assertThrows(
             ApiNoEntityException.class,
             () -> courseService.findById(9)
@@ -129,34 +122,30 @@ public class CourseServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("CourseServiceTest - FindById - Must return dto " +
-        "when ID does exist")
-    public void testFindCourseById() {
+    public void shouldReturnCourseWhenIdDoesExist() {
 
-        CourseDto expected = new CourseDto(
-            3, "Pure Maths", 0);
+        Course expected = new Course(
+            3, "Pure Maths", 0L);
 
-        CourseDto courseDto =
-            courseService.findById(expected.getId());
+        Course courseFound =
+            courseService.findById(expected.id());
 
-        assertEntityWithDto(expected, courseDto);
+        assertObjectProperties(expected, courseFound);
     }
 
     @Test
-    @DisplayName("CourseServiceTest - UpdateCourse - " +
-        "Must generate exception when ID doesn't exist")
-    public void testUpdateCourseIdDoesNotExist() {
+    public void shouldGenerateExceptionWhenIdDoesNotExistAtUpdating() {
         Integer id = 5;
-        CourseDto courseDto = new CourseDto(
-            5, "Astronomy", 0);
+        Course course = new Course(
+            5, "Astronomy", 0L);
 
         assertThrows(
             ApiNoEntityException.class,
             () -> courseService.update(
-                id, courseDto)
+                id, course)
         );
     }
-
+/*
     @Test
     @DisplayName("CourseServiceTest - UpdateCourse - " +
         "Must generate exception when Versions doesn't match")
@@ -259,17 +248,14 @@ public class CourseServiceIntegrationTest {
     public void clearDatabase() {
         jdbcTemplate.execute(deleteAllCourses);
     }
-
-    //Utils
-    private static void assertEntityWithDto(
-        CourseDto expected,
-        CourseDto current) {
-
-        assertEquals(expected.getId(), current.getId());
-        assertEquals(expected.getName(), current.getName());
-        assertEquals(expected.getVersion(), current.getVersion());
-    }
-
  */
+    // Utilities
+    private void assertObjectProperties(
+        Course expected,Course current) {
+
+        assertEquals(expected.id(), current.id());
+        assertEquals(expected.name(), current.name());
+        assertEquals(expected.version(), current.version());
+    }
 }
 

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestControllerAdvice
+@SuppressWarnings("unchecked")
 public final class  CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override

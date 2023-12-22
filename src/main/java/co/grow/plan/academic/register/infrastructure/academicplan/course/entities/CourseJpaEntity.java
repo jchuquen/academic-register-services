@@ -5,17 +5,18 @@ import jakarta.persistence.*; // TODO: Avoid *
 import lombok.Data;
 
 @Entity
+@Table(name = "course")
 @Data
 public class CourseJpaEntity implements IInfEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
-    private int id;
+    private Integer id;
 
     @Column(unique = true, nullable = false)
     private String name;
 
     @Version
-    private long version;
+    private Long version;
 }
