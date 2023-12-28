@@ -5,11 +5,9 @@ import co.grow.plan.academic.register.shared.domain.interfaces.IEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 @AllArgsConstructor
 @Getter
 public class BasicRepositoryAdapter <

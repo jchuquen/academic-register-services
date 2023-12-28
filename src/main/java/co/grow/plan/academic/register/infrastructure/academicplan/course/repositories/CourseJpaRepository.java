@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface CourseJPARepository extends JpaRepository<CourseJpaEntity, Integer> {
+public interface CourseJpaRepository
+    extends JpaRepository<CourseJpaEntity, Integer>
+{
     Optional<CourseJpaEntity> getByName(String name);
 }

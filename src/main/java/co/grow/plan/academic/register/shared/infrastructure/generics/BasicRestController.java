@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
 @AllArgsConstructor
 @Getter
 public class BasicRestController<

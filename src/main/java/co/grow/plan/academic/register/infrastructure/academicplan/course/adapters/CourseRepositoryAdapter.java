@@ -4,7 +4,7 @@ import co.grow.plan.academic.register.application.academicplan.course.ports.spi.
 import co.grow.plan.academic.register.domain.academicplan.course.model.Course;
 import co.grow.plan.academic.register.infrastructure.academicplan.course.entities.CourseJpaEntity;
 import co.grow.plan.academic.register.infrastructure.academicplan.course.mappers.IInfrastructureVsDomainCourseEntityMapper;
-import co.grow.plan.academic.register.infrastructure.academicplan.course.repositories.CourseJPARepository;
+import co.grow.plan.academic.register.infrastructure.academicplan.course.repositories.CourseJpaRepository;
 import co.grow.plan.academic.register.shared.infrastructure.generics.BasicRepositoryAdapter;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +15,15 @@ public final class CourseRepositoryAdapter
     extends BasicRepositoryAdapter<
     CourseJpaEntity,
     Course,
-    CourseJPARepository,
+    CourseJpaRepository,
     IInfrastructureVsDomainCourseEntityMapper
     >
     implements ICourseRepositorySPI {
 
-    public CourseRepositoryAdapter(CourseJPARepository repository, IInfrastructureVsDomainCourseEntityMapper mapper) {
+    public CourseRepositoryAdapter(
+        CourseJpaRepository repository,
+        IInfrastructureVsDomainCourseEntityMapper mapper
+    ) {
         super(repository, mapper);
     }
 

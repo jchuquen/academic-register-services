@@ -6,7 +6,6 @@ import co.grow.plan.academic.register.infrastructure.academicplan.course.dtos.Co
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,7 +19,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(classes = AcademicRegisterServicesApplication.class)
@@ -61,8 +59,7 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - List - Must return a list of many objects")
-    public void testListCoursesManyObjects() throws Exception {
+    public void shouldReturnAListOfCourses() throws Exception {
 
         mockMvc.perform(get("/v1/academic-plans/courses")).
             andExpect(status().isOk()).
@@ -83,8 +80,7 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - List - Must return an empty list")
-    public void testListCoursesEmptyList() throws Exception {
+    public void shouldReturnAnEmptyListOfCourses() throws Exception {
 
         jdbcTemplate.execute(deleteAllCourses);
 
@@ -94,9 +90,7 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - Create - Must generate exception when " +
-        "Object parameter is null")
-    public void testCreateCourseBadRequest1() throws Exception {
+    public void shouldGenerateBadRequestWhenCourseIsNull() throws Exception {
 
         mockMvc.perform(
             post("/v1/academic-plans/courses").
@@ -105,9 +99,7 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - Create - Must generate exception when " +
-        "name is null")
-    public void testCreateCourseBadRequest2() throws Exception {
+    public void shouldGenerateBadRequestWhenNameIsNull() throws Exception {
 
         CourseCreationalDto courseNewDto =
             new CourseCreationalDto(null);
@@ -120,9 +112,7 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - Create - Must generate exception when " +
-        "breaking name constraint")
-    public void testCreateCourseBreakingConstrain1() throws Exception {
+    public void shouldGenerateConflictExceptionWhenNameExists() throws Exception {
 
         CourseCreationalDto courseNewDto =
             new CourseCreationalDto("Software Development");
@@ -135,9 +125,7 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - Create - Must create new record and " +
-        "return created information")
-    public void testCreateCourse() throws Exception{
+    public void shouldCreateNewCourseAndReturnPersistedInformation() throws Exception{
 
         CourseCreationalDto courseNewDto =
             new CourseCreationalDto("Painting");
@@ -153,17 +141,13 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - FindById - Must generate exception " +
-        "when ID doesn't exist")
-    public void testFindCourseByIdIdDoesNotExist() throws Exception {
+    public void shouldGenerateExceptionWhenIdDoesNotExistAtGetById() throws Exception {
         mockMvc.perform(get("/v1/academic-plans/courses/{id}", 8)).
             andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - FindById - Must return dto " +
-        "when ID does exist")
-    public void testFindCourseById() throws Exception {
+    public void shouldReturnCourseWhenIdDoesExist() throws Exception {
         mockMvc.perform(get("/v1/academic-plans/courses/{id}", 2)).
             andExpect(status().isOk()).
             andExpect(jsonPath("$.id", is(2))).
@@ -172,9 +156,7 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - UpdateCourse - " +
-        "Must generate exception when Course object is null")
-    public void testUpdateCourseObjectNull() throws Exception {
+    public void shouldGenerateExceptionWhenObjectNullAtUpdating() throws Exception {
         mockMvc.perform(
             put("/v1/academic-plans/courses/{id}", 3).
                 contentType(MediaType.APPLICATION_JSON)
@@ -182,9 +164,7 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - UpdateCourse - " +
-        "Must generate exception when IDs doesn't match")
-    public void testUpdateCourseIdsDoesNotMatch() throws Exception {
+    public void shouldGenerateExceptionWhenIdsDoesNotMatchAtUpdating() throws Exception {
         Integer id = 5;
         CourseFullDto courseDto = new CourseFullDto(
             4, "Software Development", 0L);
@@ -197,12 +177,10 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - UpdateCourse - " +
-        "Must generate exception when ID doesn't exist")
-    public void testUpdateCourseIdDoesNotExist() throws Exception {
+    public void shouldGenerateExceptionWhenIdDoesNotExistAtUpdating() throws Exception {
         Integer id = 5;
         CourseFullDto courseDto = new CourseFullDto(
-            4, "Software Development", 0L);
+            5, "Software Development", 0L);
 
         mockMvc.perform(
             put("/v1/academic-plans/courses/{id}", id).
@@ -212,9 +190,7 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - UpdateCourse - " +
-        "Must generate exception when Versions doesn't match")
-    public void testUpdateCourseVersionsDoesNotMatch() throws Exception {
+    public void shouldGenerateExceptionWhenVersionsDoesNotMatchAtUpdating() throws Exception {
         Integer id = 3;
 
         CourseFullDto courseDto = new CourseFullDto(
@@ -228,9 +204,7 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - UpdateCourse - " +
-        "Must generate exception when Name is null")
-    public void testUpdateCourseNullName() throws Exception {
+    public void shouldGenerateExceptionWhenNameNullAtUpdating() throws Exception {
         Integer id = 3;
 
         CourseFullDto courseDto = new CourseFullDto(
@@ -244,9 +218,7 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - UpdateCourse - " +
-        "Must generate exception when Name is empty")
-    public void testUpdateCourseEmptyName() throws Exception {
+    public void shouldGenerateExceptionWhenNameIsEmptyAtUpdating() throws Exception {
         Integer id = 3;
 
         CourseFullDto courseDto = new CourseFullDto(
@@ -260,9 +232,7 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - UpdateCourse - " +
-        "Must generate exception when Name already exists")
-    public void testUpdateCourseNameExists() throws Exception{
+    public void shouldGenerateExceptionWhenNameExistsAtUpdating() throws Exception{
         Integer id = 3;
 
         CourseFullDto courseDto = new CourseFullDto(
@@ -276,9 +246,7 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - UpdateCourse - " +
-        "Must update and return new persisted info")
-    public void testUpdateCourse() throws Exception {
+    public void shouldUpdateCourseAndReturnPersistedInformation() throws Exception {
         Integer id = 2;
 
         CourseFullDto courseDto = new CourseFullDto(
@@ -295,18 +263,14 @@ public class CourseRestControllerTest {
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - DeleteCourse - " +
-        "Must generate exception when ID doesn't exist")
-    public void testDeleteCourseIdDoesNotExist() throws Exception{
+    public void shouldGenerateExceptionWhenIdDoesNotExistAtDeleting() throws Exception{
         mockMvc.perform(
             delete("/v1/academic-plans/courses/{id}", 9)
         ).andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("CourseRestControllerTest - DeleteCourse - " +
-        "Must delete the information found")
-    public void testDeleteCourse() throws Exception {
+    public void shouldDeleteTheCourse() throws Exception {
         mockMvc.perform(
             delete("/v1/academic-plans/courses/{id}", 2)
         ).andExpect(status().isOk());
