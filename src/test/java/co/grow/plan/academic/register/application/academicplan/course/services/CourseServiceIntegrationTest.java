@@ -4,7 +4,9 @@ import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
 import co.grow.plan.academic.register.application.academicplan.course.ports.api.ICourseServiceAPI;
 import co.grow.plan.academic.register.domain.academicplan.course.model.Course;
 import co.grow.plan.academic.register.shared.application.exceptions.ApiConflictException;
+import co.grow.plan.academic.register.shared.application.exceptions.ApiMissingInformationException;
 import co.grow.plan.academic.register.shared.application.exceptions.ApiNoEntityException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +46,6 @@ public class CourseServiceIntegrationTest {
 
     @BeforeEach
     public void setupDatabase() {
-        jdbcTemplate.execute(deleteAllCourses);
         jdbcTemplate.execute(restartAutoincrement);
         jdbcTemplate.execute(insertCourseSD);
         jdbcTemplate.execute(insertCourseTI);
@@ -145,31 +146,27 @@ public class CourseServiceIntegrationTest {
                 id, course)
         );
     }
-/*
+
     @Test
-    @DisplayName("CourseServiceTest - UpdateCourse - " +
-        "Must generate exception when Versions doesn't match")
-    public void testUpdateCourseVersionsDoesNotMatch() {
+    public void shouldGenerateExceptionWhenVersionsDoesNotMatchAtUpdating() {
         Integer id = 3;
 
-        CourseDto courseDto = new CourseDto(
-            3, "Pure Maths", 3);
+        Course course = new Course(
+            3, "Pure Maths", 3L);
 
         assertThrows(
             ApiConflictException.class,
             () -> courseService.update(
-                id, courseDto)
+                id, course)
         );
     }
 
     @Test
-    @DisplayName("CourseServiceTest - UpdateCourse - " +
-        "Must generate exception when Name is null")
-    public void testUpdateCourseNullName() {
+    public void shouldGenerateExceptionWhenNameNullAtUpdating() {
         Integer id = 3;
 
-        CourseDto courseDto = new CourseDto(
-            3, null, 0);
+        Course courseDto = new Course(
+            3, null, 0L);
 
         assertThrows(
             ApiMissingInformationException.class,
@@ -179,29 +176,25 @@ public class CourseServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("CourseServiceTest - UpdateCourse - " +
-        "Must generate exception when Name is empty")
-    public void testUpdateCourseEmptyName() {
+    public void shouldGenerateExceptionWhenNameIsEmptyAtUpdating() {
         Integer id = 3;
 
-        CourseDto courseDto = new CourseDto(
-            3, " ", 0);
+        Course course = new Course(
+            3, " ", 0L);
 
         assertThrows(
             ApiMissingInformationException.class,
             () -> courseService.update(
-                id, courseDto)
+                id, course)
         );
     }
 
     @Test
-    @DisplayName("CourseServiceTest - UpdateCourse - " +
-        "Must generate exception when Name already exists")
-    public void testUpdateCourseNameExists() {
+    public void shouldGenerateExceptionWhenNameExistsAtUpdating() {
         Integer id = 3;
 
-        CourseDto courseDto = new CourseDto(
-            3, "Software Development", 0);
+        Course courseDto = new Course(
+            3, "Software Development", 0L);
 
         assertThrows(
             ApiConflictException.class,
@@ -211,28 +204,24 @@ public class CourseServiceIntegrationTest {
     }
 
     @Test
-    @DisplayName("CourseServiceTest - UpdateCourse - " +
-        "Must update and return new persisted info")
-    public void testUpdateCourse() {
+    public void shouldUpdateCourseAndReturnPersistedInformation() {
         Integer id = 3;
 
-        CourseDto courseDto = new CourseDto(
-            3, "RR", 0);
+        Course course = new Course(
+            3, "RR", 0L);
 
-        CourseDto current =
+        Course current =
             courseService.update(
-                id, courseDto);
+                id, course);
 
-        CourseDto expected = new CourseDto(
-            3, "RR", 1);
+        Course expected = new Course(
+            3, "RR", 1L);
 
-        assertEntityWithDto(expected, current);
+        assertObjectProperties(expected, current);
     }
 
     @Test
-    @DisplayName("CourseServiceTest - DeleteCourse - " +
-        "Must delete the information")
-    public void testDeleteCourse() {
+    public void shouldDeleteTheCourse() {
         Integer id = 3;
 
         courseService.delete(id);
@@ -248,7 +237,7 @@ public class CourseServiceIntegrationTest {
     public void clearDatabase() {
         jdbcTemplate.execute(deleteAllCourses);
     }
- */
+
     // Utilities
     private void assertObjectProperties(
         Course expected,Course current) {
