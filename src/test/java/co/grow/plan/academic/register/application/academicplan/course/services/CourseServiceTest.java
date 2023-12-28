@@ -96,7 +96,7 @@ public final class CourseServiceTest {
         assertThrows(
             ApiMissingInformationException.class,
             () -> courseService.create(
-                new Course(1,null, 0L)
+                new Course(null,null, null)
             )
         );
     }
@@ -105,7 +105,7 @@ public final class CourseServiceTest {
     public void shouldGenerateExceptionWhenNameExists() {
 
         Course course =
-            new Course(0, "Software Development", 0L);
+            new Course(null, "Software Development", null);
 
         Course courseConflict =
             new Course(99, "Software Development", 15L);
@@ -129,7 +129,7 @@ public final class CourseServiceTest {
     public void shouldCreateNewCourseAndReturnPersistedInformation() {
 
         Course course = new Course(
-            1, "Software Development", 0L);
+            null, "Software Development", null);
 
         Course expected = new Course(
             15, "Software Development", 0L);
