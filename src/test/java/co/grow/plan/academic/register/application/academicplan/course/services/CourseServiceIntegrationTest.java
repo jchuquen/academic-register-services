@@ -25,9 +25,9 @@ public class CourseServiceIntegrationTest {
     // Inserts
     private static final String insertCourseSD =
         "insert into course (id, name, version) values(1, 'Software Development', 0)";
-    private static final String insertCourseTI =
+    private static final String insertCourseMP =
         "insert into course (id, name, version) values(2, 'Microprocessors', 1)";
-    private static final String insertCourseRC =
+    private static final String insertCoursePM =
         "insert into course (id, name, version) values(3, 'Pure Maths', 0)";
 
     //Deletes
@@ -48,8 +48,8 @@ public class CourseServiceIntegrationTest {
     public void setupDatabase() {
         jdbcTemplate.execute(restartAutoincrement);
         jdbcTemplate.execute(insertCourseSD);
-        jdbcTemplate.execute(insertCourseTI);
-        jdbcTemplate.execute(insertCourseRC);
+        jdbcTemplate.execute(insertCourseMP);
+        jdbcTemplate.execute(insertCoursePM);
     }
 
     @Test
