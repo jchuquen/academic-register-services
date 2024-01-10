@@ -6,7 +6,6 @@ import co.grow.plan.academic.register.shared.application.exceptions.ApiMissingIn
 import co.grow.plan.academic.register.shared.application.exceptions.ApiNoEntityException;
 import co.grow.plan.academic.register.shared.domain.interfaces.IBasicEntity;
 import co.grow.plan.academic.register.shared.helpers.AssertionHelper;
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -16,7 +15,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@AllArgsConstructor
 public abstract class BasicServiceTest<
     E extends IBasicEntity,
     R extends IBasicRepositoryForBasicEntity<E>,
@@ -244,8 +242,6 @@ public abstract class BasicServiceTest<
             findById(id);
     }
 
-
-
     @Test
     public void shouldGenerateExceptionWhenNameIsEmptyAtUpdating() {
         Integer id = getIdToUpdateOrDelete();
@@ -267,8 +263,6 @@ public abstract class BasicServiceTest<
         verify(getRepository(), times(1)).
             findById(id);
     }
-
-
 
     @Test
     public void shouldGenerateExceptionWhenNameExistsAtUpdating() {

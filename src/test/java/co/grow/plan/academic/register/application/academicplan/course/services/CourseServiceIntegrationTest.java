@@ -1,14 +1,10 @@
 package co.grow.plan.academic.register.application.academicplan.course.services;
 
 import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
-import co.grow.plan.academic.register.application.academicplan.course.ports.api.ICourseServiceAPI;
+import co.grow.plan.academic.register.application.academicplan.course.ports.spi.ICourseRepositorySPI;
 import co.grow.plan.academic.register.domain.academicplan.course.model.Course;
-import co.grow.plan.academic.register.shared.application.exceptions.ApiConflictException;
-import co.grow.plan.academic.register.shared.application.exceptions.ApiMissingInformationException;
-import co.grow.plan.academic.register.shared.application.exceptions.ApiNoEntityException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import co.grow.plan.academic.register.shared.application.generics.BasicServiceIntegrationTest;
+import co.grow.plan.academic.register.shared.application.generics.PropertyError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,235 +12,126 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(classes = AcademicRegisterServicesApplication.class)
-public class CourseServiceIntegrationTest {
-
-    // Inserts
-    private static final String insertCourseSD =
-        "insert into course (id, name, version) values(1, 'Software Development', 0)";
-    private static final String insertCourseMP =
-        "insert into course (id, name, version) values(2, 'Microprocessors', 1)";
-    private static final String insertCoursePM =
-        "insert into course (id, name, version) values(3, 'Pure Maths', 0)";
-
-    //Deletes
-    private static final String deleteAllCourses =
-        "delete from course";
-
-    // AutoIncrement restarter
-    private static final String restartAutoincrement =
-        "ALTER TABLE course ALTER COLUMN id RESTART WITH 4";
+public class CourseServiceIntegrationTest extends BasicServiceIntegrationTest<
+    Course,
+    ICourseRepositorySPI,
+    CourseService
+    > {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private ICourseServiceAPI courseService;
-
-    @BeforeEach
-    public void setupDatabase() {
-        jdbcTemplate.execute(restartAutoincrement);
-        jdbcTemplate.execute(insertCourseSD);
-        jdbcTemplate.execute(insertCourseMP);
-        jdbcTemplate.execute(insertCoursePM);
+    public CourseServiceIntegrationTest(
+        JdbcTemplate jdbcTemplate, CourseService courseService
+    ) {
+        super(jdbcTemplate, courseService);
     }
 
-    @Test
-    public void shouldReturnAListOfCourses() {
 
-        List<Course> expectedList =
-            List.of(
-                new Course(1, "Software Development", 0L),
-                new Course(2, "Microprocessors", 1L),
-                new Course(3, "Pure Maths", 0L)
-            );
+    @Override
+    protected String getRestartAutoincrementSentence() {
+        return "ALTER TABLE course ALTER COLUMN id RESTART WITH 4";
+    }
 
-        List<Course> currentList =
-            courseService.list();
+    @Override
+    protected String getFirstExampleInsertSentence() {
+        return "insert into course (id, name, version) values(1, 'Software Development', 0)";
+    }
 
-        assertEquals(expectedList.size(), currentList.size());
-        for (int i = 0; i < expectedList.size(); i++) {
-            Course expected = expectedList.get(i);
-            Course current = currentList.get(i);
+    @Override
+    protected String getSecondExampleInsertSentence() {
+        return "insert into course (id, name, version) values(2, 'Microprocessors', 1)";
+    }
 
-            assertObjectProperties(expected, current);
+    @Override
+    protected String getThirdExampleInsertSentence() {
+        return "insert into course (id, name, version) values(3, 'Pure Maths', 0)";
+    }
+
+    @Override
+    protected String getDeleteAllSentence() {
+        return "delete from course";
+    }
+
+    @Override
+    protected List<Course> getEntitiesToList() {
+        return List.of(
+            new Course(1, "Software Development", 0L),
+            new Course(2, "Microprocessors", 1L),
+            new Course(3, "Pure Maths", 0L)
+        );
+    }
+
+    @Override
+    protected Course getConflictedEntityAtCreate() {
+        return new Course(
+            null, "Software Development", null
+        );
+    }
+
+    @Override
+    protected Course getEntityToCreate() {
+        return new Course(
+            null, "Astronomy", null
+        );
+    }
+
+    @Override
+    protected Course getCreatedEntity() {
+        return new Course(
+            4, "Astronomy", 0L
+        );
+    }
+
+    @Override
+    protected Course getPersistedEntity() {
+        return new Course(
+            3, "Pure Maths", 0L
+        );
+    }
+
+    @Override
+    protected Integer getWrongIdToUpdateOrDelete() {
+        return 9;
+    }
+
+    @Override
+    protected Course getWrongEntityWithUpdatedInfo() {
+        return new Course(
+            9, "Astronomy", 0L
+        );
+    }
+
+    @Override
+    protected Course getConflictedEntityAtUpdating() {
+        return new Course(
+            3, "Software Development", 0L
+        );
+    }
+
+    @Override
+    protected Course getEntityWithUpdatedInfo(PropertyError propertyError) {
+        String name = "Pure Physics";
+        Long version = 0L;
+
+        switch (propertyError) {
+            case WRONG_VERSION -> version = 17L;
+            case EMPTY_NAME -> name = "   ";
+            case NULL_NAME -> name = null;
         }
+        return new Course(3, name, version);
     }
 
-    @Test
-    public void shouldReturnAnEmptyListOfCourses() {
-
-        jdbcTemplate.execute(deleteAllCourses);
-
-        List<Course> expectedList =
-            List.of();
-
-        List<Course> currentList =
-            courseService.list();
-
-        assertIterableEquals(expectedList, currentList);
+    @Override
+    protected Integer getIdToUpdateOrDelete() {
+        return 3;
     }
 
-    @Test
-    public void shouldGenerateExceptionWhenNameExists() {
-
-        Course course =
-            new Course(null, "Software Development", null);
-
-        assertThrows(
-            ApiConflictException.class,
-            () -> courseService.create(course)
+    @Override
+    protected Course getUpdatedEntity() {
+        return new Course(
+            3, "Pure Physics", 1L
         );
-    }
-
-    @Test
-    public void shouldCreateNewCourseAndReturnPersistedInformation() {
-
-        Course course =
-            new Course(null, "Astronomy", null);
-
-        Course expected =
-            new Course(4, "Astronomy", 0L);
-
-        Course current = courseService.create(course);
-
-        assertObjectProperties(expected, current);
-    }
-
-    @Test
-    public void shouldGenerateExceptionWhenIdDoesNotExistAtFindById() {
-        assertThrows(
-            ApiNoEntityException.class,
-            () -> courseService.findById(9)
-        );
-    }
-
-    @Test
-    public void shouldReturnCourseWhenIdDoesExist() {
-
-        Course expected = new Course(
-            3, "Pure Maths", 0L);
-
-        Course courseFound =
-            courseService.findById(expected.id());
-
-        assertObjectProperties(expected, courseFound);
-    }
-
-    @Test
-    public void shouldGenerateExceptionWhenIdDoesNotExistAtUpdating() {
-        Integer id = 5;
-        Course course = new Course(
-            5, "Astronomy", 0L);
-
-        assertThrows(
-            ApiNoEntityException.class,
-            () -> courseService.update(
-                id, course)
-        );
-    }
-
-    @Test
-    public void shouldGenerateExceptionWhenVersionsDoesNotMatchAtUpdating() {
-        Integer id = 3;
-
-        Course course = new Course(
-            3, "Pure Maths", 3L);
-
-        assertThrows(
-            ApiConflictException.class,
-            () -> courseService.update(
-                id, course)
-        );
-    }
-
-    @Test
-    public void shouldGenerateExceptionWhenNameNullAtUpdating() {
-        Integer id = 3;
-
-        Course courseDto = new Course(
-            3, null, 0L);
-
-        assertThrows(
-            ApiMissingInformationException.class,
-            () -> courseService.update(
-                id, courseDto)
-        );
-    }
-
-    @Test
-    public void shouldGenerateExceptionWhenNameIsEmptyAtUpdating() {
-        Integer id = 3;
-
-        Course course = new Course(
-            3, " ", 0L);
-
-        assertThrows(
-            ApiMissingInformationException.class,
-            () -> courseService.update(
-                id, course)
-        );
-    }
-
-    @Test
-    public void shouldGenerateExceptionWhenNameExistsAtUpdating() {
-        Integer id = 3;
-
-        Course courseDto = new Course(
-            3, "Software Development", 0L);
-
-        assertThrows(
-            ApiConflictException.class,
-            () -> courseService.update(
-                id, courseDto)
-        );
-    }
-
-    @Test
-    public void shouldUpdateCourseAndReturnPersistedInformation() {
-        Integer id = 3;
-
-        Course course = new Course(
-            3, "RR", 0L);
-
-        Course current =
-            courseService.update(
-                id, course);
-
-        Course expected = new Course(
-            3, "RR", 1L);
-
-        assertObjectProperties(expected, current);
-    }
-
-    @Test
-    public void shouldDeleteTheCourse() {
-        Integer id = 3;
-
-        courseService.delete(id);
-
-        assertThrows(
-            ApiNoEntityException.class,
-            () -> courseService.findById(3)
-        );
-
-    }
-
-    @AfterEach
-    public void clearDatabase() {
-        jdbcTemplate.execute(deleteAllCourses);
-    }
-
-    // Utilities
-    private void assertObjectProperties(
-        Course expected,Course current) {
-
-        assertEquals(expected.id(), current.id());
-        assertEquals(expected.name(), current.name());
-        assertEquals(expected.version(), current.version());
     }
 }
 
