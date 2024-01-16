@@ -2,8 +2,8 @@ package co.grow.plan.academic.register.application.academicplan.course.services;
 
 import co.grow.plan.academic.register.application.academicplan.course.ports.spi.ICourseRepositorySPI;
 import co.grow.plan.academic.register.domain.academicplan.course.model.Course;
-import co.grow.plan.academic.register.shared.application.generics.BasicServiceTest;
-import co.grow.plan.academic.register.shared.application.generics.PropertyError;
+import co.grow.plan.academic.register.shared.application.generics.services.BasicServiceTest;
+import co.grow.plan.academic.register.shared.application.generics.services.PropertyError;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

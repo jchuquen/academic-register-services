@@ -8,9 +8,9 @@ public interface IBasicInfrastructureVsDomainEntityMapper<
     D extends IEntity,
     I extends IInfEntity> {
 
-    D infToDomCourse(I infEntity);
+    D infToDomEntity(I infEntity);
 
-    List<D> infToDomCourseList(List<I> list);
+    List<D> infToDomEntityList(List<I> list);
 
-    I domToInfCourse(D entity);
+    I domToInfEntity(D entity);
 }

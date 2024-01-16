@@ -1,8 +1,8 @@
-package co.grow.plan.academic.register.infrastructure.academicplan.course.controllers;
+package co.grow.plan.academic.register.infrastructure.admissions.identificationtype.controllers;
 
 import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
-import co.grow.plan.academic.register.infrastructure.academicplan.course.dtos.CourseCreationalDto;
-import co.grow.plan.academic.register.infrastructure.academicplan.course.dtos.CourseFullDto;
+import co.grow.plan.academic.register.infrastructure.admissions.identificationtype.dtos.IdentificationTypeCreationalDto;
+import co.grow.plan.academic.register.infrastructure.admissions.identificationtype.dtos.IdentificationTypeFullDto;
 import co.grow.plan.academic.register.shared.application.generics.services.PropertyError;
 import co.grow.plan.academic.register.shared.infrastructure.generics.controllers.BasicRestControllerTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,13 +18,13 @@ import java.util.List;
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(classes = AcademicRegisterServicesApplication.class)
 @AutoConfigureMockMvc
-public class CourseRestControllerTest extends BasicRestControllerTest<
-        CourseFullDto,
-        CourseCreationalDto
+public class IdentificationTypeRestControllerTest extends BasicRestControllerTest<
+        IdentificationTypeFullDto,
+        IdentificationTypeCreationalDto
     > {
 
     @Autowired
-    public CourseRestControllerTest(
+    public IdentificationTypeRestControllerTest (
         JdbcTemplate jdbcTemplate,
         MockMvc mockMvc,
         ObjectMapper objectMapper)
@@ -32,60 +32,59 @@ public class CourseRestControllerTest extends BasicRestControllerTest<
         super(jdbcTemplate, mockMvc, objectMapper);
     }
 
-
     @Override
     protected String getRestartAutoincrementSentence() {
-        return "ALTER TABLE course ALTER COLUMN id RESTART WITH 4";
+        return "ALTER TABLE identification_type ALTER COLUMN id RESTART WITH 4";
     }
 
     @Override
     protected String getFirstExampleInsertSentence() {
-        return "insert into course (id, name, version) values(1, 'Software Development', 0)";
+        return "insert into identification_type (id, name, version) values(1, 'CC', 0)";
     }
 
     @Override
     protected String getSecondExampleInsertSentence() {
-        return "insert into course (id, name, version) values(2, 'Microprocessors', 1)";
+        return "insert into identification_type (id, name, version) values(2, 'TI', 1)";
     }
 
     @Override
     protected String getThirdExampleInsertSentence() {
-        return "insert into course (id, name, version) values(3, 'Pure Maths', 0)";
+        return "insert into identification_type (id, name, version) values(3, 'RC', 0)";
     }
 
     @Override
     protected String getDeleteAllSentence() {
-        return "delete from course";
+        return "delete from identification_type";
     }
 
     @Override
     protected String getBaseResourceURL() {
-        return "/v1/academic-plans/courses";
+        return "/v1/admissions/identification-types";
     }
 
     @Override
-    protected List<CourseFullDto> getListOfEntities() {
+    protected List<IdentificationTypeFullDto> getListOfEntities() {
         return List.of(
-            new CourseFullDto(1, "Software Development", 0L),
-            new CourseFullDto(2, "Microprocessors", 1L),
-            new CourseFullDto(3, "Pure Maths", 0L)
+            new IdentificationTypeFullDto(1, "CC", 0L),
+            new IdentificationTypeFullDto(2, "TI", 1L),
+            new IdentificationTypeFullDto(3, "RC", 0L)
         );
     }
 
     @Override
-    protected CourseCreationalDto getCreationalDto(PropertyError propertyError) {
-        String name = "Painting";
+    protected IdentificationTypeCreationalDto getCreationalDto(PropertyError propertyError) {
+        String name = "CE";
 
         switch (propertyError) {
             case NULL_NAME -> name = null;
-            case DUPLICATED_NAME -> name = "Software Development";
+            case DUPLICATED_NAME -> name = "CC";
         }
-        return new CourseCreationalDto(name);
+        return new IdentificationTypeCreationalDto(name);
     }
 
     @Override
-    protected CourseFullDto getCreatedEntity() {
-        return new CourseFullDto(4, "Painting", 0L);
+    protected IdentificationTypeFullDto getCreatedEntity() {
+        return new IdentificationTypeFullDto(4, "CE", 0L);
     }
 
     @Override
@@ -104,30 +103,30 @@ public class CourseRestControllerTest extends BasicRestControllerTest<
     }
 
     @Override
-    protected CourseFullDto getPersistedEntity() {
-        return new CourseFullDto(3, "Pure Maths", 0L);
+    protected IdentificationTypeFullDto getPersistedEntity() {
+        return new IdentificationTypeFullDto(3, "RC", 0L);
     }
 
     @Override
-    protected CourseFullDto getFullDtoToUpdate(PropertyError propertyError) {
+    protected IdentificationTypeFullDto getFullDtoToUpdate(PropertyError propertyError) {
         Integer id = getExistingResourceId();
-        String name = "Pure Physics";
+        String name = "RR";
         Long version = 0L;
 
         switch (propertyError) {
             case EMPTY_NAME -> name = "   ";
             case NULL_NAME -> name = null;
-            case DUPLICATED_NAME -> name = "Software Development";
+            case DUPLICATED_NAME -> name = "CC";
             case WRONG_ID -> id = getWrongResourceId();
             case WRONG_VERSION -> version = 17L;
         }
-        return new CourseFullDto(id, name, version);
+        return new IdentificationTypeFullDto(id, name, version);
     }
 
     @Override
-    protected CourseFullDto getUpdatedEntity() {
-        return new CourseFullDto(
-            getExistingResourceId(), "Pure Physics", 1L
+    protected IdentificationTypeFullDto getUpdatedEntity() {
+        return new IdentificationTypeFullDto(
+            getExistingResourceId(), "RR", 1L
         );
     }
 }

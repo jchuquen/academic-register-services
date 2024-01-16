@@ -32,7 +32,7 @@ public final class CourseRepositoryAdapter
         var course = this.getRepository().getByName(name);
         if (course.isPresent()) {
             return Optional.of(
-                this.getInfrastructureVsDomainMapper().infToDomCourse(course.get())
+                this.getInfrastructureVsDomainMapper().infToDomEntity(course.get())
             );
         } else {
             return Optional.empty();

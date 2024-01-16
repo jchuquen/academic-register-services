@@ -1,10 +1,8 @@
-package co.grow.plan.academic.register.application.admissions.identificationtype.services;
+package co.grow.plan.academic.register.infrastructure.admissions.identificationtype.adapters;
 
 import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
-import co.grow.plan.academic.register.application.admissions.identificationtype.ports.spi.IIdentificationTypeRepositorySPI;
 import co.grow.plan.academic.register.domain.admissions.identificationtype.model.IdentificationType;
-import co.grow.plan.academic.register.shared.application.generics.services.BasicServiceIntegrationTest;
-import co.grow.plan.academic.register.shared.application.generics.services.PropertyError;
+import co.grow.plan.academic.register.shared.infrastructure.generics.adapters.BasicRepositoryAdapterTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,19 +12,18 @@ import java.util.List;
 
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(classes = AcademicRegisterServicesApplication.class)
-public class IdentificationTypeServiceIntegrationTest extends
-    BasicServiceIntegrationTest<
-        IdentificationType,
-        IIdentificationTypeRepositorySPI,
-        IdentificationTypeService
-    > {
+public class IdentificationTypeRepositoryAdapterTest extends
+    BasicRepositoryAdapterTest<
+            IdentificationType,
+            IdentificationTypeRepositoryAdapter
+        > {
 
     @Autowired
-    public IdentificationTypeServiceIntegrationTest(
+    public IdentificationTypeRepositoryAdapterTest(
         JdbcTemplate jdbcTemplate,
-        IdentificationTypeService identificationTypeService
+        IdentificationTypeRepositoryAdapter repositoryAdapter
     ) {
-        super(jdbcTemplate, identificationTypeService);
+        super(jdbcTemplate, repositoryAdapter);
     }
 
     @Override
@@ -64,10 +61,15 @@ public class IdentificationTypeServiceIntegrationTest extends
     }
 
     @Override
-    protected IdentificationType getConflictedEntityAtCreate() {
+    protected IdentificationType getPersistedEntity() {
         return new IdentificationType(
-            null, "CC", null
+            3, "RC", 0L
         );
+    }
+
+    @Override
+    protected Integer getWrongIdToUpdateOrDelete() {
+        return 7;
     }
 
     @Override
@@ -85,54 +87,19 @@ public class IdentificationTypeServiceIntegrationTest extends
     }
 
     @Override
-    protected IdentificationType getPersistedEntity() {
-        return new IdentificationType(
-            3, "RC", 0L
-        );
-    }
-
-    @Override
     protected Integer getIdToUpdateOrDelete() {
         return 3;
     }
 
     @Override
-    protected Integer getWrongIdToUpdateOrDelete() {
-        return 5;
+    protected IdentificationType getEntityWithUpdatedInfo() {
+        return new IdentificationType(3, "RR", 0L);
     }
-
-    @Override
-    protected IdentificationType getWrongEntityWithUpdatedInfo() {
-        return new IdentificationType(
-            5, "CE", 0L
-        );
-    }
-
-    @Override
-    protected IdentificationType getEntityWithUpdatedInfo(PropertyError propertyError) {
-        String name = "RR";
-        Long version = 0L;
-
-        switch (propertyError) {
-            case WRONG_VERSION -> version = 17L;
-            case EMPTY_NAME -> name = "   ";
-            case NULL_NAME -> name = null;
-        }
-        return new IdentificationType(3, name, version);
-    }
-
-    @Override
-    protected IdentificationType getConflictedEntityAtUpdating() {
-        return new IdentificationType(
-            3, "CC", 0L);
-    }
-
-
 
     @Override
     protected IdentificationType getUpdatedEntity() {
         return new IdentificationType(
-            3, "RR", 1L);
+            3, "RR", 1L
+        );
     }
 }
-

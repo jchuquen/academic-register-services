@@ -2,8 +2,8 @@ package co.grow.plan.academic.register.application.admissions.identificationtype
 
 import co.grow.plan.academic.register.application.admissions.identificationtype.ports.spi.IIdentificationTypeRepositorySPI;
 import co.grow.plan.academic.register.domain.admissions.identificationtype.model.IdentificationType;
-import co.grow.plan.academic.register.shared.application.generics.BasicServiceTest;
-import co.grow.plan.academic.register.shared.application.generics.PropertyError;
+import co.grow.plan.academic.register.shared.application.generics.services.BasicServiceTest;
+import co.grow.plan.academic.register.shared.application.generics.services.PropertyError;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

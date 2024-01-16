@@ -1,6 +1,6 @@
 package co.grow.plan.academic.register.shared.infrastructure.generics;
 
-import co.grow.plan.academic.register.shared.application.generics.IBasicService;
+import co.grow.plan.academic.register.shared.application.generics.services.IBasicService;
 import co.grow.plan.academic.register.shared.domain.interfaces.IEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

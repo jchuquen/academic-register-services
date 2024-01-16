@@ -1,6 +1,6 @@
 package co.grow.plan.academic.register.shared.infrastructure.generics;
 
-import co.grow.plan.academic.register.shared.application.generics.IBasicRepository;
+import co.grow.plan.academic.register.shared.application.generics.services.IBasicRepository;
 import co.grow.plan.academic.register.shared.domain.interfaces.IEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,26 +25,21 @@ public class BasicRepositoryAdapter <
     public List<D> findAll() {
         return
             infrastructureVsDomainMapper
-                .infToDomCourseList(repository.findAll());
+                .infToDomEntityList(repository.findAll());
     }
 
     @Override
     public D findById(Integer id) {
-        var course = repository.findById(id);
-        if (course.isPresent()) {
-            return infrastructureVsDomainMapper
-                .infToDomCourse(course.get());
-        } else {
-            return null;
-        }
+        var entity = repository.findById(id);
+        return entity.map(infrastructureVsDomainMapper::infToDomEntity).orElse(null);
     }
 
     @Override
     public D save(D entity) {
-        return infrastructureVsDomainMapper.infToDomCourse(
+        return infrastructureVsDomainMapper.infToDomEntity(
             repository.save(
                 infrastructureVsDomainMapper
-                    .domToInfCourse(entity)
+                    .domToInfEntity(entity)
             )
         );
     }

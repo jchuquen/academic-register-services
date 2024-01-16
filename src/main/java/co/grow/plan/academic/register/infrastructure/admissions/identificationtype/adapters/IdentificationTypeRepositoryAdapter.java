@@ -33,7 +33,7 @@ public final class IdentificationTypeRepositoryAdapter
         if (identificationType.isPresent()) {
             return Optional.of(
                 this.getInfrastructureVsDomainMapper()
-                    .infToDomCourse(identificationType.get())
+                    .infToDomEntity(identificationType.get())
             );
         } else {
             return Optional.empty();

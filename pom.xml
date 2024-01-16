@@ -81,7 +81,7 @@
             </plugin>
 
             <!-- mapstruct-processor: Used to generate the mapper implementation
-             during the build. Run mvn clean install to generate mappers
+             during the build. Run mvn clean install to generate mappers and lombok artifacts
             -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

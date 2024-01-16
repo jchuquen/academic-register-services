@@ -1,4 +1,4 @@
-package co.grow.plan.academic.register.shared.application.generics;
+package co.grow.plan.academic.register.shared.application.generics.services;
 
 import co.grow.plan.academic.register.shared.application.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.shared.application.exceptions.ApiMissingInformationException;
