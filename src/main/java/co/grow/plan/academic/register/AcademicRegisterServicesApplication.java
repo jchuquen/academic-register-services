@@ -3,6 +3,9 @@ package co.grow.plan.academic.register;
 import co.grow.plan.academic.register.application.academicplan.course.ports.api.ICourseServiceAPI;
 import co.grow.plan.academic.register.application.academicplan.course.ports.spi.ICourseRepositorySPI;
 import co.grow.plan.academic.register.application.academicplan.course.services.CourseService;
+import co.grow.plan.academic.register.application.academicplan.subject.ports.api.ISubjectServiceAPI;
+import co.grow.plan.academic.register.application.academicplan.subject.ports.spi.ISubjectRepositorySPI;
+import co.grow.plan.academic.register.application.academicplan.subject.services.SubjectService;
 import co.grow.plan.academic.register.application.admissions.identificationtype.ports.api.IIdentificationTypeServiceAPI;
 import co.grow.plan.academic.register.application.admissions.identificationtype.ports.spi.IIdentificationTypeRepositorySPI;
 import co.grow.plan.academic.register.application.admissions.identificationtype.services.IdentificationTypeService;
@@ -27,5 +30,10 @@ public class AcademicRegisterServicesApplication {
         return new IdentificationTypeService(
             identificationTypeRepositorySPI
         );
+    }
+
+    @Bean
+    ISubjectServiceAPI subjectServiceAPI(ISubjectRepositorySPI subjectRepositorySPI) {
+        return new SubjectService(subjectRepositorySPI);
     }
 }
