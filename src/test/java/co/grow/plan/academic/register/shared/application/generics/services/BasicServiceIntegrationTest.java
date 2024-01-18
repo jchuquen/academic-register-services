@@ -1,10 +1,10 @@
 package co.grow.plan.academic.register.shared.application.generics.services;
 
 import co.grow.plan.academic.register.shared.application.exceptions.ApiConflictException;
-import co.grow.plan.academic.register.shared.application.exceptions.ApiMissingInformationException;
 import co.grow.plan.academic.register.shared.application.exceptions.ApiNoEntityException;
-import co.grow.plan.academic.register.shared.domain.interfaces.IBasicEntity;
+import co.grow.plan.academic.register.shared.domain.interfaces.IEntity;
 import co.grow.plan.academic.register.shared.helpers.AssertionHelper;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,15 +13,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RequiredArgsConstructor
+@Getter
 public abstract class BasicServiceIntegrationTest<
-    E extends IBasicEntity,
-    R extends IBasicRepositoryForBasicEntity<E>,
-    S extends BasicServiceForBasicEntity<E, R>
+    E extends IEntity,
+    R extends IBasicRepository<E>,
+    S extends BasicService<E, R>
     > {
 
     private final JdbcTemplate jdbcTemplate;
@@ -60,16 +59,6 @@ public abstract class BasicServiceIntegrationTest<
         List<E> currentList = service.list();
 
         assertIterableEquals(expectedList, currentList);
-    }
-
-    @Test
-    public void shouldGenerateExceptionWhenNameExistsAtCreate() {
-        E conflictedEntity = getConflictedEntityAtCreate();
-
-        assertThrows(
-            ApiConflictException.class,
-            () -> service.create(conflictedEntity)
-        );
     }
 
     @Test
@@ -117,48 +106,6 @@ public abstract class BasicServiceIntegrationTest<
 
         E entityWithUpdatedInfo =
             getEntityWithUpdatedInfo(PropertyError.WRONG_VERSION);
-
-        assertThrows(
-            ApiConflictException.class,
-            () -> service.update(
-                id, entityWithUpdatedInfo)
-        );
-    }
-
-    @Test
-    public void shouldGenerateExceptionWhenNameNullAtUpdating() {
-        Integer id = getIdToUpdateOrDelete();
-
-        E entityWithNullName =
-            getEntityWithUpdatedInfo(PropertyError.NULL_NAME);
-
-        assertThrows(
-            ApiMissingInformationException.class,
-            () -> service.update(
-                id, entityWithNullName)
-        );
-    }
-
-    @Test
-    public void shouldGenerateExceptionWhenNameIsEmptyAtUpdating() {
-        Integer id = getIdToUpdateOrDelete();
-
-        E entityWithEmptyName =
-            getEntityWithUpdatedInfo(PropertyError.EMPTY_NAME);
-
-        assertThrows(
-            ApiMissingInformationException.class,
-            () -> service.update(
-                id, entityWithEmptyName)
-        );
-    }
-
-    @Test
-    public void shouldGenerateExceptionWhenNameExistsAtUpdating() {
-        Integer id = getIdToUpdateOrDelete();
-
-        E entityWithUpdatedInfo =
-            getConflictedEntityAtUpdating();
 
         assertThrows(
             ApiConflictException.class,

@@ -2,7 +2,10 @@ package co.grow.plan.academic.register.infrastructure.academicplan.course.adapte
 
 import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
 import co.grow.plan.academic.register.domain.academicplan.course.model.Course;
-import co.grow.plan.academic.register.shared.infrastructure.generics.adapters.BasicRepositoryAdapterTest;
+import co.grow.plan.academic.register.infrastructure.academicplan.course.entities.CourseJpaEntity;
+import co.grow.plan.academic.register.infrastructure.academicplan.course.mappers.IInfrastructureVsDomainCourseEntityMapper;
+import co.grow.plan.academic.register.infrastructure.academicplan.course.repositories.CourseJpaRepository;
+import co.grow.plan.academic.register.shared.infrastructure.generics.adapters.BasicRepositoryAdapterForBasicEntityTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,8 +16,11 @@ import java.util.List;
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(classes = AcademicRegisterServicesApplication.class)
 public class CourseRepositoryAdapterTest extends
-    BasicRepositoryAdapterTest<
+    BasicRepositoryAdapterForBasicEntityTest<
+        CourseJpaEntity,
         Course,
+        CourseJpaRepository,
+        IInfrastructureVsDomainCourseEntityMapper,
         CourseRepositoryAdapter
     > {
 
@@ -24,6 +30,16 @@ public class CourseRepositoryAdapterTest extends
         CourseRepositoryAdapter repositoryAdapter
     ) {
         super(jdbcTemplate, repositoryAdapter);
+    }
+
+    @Override
+    protected String getWrongName() {
+        return "Physics";
+    }
+
+    @Override
+    protected String getExistingName() {
+        return "Pure Maths";
     }
 
     @Override

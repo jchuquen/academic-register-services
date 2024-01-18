@@ -3,7 +3,7 @@ package co.grow.plan.academic.register.application.admissions.identificationtype
 import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
 import co.grow.plan.academic.register.application.admissions.identificationtype.ports.spi.IIdentificationTypeRepositorySPI;
 import co.grow.plan.academic.register.domain.admissions.identificationtype.model.IdentificationType;
-import co.grow.plan.academic.register.shared.application.generics.services.BasicServiceIntegrationTest;
+import co.grow.plan.academic.register.shared.application.generics.services.BasicServiceIntegrationForBasicEntityTest;
 import co.grow.plan.academic.register.shared.application.generics.services.PropertyError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,11 +15,11 @@ import java.util.List;
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(classes = AcademicRegisterServicesApplication.class)
 public class IdentificationTypeServiceIntegrationTest extends
-    BasicServiceIntegrationTest<
-        IdentificationType,
-        IIdentificationTypeRepositorySPI,
-        IdentificationTypeService
-    > {
+    BasicServiceIntegrationForBasicEntityTest<
+            IdentificationType,
+            IIdentificationTypeRepositorySPI,
+            IdentificationTypeService
+        > {
 
     @Autowired
     public IdentificationTypeServiceIntegrationTest(

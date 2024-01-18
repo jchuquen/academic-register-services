@@ -1,9 +1,10 @@
 package co.grow.plan.academic.register.shared.infrastructure.generics.controllers;
 
 import co.grow.plan.academic.register.shared.application.generics.services.PropertyError;
-import co.grow.plan.academic.register.shared.domain.interfaces.IBasicEntity;
 import co.grow.plan.academic.register.shared.infrastructure.generics.ICreationalDto;
+import co.grow.plan.academic.register.shared.infrastructure.generics.IFullEntityDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,23 +12,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RequiredArgsConstructor
+@Getter
 public abstract class BasicRestControllerTest<
-        F extends IBasicEntity,
+        F extends IFullEntityDto,
         C extends ICreationalDto
     > {
 
@@ -41,23 +35,6 @@ public abstract class BasicRestControllerTest<
         jdbcTemplate.execute(getFirstExampleInsertSentence());
         jdbcTemplate.execute(getSecondExampleInsertSentence());
         jdbcTemplate.execute(getThirdExampleInsertSentence());
-    }
-
-    @Test
-    public void shouldReturnAListOfEntitiesAtList() throws Exception {
-
-        List<F> listOfEntities = getListOfEntities();
-
-        ResultActions resultActions = mockMvc.perform(get(getBaseResourceURL())).
-            andExpect(status().isOk()).
-            andExpect(content().contentType(MediaType.APPLICATION_JSON)).
-            andExpect(jsonPath("$", hasSize(listOfEntities.size())));
-
-        for (int i = 0; i < listOfEntities.size(); i++) {
-            resultActions.andExpect(jsonPath(String.format("$[%s].id", i), is(listOfEntities.get(i).id()))).
-                andExpect(jsonPath(String.format("$[%s].name", i), is(listOfEntities.get(i).name()))).
-                andExpect(jsonPath(String.format("$[%s].version", i), is(listOfEntities.get(i).version().intValue())));
-        }
     }
 
     @Test
@@ -77,45 +54,6 @@ public abstract class BasicRestControllerTest<
     }
 
     @Test
-    public void shouldGenerateBadRequestWhenNameIsNullAtCreate() throws Exception {
-        C creationalDto = getCreationalDto(PropertyError.NULL_NAME);
-
-        mockMvc.perform(
-            post(getBaseResourceURL()).
-                contentType(MediaType.APPLICATION_JSON).
-                content(objectMapper.writeValueAsString(creationalDto))
-        ).andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void shouldGenerateConflictExceptionWhenNameExistsAtCreate() throws Exception {
-        C creationalDto = getCreationalDto(PropertyError.DUPLICATED_NAME);
-
-        mockMvc.perform(
-            post(getBaseResourceURL()).
-                contentType(MediaType.APPLICATION_JSON).
-                content(objectMapper.writeValueAsString(creationalDto))
-        ).andExpect(status().isConflict());
-    }
-
-    @Test
-    public void shouldCreateNewEntityAndReturnPersistedInformation() throws Exception{
-        C creationalDto = getCreationalDto(PropertyError.NONE);
-
-        ResultActions resultActions = mockMvc.perform(
-            post(getBaseResourceURL()).
-                contentType(MediaType.APPLICATION_JSON).
-                content(objectMapper.writeValueAsString(creationalDto))
-        ).andExpect(status().isCreated());
-
-        F expected = getCreatedEntity();
-
-        resultActions.andExpect(jsonPath("$.id", is(expected.id()))).
-            andExpect(jsonPath("$.name", is(expected.name()))).
-            andExpect(jsonPath("$.version", is(expected.version().intValue())));
-    }
-
-    @Test
     public void shouldGenerateExceptionWhenIdDoesNotExistAtGetById() throws Exception {
         mockMvc.perform(
             get(
@@ -126,20 +64,7 @@ public abstract class BasicRestControllerTest<
     }
 
     @Test
-    public void shouldReturnEntityWhenIdDoesExist() throws Exception {
-        ResultActions resultActions = mockMvc.perform(
-            get(getIdentifiedResourceURL(), getExistingResourceId())).
-            andExpect(status().isOk());
-
-        F expected = getPersistedEntity();
-
-        resultActions.andExpect(jsonPath("$.id", is(expected.id()))).
-            andExpect(jsonPath("$.name", is(expected.name()))).
-            andExpect(jsonPath("$.version", is(expected.version().intValue())));
-    }
-
-    @Test
-    public void shouldGenerateExceptionWhenObjectNullAtUpdating() throws Exception {
+        public void shouldGenerateExceptionWhenObjectNullAtUpdating() throws Exception {
         mockMvc.perform(
             put(getIdentifiedResourceURL(), getExistingResourceId()).
                 contentType(MediaType.APPLICATION_JSON)
@@ -180,56 +105,6 @@ public abstract class BasicRestControllerTest<
     }
 
     @Test
-    public void shouldGenerateExceptionWhenNameNullAtUpdating() throws Exception {
-        F dtoWithUpdatedInfo = getFullDtoToUpdate(PropertyError.NULL_NAME);
-
-        mockMvc.perform(
-            put(getIdentifiedResourceURL(), getExistingResourceId()).
-                contentType(MediaType.APPLICATION_JSON).
-                content(objectMapper.writeValueAsString(dtoWithUpdatedInfo))
-        ).andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void shouldGenerateExceptionWhenNameIsEmptyAtUpdating() throws Exception {
-        F dtoWithUpdatedInfo = getFullDtoToUpdate(PropertyError.EMPTY_NAME);
-
-        mockMvc.perform(
-            put(getIdentifiedResourceURL(), getExistingResourceId()).
-                contentType(MediaType.APPLICATION_JSON).
-                content(objectMapper.writeValueAsString(dtoWithUpdatedInfo))
-        ).andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void shouldGenerateExceptionWhenNameExistsAtUpdating() throws Exception{
-        F dtoWithUpdatedInfo = getFullDtoToUpdate(PropertyError.DUPLICATED_NAME);
-
-        mockMvc.perform(
-            put(getIdentifiedResourceURL(), getExistingResourceId()).
-                contentType(MediaType.APPLICATION_JSON).
-                content(objectMapper.writeValueAsString(dtoWithUpdatedInfo))
-        ).andExpect(status().isConflict());
-    }
-
-    @Test
-    public void shouldUpdateEntityAndReturnPersistedInformation() throws Exception {
-        F dtoWithUpdatedInfo = getFullDtoToUpdate(PropertyError.NONE);
-
-        ResultActions resultActions = mockMvc.perform(
-            put(getIdentifiedResourceURL(), getExistingResourceId()).
-                contentType(MediaType.APPLICATION_JSON).
-                content(objectMapper.writeValueAsString(dtoWithUpdatedInfo))
-        ).andExpect(status().isOk());
-
-        F expected = getUpdatedEntity();
-
-        resultActions.andExpect(jsonPath("$.id", is(expected.id()))).
-            andExpect(jsonPath("$.name", is(expected.name()))).
-            andExpect(jsonPath("$.version", is(expected.version().intValue())));
-    }
-
-    @Test
     public void shouldGenerateExceptionWhenIdDoesNotExistAtDeleting() throws Exception{
         mockMvc.perform(
             delete(getIdentifiedResourceURL(), getWrongResourceId())
@@ -259,8 +134,7 @@ public abstract class BasicRestControllerTest<
     protected abstract String getThirdExampleInsertSentence();
     protected abstract String getDeleteAllSentence();
 
-
-    //
+    // Templates
     protected abstract String getBaseResourceURL();
     protected abstract List<F> getListOfEntities();
     protected abstract C getCreationalDto(PropertyError propertyError);

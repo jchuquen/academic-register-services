@@ -1,12 +1,16 @@
 package co.grow.plan.academic.register.shared.infrastructure.generics.adapters;
 
-import co.grow.plan.academic.register.shared.application.generics.services.IBasicRepository;
-import co.grow.plan.academic.register.shared.domain.interfaces.IBasicEntity;
+import co.grow.plan.academic.register.shared.domain.interfaces.IEntity;
 import co.grow.plan.academic.register.shared.helpers.AssertionHelper;
+import co.grow.plan.academic.register.shared.infrastructure.generics.BasicRepositoryAdapter;
+import co.grow.plan.academic.register.shared.infrastructure.generics.IBasicInfrastructureVsDomainEntityMapper;
+import co.grow.plan.academic.register.shared.infrastructure.generics.IInfEntity;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -15,13 +19,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @RequiredArgsConstructor
+@Getter
 public abstract class BasicRepositoryAdapterTest <
-    E extends IBasicEntity,
-    R extends IBasicRepository<E>
+    I extends IInfEntity, //The infrastructure entity
+    D extends IEntity, // The domain entity
+    R extends JpaRepository<I, Integer>, // The infrastructure repository
+    M extends IBasicInfrastructureVsDomainEntityMapper<D,I>,
+    A extends BasicRepositoryAdapter<I, D, R, M>
     > {
 
     private final JdbcTemplate jdbcTemplate;
-    private final R repositoryAdapter;
+    private final A repositoryAdapter;
 
     @BeforeEach
     public void setupDatabase() {
@@ -33,13 +41,13 @@ public abstract class BasicRepositoryAdapterTest <
 
     @Test
     public void shouldReturnAListOfEntitiesAtFindAll() {
-        List<E> expectedList = getEntitiesToList();
-        List<E> currentList = repositoryAdapter.findAll();
+        List<D> expectedList = getEntitiesToList();
+        List<D> currentList = repositoryAdapter.findAll();
 
         assertEquals(expectedList.size(), currentList.size());
 
-        E expected;
-        E current;
+        D expected;
+        D current;
         for (int i = 0; i < expectedList.size(); i++) {
             expected = expectedList.get(i);
             current = currentList.get(i);
@@ -50,8 +58,8 @@ public abstract class BasicRepositoryAdapterTest <
 
     @Test
     public void shouldReturnTheEntityWhenIdDoesExistAtFindById() {
-        E expected = getPersistedEntity();
-        E foundEntity =
+        D expected = getPersistedEntity();
+        D foundEntity =
             repositoryAdapter.findById(expected.id());
 
         AssertionHelper.assertObjectProperties(expected, foundEntity);
@@ -66,10 +74,10 @@ public abstract class BasicRepositoryAdapterTest <
 
     @Test
     public void shouldCreateNewEntityAndReturnPersistedInformation() {
-        E entityToCreate = getEntityToCreate();
-        E expected = getCreatedEntity();
+        D entityToCreate = getEntityToCreate();
+        D expected = getCreatedEntity();
 
-        E persisted = repositoryAdapter.save(entityToCreate);
+        D persisted = repositoryAdapter.save(entityToCreate);
 
         AssertionHelper.assertObjectProperties(expected, persisted);
     }
@@ -78,13 +86,13 @@ public abstract class BasicRepositoryAdapterTest <
     public void shouldUpdateEntityAndReturnPersistedInformation() {
         Integer id = getIdToUpdateOrDelete();
 
-        E entityToUpdate =
+        D entityToUpdate =
             getEntityWithUpdatedInfo();
 
-        E updatedEntity =
+        D updatedEntity =
             repositoryAdapter.save(entityToUpdate);
 
-        E expected = getUpdatedEntity();
+        D expected = getUpdatedEntity();
 
         AssertionHelper.assertObjectProperties(expected, updatedEntity);
     }
@@ -109,13 +117,13 @@ public abstract class BasicRepositoryAdapterTest <
     protected abstract String getDeleteAllSentence();
 
     // Templates to implement
-    protected abstract List<E> getEntitiesToList();
-    protected abstract E getPersistedEntity();
+    protected abstract List<D> getEntitiesToList();
+    protected abstract D getPersistedEntity();
     protected abstract Integer getWrongIdToUpdateOrDelete();
-    protected abstract E getEntityToCreate();
-    protected abstract E getCreatedEntity();
+    protected abstract D getEntityToCreate();
+    protected abstract D getCreatedEntity();
     protected abstract Integer getIdToUpdateOrDelete();
-    protected abstract E getEntityWithUpdatedInfo();
-    protected abstract E getUpdatedEntity();
+    protected abstract D getEntityWithUpdatedInfo();
+    protected abstract D getUpdatedEntity();
 
 }

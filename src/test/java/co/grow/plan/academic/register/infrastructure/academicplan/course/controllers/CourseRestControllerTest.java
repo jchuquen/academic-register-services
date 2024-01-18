@@ -4,7 +4,7 @@ import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
 import co.grow.plan.academic.register.infrastructure.academicplan.course.dtos.CourseCreationalDto;
 import co.grow.plan.academic.register.infrastructure.academicplan.course.dtos.CourseFullDto;
 import co.grow.plan.academic.register.shared.application.generics.services.PropertyError;
-import co.grow.plan.academic.register.shared.infrastructure.generics.controllers.BasicRestControllerTest;
+import co.grow.plan.academic.register.shared.infrastructure.generics.controllers.BasicRestControllerForBasicEntityTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,7 +18,7 @@ import java.util.List;
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(classes = AcademicRegisterServicesApplication.class)
 @AutoConfigureMockMvc
-public class CourseRestControllerTest extends BasicRestControllerTest<
+public class CourseRestControllerTest extends BasicRestControllerForBasicEntityTest<
         CourseFullDto,
         CourseCreationalDto
     > {

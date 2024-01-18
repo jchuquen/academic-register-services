@@ -5,8 +5,8 @@ import co.grow.plan.academic.register.shared.application.exceptions.ApiError;
 import co.grow.plan.academic.register.shared.domain.interfaces.IBasicEntity;
 
 public abstract class BasicServiceForBasicEntity<
-    E extends IBasicEntity,
-    R extends IBasicRepositoryForBasicEntity<E>
+        E extends IBasicEntity,
+        R extends IBasicRepositoryForBasicEntity<E>
     >
     extends BasicService<E, R>{
     public BasicServiceForBasicEntity(R repository) {
