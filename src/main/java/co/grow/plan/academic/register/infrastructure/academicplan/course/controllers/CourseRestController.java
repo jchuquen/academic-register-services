@@ -4,7 +4,7 @@ import co.grow.plan.academic.register.application.academicplan.course.ports.api.
 import co.grow.plan.academic.register.domain.academicplan.course.model.Course;
 import co.grow.plan.academic.register.infrastructure.academicplan.course.dtos.CourseCreationalDto;
 import co.grow.plan.academic.register.infrastructure.academicplan.course.dtos.CourseFullDto;
-import co.grow.plan.academic.register.infrastructure.academicplan.course.mappers.IInfrastructureDtoVsDomainCourseMapper;
+import co.grow.plan.academic.register.infrastructure.academicplan.course.mappers.InfrastructureDtoVsDomainCourseMapper;
 import co.grow.plan.academic.register.shared.infrastructure.generics.BasicRestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,11 +17,11 @@ public class CourseRestController
     CourseCreationalDto,
     Course,
     ICourseServiceAPI,
-    IInfrastructureDtoVsDomainCourseMapper
+    InfrastructureDtoVsDomainCourseMapper
     >
     implements ICourseRestController{
 
-    public CourseRestController(ICourseServiceAPI service, IInfrastructureDtoVsDomainCourseMapper mapper) {
+    public CourseRestController(ICourseServiceAPI service, InfrastructureDtoVsDomainCourseMapper mapper) {
         super(service, mapper);
     }
 }

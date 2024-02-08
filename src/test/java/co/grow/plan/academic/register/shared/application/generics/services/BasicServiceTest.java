@@ -43,8 +43,6 @@ public abstract class BasicServiceTest<
         verify(getRepository(), times(1)).findAll();
     }
 
-
-
     @Test
     public void shouldReturnAnEmptyListOfEntitiesAtList() {
 

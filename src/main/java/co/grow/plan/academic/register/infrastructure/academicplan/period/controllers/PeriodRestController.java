@@ -4,7 +4,7 @@ import co.grow.plan.academic.register.application.academicplan.period.ports.api.
 import co.grow.plan.academic.register.domain.academicplan.period.model.Period;
 import co.grow.plan.academic.register.infrastructure.academicplan.period.dtos.PeriodCreationalDto;
 import co.grow.plan.academic.register.infrastructure.academicplan.period.dtos.PeriodFullDto;
-import co.grow.plan.academic.register.infrastructure.academicplan.period.mappers.IInfrastructureDtoVsDomainPeriodMapper;
+import co.grow.plan.academic.register.infrastructure.academicplan.period.mappers.InfrastructureDtoVsDomainPeriodMapper;
 import co.grow.plan.academic.register.shared.infrastructure.generics.BasicRestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,11 +17,11 @@ public class PeriodRestController
     PeriodCreationalDto,
     Period,
     IPeriodServiceAPI,
-    IInfrastructureDtoVsDomainPeriodMapper
+    InfrastructureDtoVsDomainPeriodMapper
     >
     implements IPeriodRestController {
 
-    public PeriodRestController(IPeriodServiceAPI service, IInfrastructureDtoVsDomainPeriodMapper mapper) {
+    public PeriodRestController(IPeriodServiceAPI service, InfrastructureDtoVsDomainPeriodMapper mapper) {
         super(service, mapper);
     }
 }

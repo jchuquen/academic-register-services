@@ -4,7 +4,7 @@ import co.grow.plan.academic.register.application.admissions.identificationtype.
 import co.grow.plan.academic.register.domain.admissions.identificationtype.model.IdentificationType;
 import co.grow.plan.academic.register.infrastructure.admissions.identificationtype.dtos.IdentificationTypeCreationalDto;
 import co.grow.plan.academic.register.infrastructure.admissions.identificationtype.dtos.IdentificationTypeFullDto;
-import co.grow.plan.academic.register.infrastructure.admissions.identificationtype.mappers.IInfrastructureDtoVsDomainIdentificationTypeMapper;
+import co.grow.plan.academic.register.infrastructure.admissions.identificationtype.mappers.InfrastructureDtoVsDomainIdentificationTypeMapper;
 import co.grow.plan.academic.register.shared.infrastructure.generics.BasicRestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,13 +17,13 @@ public class IdentificationTypeRestController
     IdentificationTypeCreationalDto,
     IdentificationType,
     IIdentificationTypeServiceAPI,
-    IInfrastructureDtoVsDomainIdentificationTypeMapper
+    InfrastructureDtoVsDomainIdentificationTypeMapper
     >
     implements IIdentificationTypeRestController {
 
     public IdentificationTypeRestController(
         IIdentificationTypeServiceAPI service,
-        IInfrastructureDtoVsDomainIdentificationTypeMapper mapper) {
+        InfrastructureDtoVsDomainIdentificationTypeMapper mapper) {
         super(service, mapper);
     }
 }

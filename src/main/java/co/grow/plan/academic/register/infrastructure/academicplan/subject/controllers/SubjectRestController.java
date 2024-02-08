@@ -4,7 +4,7 @@ import co.grow.plan.academic.register.application.academicplan.subject.ports.api
 import co.grow.plan.academic.register.domain.academicplan.subject.model.Subject;
 import co.grow.plan.academic.register.infrastructure.academicplan.subject.dtos.SubjectCreationalDto;
 import co.grow.plan.academic.register.infrastructure.academicplan.subject.dtos.SubjectFullDto;
-import co.grow.plan.academic.register.infrastructure.academicplan.subject.mappers.IInfrastructureDtoVsDomainSubjectMapper;
+import co.grow.plan.academic.register.infrastructure.academicplan.subject.mappers.InfrastructureDtoVsDomainSubjectMapper;
 import co.grow.plan.academic.register.shared.infrastructure.generics.BasicRestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,11 +17,11 @@ public class SubjectRestController
     SubjectCreationalDto,
     Subject,
     ISubjectServiceAPI,
-    IInfrastructureDtoVsDomainSubjectMapper
+    InfrastructureDtoVsDomainSubjectMapper
     >
     implements ISubjectRestController {
 
-    public SubjectRestController(ISubjectServiceAPI service, IInfrastructureDtoVsDomainSubjectMapper mapper) {
+    public SubjectRestController(ISubjectServiceAPI service, InfrastructureDtoVsDomainSubjectMapper mapper) {
         super(service, mapper);
     }
 }

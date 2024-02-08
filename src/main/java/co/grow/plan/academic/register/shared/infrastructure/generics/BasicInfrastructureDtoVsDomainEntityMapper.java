@@ -4,7 +4,7 @@ import co.grow.plan.academic.register.shared.domain.interfaces.IEntity;
 
 import java.util.List;
 
-public interface IBasicInfrastructureDtoVsDomainEntityMapper<
+public interface BasicInfrastructureDtoVsDomainEntityMapper<
     E extends IEntity, // The domain entity
     F extends IFullEntityDto, // The full DTO
     C extends ICreationalDto // The DTO without ID and Version

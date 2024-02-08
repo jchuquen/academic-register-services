@@ -22,7 +22,7 @@ public class BasicRestController<
     C extends ICreationalDto, // The DTO without ID and Version
     E extends IEntity,
     S extends IBasicService<E>,
-    M extends IBasicInfrastructureDtoVsDomainEntityMapper<E, F, C>
+    M extends BasicInfrastructureDtoVsDomainEntityMapper<E, F, C>
     >
     implements IBasicRestController<F, C> {
 
