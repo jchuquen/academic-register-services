@@ -2,7 +2,7 @@ package co.grow.plan.academic.register.shared.application.generics.services;
 
 import co.grow.plan.academic.register.shared.application.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.shared.application.exceptions.ApiNoEntityException;
-import co.grow.plan.academic.register.shared.domain.interfaces.IEntity;
+import co.grow.plan.academic.register.shared.domain.interfaces.Entity;
 import co.grow.plan.academic.register.shared.helpers.AssertionHelper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @RequiredArgsConstructor
 @Getter
 public abstract class BasicServiceIntegrationTest<
-    E extends IEntity,
-    R extends IBasicRepository<E>,
-    S extends BasicService<E, R>
+    E extends Entity,
+    R extends BasicRepository<E>,
+    S extends BasicServiceImpl<E, R>
     > {
 
     private final JdbcTemplate jdbcTemplate;

@@ -1,7 +1,7 @@
 package co.grow.plan.academic.register.application.admissions.identificationtype.services;
 
 import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
-import co.grow.plan.academic.register.application.admissions.identificationtype.ports.spi.IIdentificationTypeRepositorySPI;
+import co.grow.plan.academic.register.application.admissions.identificationtype.ports.spi.IdentificationTypeRepositorySPI;
 import co.grow.plan.academic.register.domain.admissions.identificationtype.model.IdentificationType;
 import co.grow.plan.academic.register.shared.application.generics.services.BasicServiceIntegrationForBasicEntityTest;
 import co.grow.plan.academic.register.shared.application.generics.services.PropertyError;
@@ -17,7 +17,7 @@ import java.util.List;
 public class IdentificationTypeServiceIntegrationTest extends
     BasicServiceIntegrationForBasicEntityTest<
             IdentificationType,
-            IIdentificationTypeRepositorySPI,
+        IdentificationTypeRepositorySPI,
             IdentificationTypeService
         > {
 

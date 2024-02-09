@@ -1,16 +1,16 @@
 package co.grow.plan.academic.register;
 
-import co.grow.plan.academic.register.application.academicplan.course.ports.api.ICourseServiceAPI;
-import co.grow.plan.academic.register.application.academicplan.course.ports.spi.ICourseRepositorySPI;
+import co.grow.plan.academic.register.application.academicplan.course.ports.api.CourseServiceAPI;
+import co.grow.plan.academic.register.application.academicplan.course.ports.spi.CourseRepositorySPI;
 import co.grow.plan.academic.register.application.academicplan.course.services.CourseService;
-import co.grow.plan.academic.register.application.academicplan.period.ports.api.IPeriodServiceAPI;
-import co.grow.plan.academic.register.application.academicplan.period.ports.spi.IPeriodRepositorySPI;
+import co.grow.plan.academic.register.application.academicplan.period.ports.api.PeriodServiceAPI;
+import co.grow.plan.academic.register.application.academicplan.period.ports.spi.PeriodRepositorySPI;
 import co.grow.plan.academic.register.application.academicplan.period.services.PeriodService;
-import co.grow.plan.academic.register.application.academicplan.subject.ports.api.ISubjectServiceAPI;
-import co.grow.plan.academic.register.application.academicplan.subject.ports.spi.ISubjectRepositorySPI;
+import co.grow.plan.academic.register.application.academicplan.subject.ports.api.SubjectServiceAPI;
+import co.grow.plan.academic.register.application.academicplan.subject.ports.spi.SubjectRepositorySPI;
 import co.grow.plan.academic.register.application.academicplan.subject.services.SubjectService;
-import co.grow.plan.academic.register.application.admissions.identificationtype.ports.api.IIdentificationTypeServiceAPI;
-import co.grow.plan.academic.register.application.admissions.identificationtype.ports.spi.IIdentificationTypeRepositorySPI;
+import co.grow.plan.academic.register.application.admissions.identificationtype.ports.api.IdentificationTypeServiceAPI;
+import co.grow.plan.academic.register.application.admissions.identificationtype.ports.spi.IdentificationTypeRepositorySPI;
 import co.grow.plan.academic.register.application.admissions.identificationtype.services.IdentificationTypeService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,25 +23,25 @@ public class AcademicRegisterServicesApplication {
     }
 
     @Bean
-    ICourseServiceAPI courseServiceAPI(ICourseRepositorySPI courseRepositorySPI) {
+    CourseServiceAPI courseServiceAPI(CourseRepositorySPI courseRepositorySPI) {
         return new CourseService(courseRepositorySPI);
     }
 
     @Bean
-    IIdentificationTypeServiceAPI identificationTypeServiceAPI (
-        IIdentificationTypeRepositorySPI identificationTypeRepositorySPI) {
+    IdentificationTypeServiceAPI identificationTypeServiceAPI (
+        IdentificationTypeRepositorySPI identificationTypeRepositorySPI) {
         return new IdentificationTypeService(
             identificationTypeRepositorySPI
         );
     }
 
     @Bean
-    ISubjectServiceAPI subjectServiceAPI(ISubjectRepositorySPI subjectRepositorySPI) {
+    SubjectServiceAPI subjectServiceAPI(SubjectRepositorySPI subjectRepositorySPI) {
         return new SubjectService(subjectRepositorySPI);
     }
 
     @Bean
-    IPeriodServiceAPI periodServiceAPI(IPeriodRepositorySPI periodRepositorySPI) {
+    PeriodServiceAPI periodServiceAPI(PeriodRepositorySPI periodRepositorySPI) {
         return new PeriodService(periodRepositorySPI);
     }
 }

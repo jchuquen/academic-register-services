@@ -3,7 +3,7 @@ package co.grow.plan.academic.register.infrastructure.admissions.identificationt
 import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
 import co.grow.plan.academic.register.domain.admissions.identificationtype.model.IdentificationType;
 import co.grow.plan.academic.register.infrastructure.admissions.identificationtype.entities.IdentificationTypeJpaEntity;
-import co.grow.plan.academic.register.infrastructure.admissions.identificationtype.mappers.IInfrastructureVsDomainIdentificationTypeEntityMapper;
+import co.grow.plan.academic.register.infrastructure.admissions.identificationtype.mappers.InfrastructureVsDomainIdentificationTypeEntityMapper;
 import co.grow.plan.academic.register.infrastructure.admissions.identificationtype.repositories.IdentificationTypeJpaRepository;
 import co.grow.plan.academic.register.shared.infrastructure.generics.adapters.BasicRepositoryAdapterForBasicEntityTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class IdentificationTypeRepositoryAdapterTest extends
             IdentificationTypeJpaEntity,
             IdentificationType,
             IdentificationTypeJpaRepository,
-            IInfrastructureVsDomainIdentificationTypeEntityMapper,
+        InfrastructureVsDomainIdentificationTypeEntityMapper,
             IdentificationTypeRepositoryAdapter
         > {
 

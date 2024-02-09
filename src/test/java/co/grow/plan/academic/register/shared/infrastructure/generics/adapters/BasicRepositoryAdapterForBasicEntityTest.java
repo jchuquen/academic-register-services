@@ -1,10 +1,10 @@
 package co.grow.plan.academic.register.shared.infrastructure.generics.adapters;
 
-import co.grow.plan.academic.register.shared.domain.interfaces.IBasicEntity;
+import co.grow.plan.academic.register.shared.domain.interfaces.BasicEntity;
+import co.grow.plan.academic.register.shared.infrastructure.generics.BasicInfrastructureVsDomainEntityMapper;
 import co.grow.plan.academic.register.shared.infrastructure.generics.BasicRepositoryAdapterForBasicEntity;
-import co.grow.plan.academic.register.shared.infrastructure.generics.IBasicInfrastructureVsDomainEntityMapper;
-import co.grow.plan.academic.register.shared.infrastructure.generics.IInfBasicEntity;
-import co.grow.plan.academic.register.shared.infrastructure.generics.IJpaRepositoryForBasicEntity;
+import co.grow.plan.academic.register.shared.infrastructure.generics.InfBasicEntity;
+import co.grow.plan.academic.register.shared.infrastructure.generics.JpaRepositoryForBasicEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,10 +14,10 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class BasicRepositoryAdapterForBasicEntityTest<
-    I extends IInfBasicEntity, //The infrastructure entity
-    D extends IBasicEntity, // The domain entity
-    R extends IJpaRepositoryForBasicEntity<I> & JpaRepository<I, Integer>, // The infrastructure repository
-    M extends IBasicInfrastructureVsDomainEntityMapper<D,I>,
+    I extends InfBasicEntity, //The infrastructure entity
+    D extends BasicEntity, // The domain entity
+    R extends JpaRepositoryForBasicEntity<I> & JpaRepository<I, Integer>, // The infrastructure repository
+    M extends BasicInfrastructureVsDomainEntityMapper<D,I>,
     A extends BasicRepositoryAdapterForBasicEntity<I, D, R, M>
     >
     extends BasicRepositoryAdapterTest<I, D, R, M, A>{

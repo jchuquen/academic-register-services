@@ -1,9 +1,9 @@
 package co.grow.plan.academic.register.shared.infrastructure.generics.controllers;
 
 import co.grow.plan.academic.register.shared.application.generics.services.PropertyError;
-import co.grow.plan.academic.register.shared.domain.interfaces.IBasicEntity;
-import co.grow.plan.academic.register.shared.infrastructure.generics.ICreationalDto;
-import co.grow.plan.academic.register.shared.infrastructure.generics.IFullEntityDto;
+import co.grow.plan.academic.register.shared.domain.interfaces.BasicEntity;
+import co.grow.plan.academic.register.shared.infrastructure.generics.CreationalDto;
+import co.grow.plan.academic.register.shared.infrastructure.generics.FullEntityDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -19,8 +19,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public abstract class BasicRestControllerForBasicEntityTest<
-        F extends IFullEntityDto & IBasicEntity,
-        C extends ICreationalDto
+        F extends FullEntityDto & BasicEntity,
+        C extends CreationalDto
     > extends BasicRestControllerTest<F, C>{
 
     public BasicRestControllerForBasicEntityTest(

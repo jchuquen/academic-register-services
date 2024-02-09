@@ -2,7 +2,7 @@ package co.grow.plan.academic.register.shared.application.generics.services;
 
 import co.grow.plan.academic.register.shared.application.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.shared.application.exceptions.ApiMissingInformationException;
-import co.grow.plan.academic.register.shared.domain.interfaces.IBasicEntity;
+import co.grow.plan.academic.register.shared.domain.interfaces.BasicEntity;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public abstract class BasicServiceForBasicEntityTest<
-    E extends IBasicEntity,
-    R extends IBasicRepositoryForBasicEntity<E>,
+    E extends BasicEntity,
+    R extends BasicRepositoryForBasicEntity<E>,
     S extends BasicServiceForBasicEntity<E, R>
     >
     extends BasicServiceTest <E, R, S>{

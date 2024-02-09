@@ -1,8 +1,8 @@
 package co.grow.plan.academic.register.shared.infrastructure.generics.controllers;
 
 import co.grow.plan.academic.register.shared.application.generics.services.PropertyError;
-import co.grow.plan.academic.register.shared.infrastructure.generics.ICreationalDto;
-import co.grow.plan.academic.register.shared.infrastructure.generics.IFullEntityDto;
+import co.grow.plan.academic.register.shared.infrastructure.generics.CreationalDto;
+import co.grow.plan.academic.register.shared.infrastructure.generics.FullEntityDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RequiredArgsConstructor
 @Getter
 public abstract class BasicRestControllerTest<
-        F extends IFullEntityDto,
-        C extends ICreationalDto
+        F extends FullEntityDto,
+        C extends CreationalDto
     > {
 
     private final JdbcTemplate jdbcTemplate;

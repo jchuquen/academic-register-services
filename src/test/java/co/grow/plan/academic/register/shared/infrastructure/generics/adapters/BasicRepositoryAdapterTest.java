@@ -1,10 +1,10 @@
 package co.grow.plan.academic.register.shared.infrastructure.generics.adapters;
 
-import co.grow.plan.academic.register.shared.domain.interfaces.IEntity;
+import co.grow.plan.academic.register.shared.domain.interfaces.Entity;
 import co.grow.plan.academic.register.shared.helpers.AssertionHelper;
+import co.grow.plan.academic.register.shared.infrastructure.generics.BasicInfrastructureVsDomainEntityMapper;
 import co.grow.plan.academic.register.shared.infrastructure.generics.BasicRepositoryAdapter;
-import co.grow.plan.academic.register.shared.infrastructure.generics.IBasicInfrastructureVsDomainEntityMapper;
-import co.grow.plan.academic.register.shared.infrastructure.generics.IInfEntity;
+import co.grow.plan.academic.register.shared.infrastructure.generics.InfEntity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
@@ -21,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @RequiredArgsConstructor
 @Getter
 public abstract class BasicRepositoryAdapterTest <
-    I extends IInfEntity, //The infrastructure entity
-    D extends IEntity, // The domain entity
+    I extends InfEntity, //The infrastructure entity
+    D extends Entity, // The domain entity
     R extends JpaRepository<I, Integer>, // The infrastructure repository
-    M extends IBasicInfrastructureVsDomainEntityMapper<D,I>,
+    M extends BasicInfrastructureVsDomainEntityMapper<D,I>,
     A extends BasicRepositoryAdapter<I, D, R, M>
     > {
 

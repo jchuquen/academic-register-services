@@ -1,6 +1,6 @@
 package co.grow.plan.academic.register.shared.domain.interfaces;
 
-public interface IIdentifiableAndVersionable {
+public interface IdentifiableAndVersionable {
 
     /**
      * Gets the entity's id

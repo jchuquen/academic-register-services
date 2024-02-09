@@ -3,7 +3,7 @@ package co.grow.plan.academic.register.infrastructure.academicplan.subject.adapt
 import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
 import co.grow.plan.academic.register.domain.academicplan.subject.model.Subject;
 import co.grow.plan.academic.register.infrastructure.academicplan.subject.entities.SubjectJpaEntity;
-import co.grow.plan.academic.register.infrastructure.academicplan.subject.mappers.IInfrastructureVsDomainSubjectEntityMapper;
+import co.grow.plan.academic.register.infrastructure.academicplan.subject.mappers.InfrastructureVsDomainSubjectEntityMapper;
 import co.grow.plan.academic.register.infrastructure.academicplan.subject.repositories.SubjectJpaRepository;
 import co.grow.plan.academic.register.shared.infrastructure.generics.adapters.BasicRepositoryAdapterForBasicEntityTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class SubjectRepositoryAdapterTest extends
         SubjectJpaEntity,
         Subject,
         SubjectJpaRepository,
-        IInfrastructureVsDomainSubjectEntityMapper,
+        InfrastructureVsDomainSubjectEntityMapper,
         SubjectRepositoryAdapter
     > {
 

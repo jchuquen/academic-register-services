@@ -1,10 +1,10 @@
 package co.grow.plan.academic.register.shared.application.generics.services;
 
-import co.grow.plan.academic.register.shared.domain.interfaces.IEntity;
+import co.grow.plan.academic.register.shared.domain.interfaces.Entity;
 
 import java.util.List;
 
-public interface IBasicRepository<E extends IEntity> {
+public interface BasicRepository<E extends Entity> {
 
     /**
      * Gets a list of all entities

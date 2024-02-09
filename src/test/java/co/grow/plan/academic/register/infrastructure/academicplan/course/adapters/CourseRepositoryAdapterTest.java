@@ -3,7 +3,7 @@ package co.grow.plan.academic.register.infrastructure.academicplan.course.adapte
 import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
 import co.grow.plan.academic.register.domain.academicplan.course.model.Course;
 import co.grow.plan.academic.register.infrastructure.academicplan.course.entities.CourseJpaEntity;
-import co.grow.plan.academic.register.infrastructure.academicplan.course.mappers.IInfrastructureVsDomainCourseEntityMapper;
+import co.grow.plan.academic.register.infrastructure.academicplan.course.mappers.InfrastructureVsDomainCourseEntityMapper;
 import co.grow.plan.academic.register.infrastructure.academicplan.course.repositories.CourseJpaRepository;
 import co.grow.plan.academic.register.shared.infrastructure.generics.adapters.BasicRepositoryAdapterForBasicEntityTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class CourseRepositoryAdapterTest extends
         CourseJpaEntity,
         Course,
         CourseJpaRepository,
-        IInfrastructureVsDomainCourseEntityMapper,
+        InfrastructureVsDomainCourseEntityMapper,
         CourseRepositoryAdapter
     > {
 

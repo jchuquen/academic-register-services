@@ -1,7 +1,7 @@
 package co.grow.plan.academic.register.application.academicplan.course.services;
 
 import co.grow.plan.academic.register.AcademicRegisterServicesApplication;
-import co.grow.plan.academic.register.application.academicplan.course.ports.spi.ICourseRepositorySPI;
+import co.grow.plan.academic.register.application.academicplan.course.ports.spi.CourseRepositorySPI;
 import co.grow.plan.academic.register.domain.academicplan.course.model.Course;
 import co.grow.plan.academic.register.shared.application.generics.services.BasicServiceIntegrationForBasicEntityTest;
 import co.grow.plan.academic.register.shared.application.generics.services.PropertyError;
@@ -16,7 +16,7 @@ import java.util.List;
 @SpringBootTest(classes = AcademicRegisterServicesApplication.class)
 public class CourseServiceIntegrationTest extends BasicServiceIntegrationForBasicEntityTest<
     Course,
-    ICourseRepositorySPI,
+    CourseRepositorySPI,
     CourseService
     > {
 

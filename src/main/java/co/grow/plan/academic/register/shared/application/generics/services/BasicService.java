@@ -1,106 +1,42 @@
 package co.grow.plan.academic.register.shared.application.generics.services;
 
-import co.grow.plan.academic.register.shared.application.exceptions.ApiError;
-import co.grow.plan.academic.register.shared.application.exceptions.ApiMissingInformationException;
-import co.grow.plan.academic.register.shared.application.exceptions.ApiNoEntityException;
-import co.grow.plan.academic.register.shared.application.helpers.EntitiesValidationsHelper;
-import co.grow.plan.academic.register.shared.domain.exceptions.EmptyPropertyException;
-import co.grow.plan.academic.register.shared.domain.interfaces.IEntity;
-import co.grow.plan.academic.register.shared.helpers.ObjectValidationsHelper;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import co.grow.plan.academic.register.shared.domain.interfaces.Entity;
 
 import java.util.List;
 
-@RequiredArgsConstructor
-@Getter
-public abstract class BasicService<
-    E extends IEntity,
-    R extends IBasicRepository<E>
-    >
-    implements IBasicService<E>
-    {
+public interface BasicService<E extends Entity> {
 
-    private final R repository;
+    /**
+     * Gets a list of all entities
+     * @return List of Entities
+     */
+    List<E> list();
 
-    @Override
-    public List<E> list() {
-        return repository.findAll();
-    }
+    /**
+     * Get an entity using it's ID
+     * @param id ID to get
+     * @return Entity found
+     */
+    E findById(Integer id);
 
-    @Override
-    public E findById(Integer id) {
-        ObjectValidationsHelper.validateNotNull(id, "ID");
-        return validateInstanceIfExistsAndReturn(id);
-    }
+    /**
+     * Persists an entity in the repository
+     * @param entity Entity to persist
+     * @return Persisted entity
+     */
+    E create(E entity);
 
-    @Override
-    public E create(E entity) {
-        ObjectValidationsHelper.validateNotNull(entity,"Entity");
-        try {
-            entity.validate();
-        } catch (EmptyPropertyException e) {
-            throw new ApiMissingInformationException(
-                new ApiError(e.getMessage())
-            );
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        validateConstrains(null, entity);
-        return repository.save(entity);
-    }
+    /**
+     * Updates an entity in the repository
+     * @param id Entity's id to be updated
+     * @param entity Entity's info to be updated
+     * @return Updated entity
+     */
+    E update(Integer id, E entity);
 
-    @Override
-    public E update(Integer id, E entity) {
-        ObjectValidationsHelper.validateNotNull(id, "ID");
-        ObjectValidationsHelper.validateNotNull(entity,"Entity");
-
-        EntitiesValidationsHelper.validateIdsMatchingOrException(
-            id, entity.id());
-
-        var persistedEntity = validateInstanceIfExistsAndReturn(id);
-
-        EntitiesValidationsHelper.validateVersionsMatchOrException(
-            entity.version(), persistedEntity.version());
-
-        try {
-            entity.validate();
-        } catch (EmptyPropertyException e) {
-            throw new ApiMissingInformationException(
-                new ApiError(e.getMessage())
-            );
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        validateConstrains(id, entity);
-
-        return repository.save(entity);
-    }
-
-    @Override
-    public void delete(Integer id) {
-        ObjectValidationsHelper.validateNotNull(id, "ID");
-        validateInstanceIfExistsAndReturn(id);
-        repository.deleteById(id);
-    }
-
-    // Validations
-    protected abstract void validateConstrains(Integer id, E entity);
-
-    private E validateInstanceIfExistsAndReturn(Integer id) {
-
-        var entity = repository.findById(id);
-
-        if (entity == null) {
-            throw new ApiNoEntityException(
-                new ApiError(
-                    String.format(
-                        "Instance with id %s doesn't exist",
-                        id)
-                )
-            );
-        }
-        return entity;
-    }
+    /**
+     * Deletes an entity
+     * @param id Entity's id to be deleted
+     */
+    void delete(Integer id);
 }

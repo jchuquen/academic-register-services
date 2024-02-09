@@ -1,6 +1,6 @@
 package co.grow.plan.academic.register.application.academicplan.period.services;
 
-import co.grow.plan.academic.register.application.academicplan.period.ports.spi.IPeriodRepositorySPI;
+import co.grow.plan.academic.register.application.academicplan.period.ports.spi.PeriodRepositorySPI;
 import co.grow.plan.academic.register.domain.academicplan.period.model.Period;
 import co.grow.plan.academic.register.shared.application.generics.services.BasicServiceForBasicEntityTest;
 import co.grow.plan.academic.register.shared.application.generics.services.PropertyError;
@@ -14,18 +14,18 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 public class PeriodServiceTest extends BasicServiceForBasicEntityTest<
     Period,
-    IPeriodRepositorySPI,
+    PeriodRepositorySPI,
     PeriodService
     > {
 
     @Mock
-    private IPeriodRepositorySPI repositorySPI;
+    private PeriodRepositorySPI repositorySPI;
 
     @InjectMocks
     private PeriodService periodService;
 
     @Override
-    protected IPeriodRepositorySPI getRepository() {
+    protected PeriodRepositorySPI getRepository() {
         return repositorySPI;
     }
 

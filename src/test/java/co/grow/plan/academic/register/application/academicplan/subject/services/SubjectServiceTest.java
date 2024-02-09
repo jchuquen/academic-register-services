@@ -1,6 +1,6 @@
 package co.grow.plan.academic.register.application.academicplan.subject.services;
 
-import co.grow.plan.academic.register.application.academicplan.subject.ports.spi.ISubjectRepositorySPI;
+import co.grow.plan.academic.register.application.academicplan.subject.ports.spi.SubjectRepositorySPI;
 import co.grow.plan.academic.register.domain.academicplan.subject.model.Subject;
 import co.grow.plan.academic.register.shared.application.generics.services.BasicServiceForBasicEntityTest;
 import co.grow.plan.academic.register.shared.application.generics.services.PropertyError;
@@ -14,18 +14,18 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 public class SubjectServiceTest extends BasicServiceForBasicEntityTest<
     Subject,
-    ISubjectRepositorySPI,
+    SubjectRepositorySPI,
     SubjectService
     > {
 
     @Mock
-    private ISubjectRepositorySPI repositorySPI;
+    private SubjectRepositorySPI repositorySPI;
 
     @InjectMocks
     private SubjectService subjectService;
 
     @Override
-    protected ISubjectRepositorySPI getRepository() {
+    protected SubjectRepositorySPI getRepository() {
         return repositorySPI;
     }
 

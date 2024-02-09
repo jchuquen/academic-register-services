@@ -2,13 +2,13 @@ package co.grow.plan.academic.register.shared.application.generics.services;
 
 import co.grow.plan.academic.register.shared.application.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.shared.application.exceptions.ApiError;
-import co.grow.plan.academic.register.shared.domain.interfaces.IBasicEntity;
+import co.grow.plan.academic.register.shared.domain.interfaces.BasicEntity;
 
 public abstract class BasicServiceForBasicEntity<
-        E extends IBasicEntity,
-        R extends IBasicRepositoryForBasicEntity<E>
+        E extends BasicEntity,
+        R extends BasicRepositoryForBasicEntity<E>
     >
-    extends BasicService<E, R>{
+    extends BasicServiceImpl<E, R> {
     public BasicServiceForBasicEntity(R repository) {
         super(repository);
     }

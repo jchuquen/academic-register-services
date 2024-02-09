@@ -1,9 +1,9 @@
 package co.grow.plan.academic.register.infrastructure.academicplan.period.adapters;
 
-import co.grow.plan.academic.register.application.academicplan.period.ports.spi.IPeriodRepositorySPI;
+import co.grow.plan.academic.register.application.academicplan.period.ports.spi.PeriodRepositorySPI;
 import co.grow.plan.academic.register.domain.academicplan.period.model.Period;
 import co.grow.plan.academic.register.infrastructure.academicplan.period.entities.PeriodJpaEntity;
-import co.grow.plan.academic.register.infrastructure.academicplan.period.mappers.IInfrastructureVsDomainPeriodEntityMapper;
+import co.grow.plan.academic.register.infrastructure.academicplan.period.mappers.InfrastructureVsDomainPeriodEntityMapper;
 import co.grow.plan.academic.register.infrastructure.academicplan.period.repositories.PeriodJpaRepository;
 import co.grow.plan.academic.register.shared.infrastructure.generics.BasicRepositoryAdapterForBasicEntity;
 import org.springframework.stereotype.Service;
@@ -14,13 +14,13 @@ public final class PeriodRepositoryAdapter
         PeriodJpaEntity,
         Period,
         PeriodJpaRepository,
-        IInfrastructureVsDomainPeriodEntityMapper
+    InfrastructureVsDomainPeriodEntityMapper
     >
-    implements IPeriodRepositorySPI {
+    implements PeriodRepositorySPI {
 
     public PeriodRepositoryAdapter(
         PeriodJpaRepository repository,
-        IInfrastructureVsDomainPeriodEntityMapper mapper
+        InfrastructureVsDomainPeriodEntityMapper mapper
     ) {
         super(repository, mapper);
     }

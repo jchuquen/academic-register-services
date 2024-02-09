@@ -1,13 +1,13 @@
 package co.grow.plan.academic.register.infrastructure.academicplan.period.entities;
 
-import co.grow.plan.academic.register.shared.infrastructure.generics.IInfBasicEntity;
+import co.grow.plan.academic.register.shared.infrastructure.generics.InfBasicEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Table(name = "period")
 @Data
-public class PeriodJpaEntity implements IInfBasicEntity {
+public class PeriodJpaEntity implements InfBasicEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

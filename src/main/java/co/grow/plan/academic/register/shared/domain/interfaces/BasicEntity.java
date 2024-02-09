@@ -2,7 +2,7 @@ package co.grow.plan.academic.register.shared.domain.interfaces;
 
 import co.grow.plan.academic.register.shared.domain.exceptions.EmptyPropertyException;
 
-public interface IBasicEntity extends IEntity{
+public interface BasicEntity extends Entity {
     /**
      * Gets the entity's name
      * @return Entity's name

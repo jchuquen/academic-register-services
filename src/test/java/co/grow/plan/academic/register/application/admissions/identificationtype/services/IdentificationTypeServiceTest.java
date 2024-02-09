@@ -1,9 +1,8 @@
 package co.grow.plan.academic.register.application.admissions.identificationtype.services;
 
-import co.grow.plan.academic.register.application.admissions.identificationtype.ports.spi.IIdentificationTypeRepositorySPI;
+import co.grow.plan.academic.register.application.admissions.identificationtype.ports.spi.IdentificationTypeRepositorySPI;
 import co.grow.plan.academic.register.domain.admissions.identificationtype.model.IdentificationType;
 import co.grow.plan.academic.register.shared.application.generics.services.BasicServiceForBasicEntityTest;
-import co.grow.plan.academic.register.shared.application.generics.services.BasicServiceTest;
 import co.grow.plan.academic.register.shared.application.generics.services.PropertyError;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,18 +14,18 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 public class IdentificationTypeServiceTest extends BasicServiceForBasicEntityTest<
     IdentificationType,
-    IIdentificationTypeRepositorySPI,
+    IdentificationTypeRepositorySPI,
     IdentificationTypeService
     > {
 
     @Mock
-    private IIdentificationTypeRepositorySPI repositorySPI;
+    private IdentificationTypeRepositorySPI repositorySPI;
 
     @InjectMocks
     private IdentificationTypeService identificationTypeService;
 
     @Override
-    protected IIdentificationTypeRepositorySPI getRepository() {
+    protected IdentificationTypeRepositorySPI getRepository() {
         return repositorySPI;
     }
 

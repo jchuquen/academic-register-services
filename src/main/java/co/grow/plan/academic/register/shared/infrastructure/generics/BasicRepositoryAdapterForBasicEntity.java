@@ -1,15 +1,15 @@
 package co.grow.plan.academic.register.shared.infrastructure.generics;
 
-import co.grow.plan.academic.register.shared.domain.interfaces.IBasicEntity;
+import co.grow.plan.academic.register.shared.domain.interfaces.BasicEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
 public abstract class BasicRepositoryAdapterForBasicEntity<
-        I extends IInfBasicEntity, //The infrastructure entity
-        D extends IBasicEntity, // The domain entity
-        R extends IJpaRepositoryForBasicEntity<I> & JpaRepository<I, Integer>, // The infrastructure repository
-        M extends IBasicInfrastructureVsDomainEntityMapper<D,I>
+        I extends InfBasicEntity, //The infrastructure entity
+        D extends BasicEntity, // The domain entity
+        R extends JpaRepositoryForBasicEntity<I> & JpaRepository<I, Integer>, // The infrastructure repository
+        M extends BasicInfrastructureVsDomainEntityMapper<D,I>
     > extends BasicRepositoryAdapter<I, D, R, M>{
 
     public BasicRepositoryAdapterForBasicEntity(

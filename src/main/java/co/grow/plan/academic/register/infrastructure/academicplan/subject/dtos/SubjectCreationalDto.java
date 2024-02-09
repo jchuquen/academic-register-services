@@ -1,7 +1,7 @@
 package co.grow.plan.academic.register.infrastructure.academicplan.subject.dtos;
 
-import co.grow.plan.academic.register.shared.infrastructure.generics.ICreationalDto;
+import co.grow.plan.academic.register.shared.infrastructure.generics.CreationalDto;
 
 public record SubjectCreationalDto(String name)
-    implements ICreationalDto {
+    implements CreationalDto {
 }

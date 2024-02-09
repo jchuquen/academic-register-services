@@ -1,7 +1,7 @@
 package co.grow.plan.academic.register.shared.infrastructure.generics;
 
-import co.grow.plan.academic.register.shared.application.generics.services.IBasicRepository;
-import co.grow.plan.academic.register.shared.domain.interfaces.IEntity;
+import co.grow.plan.academic.register.shared.application.generics.services.BasicRepository;
+import co.grow.plan.academic.register.shared.domain.interfaces.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,12 +11,12 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class BasicRepositoryAdapter <
-    I extends IInfEntity, //The infrastructure entity
-    D extends IEntity, // The domain entity
+    I extends InfEntity, //The infrastructure entity
+    D extends Entity, // The domain entity
     R extends JpaRepository<I, Integer>, // The infrastructure repository
-    M extends IBasicInfrastructureVsDomainEntityMapper<D,I>
+    M extends BasicInfrastructureVsDomainEntityMapper<D,I>
     >
-    implements IBasicRepository<D> {
+    implements BasicRepository<D> {
 
     private final R repository;
     private final M infrastructureVsDomainMapper;

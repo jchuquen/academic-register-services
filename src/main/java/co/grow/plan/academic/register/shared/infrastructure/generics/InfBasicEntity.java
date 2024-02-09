@@ -1,6 +1,6 @@
 package co.grow.plan.academic.register.shared.infrastructure.generics;
 
-public interface IInfBasicEntity extends IInfEntity {
+public interface InfBasicEntity extends InfEntity {
     Integer getId();
     String getName();
     Long getVersion();
