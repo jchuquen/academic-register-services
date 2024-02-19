@@ -7,9 +7,9 @@ import co.grow.plan.academic.register.domain.admissions.identificationtype.model
 
 public final class IdentificationTypeService
     extends BasicServiceForBasicEntity<
-            IdentificationType,
+        IdentificationType,
         IdentificationTypeRepositorySPI
-        >
+    >
     implements IdentificationTypeServiceAPI {
 
     public IdentificationTypeService(IdentificationTypeRepositorySPI repository) {

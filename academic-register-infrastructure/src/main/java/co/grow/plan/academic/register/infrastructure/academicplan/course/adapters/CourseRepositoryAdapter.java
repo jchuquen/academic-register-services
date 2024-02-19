@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public final class CourseRepositoryAdapter
     extends BasicRepositoryAdapterForBasicEntity<
-            CourseJpaEntity,
-            Course,
-            CourseJpaRepository,
+        CourseJpaEntity,
+        Course,
+        CourseJpaRepository,
         InfrastructureVsDomainCourseEntityMapper
-        >
+    >
     implements CourseRepositorySPI {
 
     public CourseRepositoryAdapter(
