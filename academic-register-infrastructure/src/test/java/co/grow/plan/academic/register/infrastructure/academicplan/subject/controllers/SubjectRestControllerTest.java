@@ -94,12 +94,12 @@ public class SubjectRestControllerTest extends BasicRestControllerForBasicEntity
     }
 
     @Override
-    protected int getWrongResourceId() {
+    protected Integer getWrongResourceId() {
         return 8;
     }
 
     @Override
-    protected int getExistingResourceId() {
+    protected Integer getExistingResourceId() {
         return 3;
     }
 

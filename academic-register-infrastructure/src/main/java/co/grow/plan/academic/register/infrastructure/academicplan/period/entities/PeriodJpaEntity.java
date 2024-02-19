@@ -18,7 +18,7 @@ public class PeriodJpaEntity implements InfBasicEntity {
     private String name;
 
     @Column(nullable = false)
-    private boolean active;
+    private Boolean active;
 
     @Version
     private Long version;

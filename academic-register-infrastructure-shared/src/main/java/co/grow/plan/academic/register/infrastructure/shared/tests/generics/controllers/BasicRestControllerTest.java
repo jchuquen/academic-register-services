@@ -140,8 +140,8 @@ public abstract class BasicRestControllerTest<
     protected abstract C getCreationalDto(PropertyError propertyError);
     protected abstract F getCreatedEntity();
     protected abstract String getIdentifiedResourceURL();
-    protected abstract int getWrongResourceId();
-    protected abstract int getExistingResourceId();
+    protected abstract Integer getWrongResourceId();
+    protected abstract Integer getExistingResourceId();
     protected abstract F getPersistedEntity();
     protected abstract F getFullDtoToUpdate(PropertyError propertyError);
     protected abstract F getUpdatedEntity();

@@ -1,8 +1,7 @@
-package co.grow.plan.academic.register.application.shared.tests.helpers;
+package co.grow.plan.academic.register.application.shared.helpers;
 
 import co.grow.plan.academic.register.application.shared.exceptions.ApiBadInformationException;
 import co.grow.plan.academic.register.application.shared.exceptions.ApiError;
-import co.grow.plan.academic.register.application.shared.helpers.EntitiesValidationsHelper;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
