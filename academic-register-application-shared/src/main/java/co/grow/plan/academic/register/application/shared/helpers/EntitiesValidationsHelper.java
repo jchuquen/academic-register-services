@@ -4,12 +4,26 @@ import co.grow.plan.academic.register.application.shared.exceptions.ApiBadInform
 import co.grow.plan.academic.register.application.shared.exceptions.ApiConflictException;
 import co.grow.plan.academic.register.application.shared.exceptions.ApiError;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public final class EntitiesValidationsHelper {
+
+    private static final Logger logger =
+        Logger.getLogger(EntitiesValidationsHelper.class.getName());
+    public static final String ID_ONE_NOT_NULL = "ID one cannot be null";
+    public static final String ID_TWO_NOT_NULL = "ID two cannot be null";
+    public static final String IDS_MUST_MATCH = "IDs must match";
+    public static final String WRONG_ENTITY_VERSION = "Information version is different. ¡Try to refresh it!";
+
     public static void validateIdsMatchingOrException(Integer id1, Integer id2) {
+
+        logger.log(Level.INFO, "Validating IDs");
+
         if (id1 == null) {
             throw new ApiBadInformationException(
                 new ApiError(
-                    "ID one cannot be null"
+                    ID_ONE_NOT_NULL
                 )
             );
         }
@@ -17,7 +31,7 @@ public final class EntitiesValidationsHelper {
         if (id2 == null) {
             throw new ApiBadInformationException(
                 new ApiError(
-                    "ID two cannot be null"
+                    ID_TWO_NOT_NULL
                 )
             );
         }
@@ -25,7 +39,7 @@ public final class EntitiesValidationsHelper {
         if (!id1.equals(id2)) {
             throw new ApiBadInformationException(
                 new ApiError(
-                    "IDs must match"
+                    IDS_MUST_MATCH
                 )
             );
         }
@@ -33,11 +47,13 @@ public final class EntitiesValidationsHelper {
 
     public static void validateVersionsMatchOrException(long version1, long version2) {
 
+        logger.log(Level.INFO, "Validating entity versions");
+
         if (version1 != version2) {
             throw new ApiConflictException(
                 new ApiError(
                     String.format(
-                        "Information version is different. ¡Try to refresh it!")
+                        WRONG_ENTITY_VERSION)
                 )
             );
         }

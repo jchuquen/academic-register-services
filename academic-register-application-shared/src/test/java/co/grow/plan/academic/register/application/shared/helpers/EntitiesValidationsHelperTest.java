@@ -53,7 +53,8 @@ public final class EntitiesValidationsHelperTest {
             assertEquals("ID one cannot be null",
                 apiError.getMainMessage());
 
-            assertNull(apiError.getDetailedErrors());
+            assertNotNull(apiError.getDetailedErrors());
+            assertTrue(apiError.getDetailedErrors().isEmpty());
         }
 
         try {
@@ -71,7 +72,8 @@ public final class EntitiesValidationsHelperTest {
             assertEquals("ID one cannot be null",
                 apiError.getMainMessage());
 
-            assertNull(apiError.getDetailedErrors());
+            assertNotNull(apiError.getDetailedErrors());
+            assertTrue(apiError.getDetailedErrors().isEmpty());
         }
     }
 
@@ -92,7 +94,8 @@ public final class EntitiesValidationsHelperTest {
             assertEquals("ID two cannot be null",
                 apiError.getMainMessage());
 
-            assertNull(apiError.getDetailedErrors());
+            assertNotNull(apiError.getDetailedErrors());
+            assertTrue(apiError.getDetailedErrors().isEmpty());
         }
     }
 
@@ -113,7 +116,8 @@ public final class EntitiesValidationsHelperTest {
             assertEquals("IDs must match",
                 apiError.getMainMessage());
 
-            assertNull(apiError.getDetailedErrors());
+            assertNotNull(apiError.getDetailedErrors());
+            assertTrue(apiError.getDetailedErrors().isEmpty());
         }
     }
 }

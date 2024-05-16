@@ -11,32 +11,42 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RequiredArgsConstructor
 @Getter
 public abstract class BasicServiceImpl<
     E extends Entity,
     R extends BasicRepository<E>
-    >
-    implements BasicService<E>
-    {
+>
+implements BasicService<E>
+{
+
+    private static final Logger logger = Logger.getLogger(BasicServiceImpl.class.getName());
+    public static final String INSTANCE_DOES_NOT_EXIST = "Instance with id %s doesn't exist";
+    public static final String ID = "ID";
+    public static final String ENTITY = "Entity";
 
     private final R repository;
 
     @Override
     public List<E> list() {
+        logger.log(Level.INFO, "Listing using BasicServiceImpl");
         return repository.findAll();
     }
 
     @Override
     public E findById(Integer id) {
-        ObjectValidationsHelper.validateNotNull(id, "ID");
+        logger.log(Level.INFO, "Finding by id using BasicServiceImpl");
+        ObjectValidationsHelper.validateNotNull(id, ID);
         return validateInstanceIfExistsAndReturn(id);
     }
 
     @Override
     public E create(E entity) {
-        ObjectValidationsHelper.validateNotNull(entity,"Entity");
+        logger.log(Level.INFO, "Creating entity using BasicServiceImpl");
+        ObjectValidationsHelper.validateNotNull(entity, ENTITY);
         try {
             entity.validate();
         } catch (EmptyPropertyException e) {
@@ -52,8 +62,9 @@ public abstract class BasicServiceImpl<
 
     @Override
     public E update(Integer id, E entity) {
-        ObjectValidationsHelper.validateNotNull(id, "ID");
-        ObjectValidationsHelper.validateNotNull(entity,"Entity");
+        logger.log(Level.INFO, "Updating entity using BasicServiceImpl");
+        ObjectValidationsHelper.validateNotNull(id, ID);
+        ObjectValidationsHelper.validateNotNull(entity,ENTITY);
 
         EntitiesValidationsHelper.validateIdsMatchingOrException(
             id, entity.id());
@@ -80,7 +91,8 @@ public abstract class BasicServiceImpl<
 
     @Override
     public void delete(Integer id) {
-        ObjectValidationsHelper.validateNotNull(id, "ID");
+        logger.log(Level.INFO, "Deleting entity using BasicServiceImpl");
+        ObjectValidationsHelper.validateNotNull(id, ID);
         validateInstanceIfExistsAndReturn(id);
         repository.deleteById(id);
     }
@@ -89,14 +101,14 @@ public abstract class BasicServiceImpl<
     protected abstract void validateConstrains(Integer id, E entity);
 
     private E validateInstanceIfExistsAndReturn(Integer id) {
-
+        logger.log(Level.INFO, "Validating entity existence using BasicServiceImpl");
         var entity = repository.findById(id);
 
         if (entity == null) {
             throw new ApiNoEntityException(
                 new ApiError(
                     String.format(
-                        "Instance with id %s doesn't exist",
+                        INSTANCE_DOES_NOT_EXIST,
                         id)
                 )
             );

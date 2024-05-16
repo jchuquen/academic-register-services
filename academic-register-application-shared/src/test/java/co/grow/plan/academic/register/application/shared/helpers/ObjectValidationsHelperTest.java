@@ -25,7 +25,8 @@ public final class ObjectValidationsHelperTest {
             assertEquals("Parameter Test cannot be null",
                 apiError.getMainMessage());
 
-            assertNull(apiError.getDetailedErrors());
+            assertNotNull(apiError.getDetailedErrors());
+            assertTrue(apiError.getDetailedErrors().isEmpty());
         }
 
     }
