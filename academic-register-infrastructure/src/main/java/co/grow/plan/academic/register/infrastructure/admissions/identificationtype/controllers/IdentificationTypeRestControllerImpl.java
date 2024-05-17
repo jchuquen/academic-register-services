@@ -6,11 +6,13 @@ import co.grow.plan.academic.register.infrastructure.admissions.identificationty
 import co.grow.plan.academic.register.infrastructure.admissions.identificationtype.dtos.IdentificationTypeFullDto;
 import co.grow.plan.academic.register.infrastructure.admissions.identificationtype.mappers.InfrastructureDtoVsDomainIdentificationTypeMapper;
 import co.grow.plan.academic.register.infrastructure.shared.generics.BasicRestControllerImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/admissions/identification-types")
+@Slf4j
 public class IdentificationTypeRestControllerImpl
     extends BasicRestControllerImpl<
         IdentificationTypeFullDto,

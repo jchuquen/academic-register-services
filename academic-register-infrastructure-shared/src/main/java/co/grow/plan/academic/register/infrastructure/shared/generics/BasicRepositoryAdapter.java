@@ -4,12 +4,14 @@ import co.grow.plan.academic.register.application.shared.generics.services.Basic
 import co.grow.plan.academic.register.domain.shared.interfaces.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 @AllArgsConstructor
 @Getter
+@Slf4j
 public class BasicRepositoryAdapter <
     I extends InfEntity, //The infrastructure entity
     D extends Entity, // The domain entity
@@ -23,6 +25,9 @@ public class BasicRepositoryAdapter <
 
     @Override
     public List<D> findAll() {
+
+        log.debug("Listing Entities using BasicRepositoryAdapter");
+
         return
             infrastructureVsDomainMapper
                 .infToDomEntityList(repository.findAll());
@@ -30,12 +35,18 @@ public class BasicRepositoryAdapter <
 
     @Override
     public D findById(Integer id) {
+
+        log.debug(String.format("Finding entity by id %s using BasicRepositoryAdapter", id));
+
         var entity = repository.findById(id);
         return entity.map(infrastructureVsDomainMapper::infToDomEntity).orElse(null);
     }
 
     @Override
     public D save(D entity) {
+
+        log.debug("Saving entity using BasicRepositoryAdapter");
+
         return infrastructureVsDomainMapper.infToDomEntity(
             repository.save(
                 infrastructureVsDomainMapper
@@ -46,6 +57,9 @@ public class BasicRepositoryAdapter <
 
     @Override
     public void deleteById(Integer id) {
+
+        log.debug(String.format("Updating entity with id %s using BasicRepositoryAdapter", id));
+
         repository.deleteById(id);
     }
 }

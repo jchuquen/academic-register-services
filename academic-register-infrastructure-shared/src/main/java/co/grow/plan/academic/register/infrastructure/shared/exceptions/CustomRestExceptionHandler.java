@@ -1,6 +1,7 @@
 package co.grow.plan.academic.register.infrastructure.shared.exceptions;
 
 import co.grow.plan.academic.register.application.shared.exceptions.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -20,15 +21,30 @@ import java.util.List;
 import java.util.Set;
 
 @RestControllerAdvice
+@Slf4j
 @SuppressWarnings("unchecked")
 public final class  CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
+
+    public static final String PARAMETER_IS_MISSING_TEMPLATE = "%s parameter is missing";
+    public static final String TYPE_MISMATCH_TEMPLATE = "%s should be of type %s";
+    public static final String ARGUMENT_TYPE_MISMATCH_ERROR = "Error handling MethodArgumentTypeMismatch. No requiredType";
+    public static final String NO_HANDLER_FOUND_TEMPLATE = "No handler found for %s %s";
+    public static final String METHOD_NOT_SUPPORTED_ERROR = " method is not supported for this request. Supported methods are ";
+    public static final String HTTP_REQUEST_METHOD_NOT_SUPPORTED_ERROR = "Error handling HttpRequestMethodNotSupported. No supportedHttpMethods";
+    public static final String MEDIA_TYPE_NOT_SUPPORTED_ERROR = " media type is not supported. Supported media types are ";
+    public static final String AN_UNEXPECTED_ERROR = "An unexpected error has occurred";
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex,
-            HttpHeaders headers,
-            HttpStatusCode status,
-            WebRequest request) {
+        MethodArgumentNotValidException ex,
+        HttpHeaders headers,
+        HttpStatusCode status,
+        WebRequest request
+    ) {
+
+        log.debug("Handling Method Argument Not Valid");
+
         List<String> errors = new ArrayList<>();
 
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
@@ -47,9 +63,16 @@ public final class  CustomRestExceptionHandler extends ResponseEntityExceptionHa
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(
-            MissingServletRequestParameterException ex, HttpHeaders headers,
-            HttpStatusCode status, WebRequest request) {
-        String error = ex.getParameterName() + " parameter is missing";
+        MissingServletRequestParameterException ex, HttpHeaders headers,
+        HttpStatusCode status, WebRequest request
+    ) {
+
+        log.debug("Handling Missing Servlet Request Parameter");
+
+        String error =
+            String.format(
+                PARAMETER_IS_MISSING_TEMPLATE, ex.getParameterName()
+            );
 
         ApiError apiError =
                 new ApiError(ex.getLocalizedMessage(), List.of(error));
@@ -78,12 +101,17 @@ public final class  CustomRestExceptionHandler extends ResponseEntityExceptionHa
 
     @ExceptionHandler({ MethodArgumentTypeMismatchException.class })
     public ResponseEntity<Object> handleMethodArgumentTypeMismatch(
-            MethodArgumentTypeMismatchException ex, WebRequest request) {
+        MethodArgumentTypeMismatchException ex, WebRequest request
+    ) {
+
+        log.debug("Handling Method Argument Type MismatchException");
 
         Class<?> requiredType = ex.getRequiredType();
         if (requiredType != null) {
             String error =
-                ex.getName() + " should be of type " + requiredType.getName();
+                String.format(TYPE_MISMATCH_TEMPLATE,
+                    ex.getName(),requiredType.getName()
+                );
 
             ApiError apiError =
                 new ApiError(ex.getLocalizedMessage(), List.of(error));
@@ -93,7 +121,7 @@ public final class  CustomRestExceptionHandler extends ResponseEntityExceptionHa
         }
 
         return new ResponseEntity<>(
-            new ApiError("Error handling MethodArgumentTypeMismatch. No requiredType"),
+            new ApiError(ARGUMENT_TYPE_MISMATCH_ERROR),
             new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -101,9 +129,11 @@ public final class  CustomRestExceptionHandler extends ResponseEntityExceptionHa
     protected ResponseEntity<Object> handleNoHandlerFoundException(
             NoHandlerFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
+        log.debug("Handling No Handler Found Exception");
+
         String error =
-                "No handler found for " + ex.getHttpMethod() +
-                    " " + ex.getRequestURL();
+            String.format(NO_HANDLER_FOUND_TEMPLATE,
+                ex.getHttpMethod(), ex.getRequestURL());
 
         ApiError apiError = new ApiError(ex.getLocalizedMessage(), List.of(error));
 
@@ -118,10 +148,11 @@ public final class  CustomRestExceptionHandler extends ResponseEntityExceptionHa
             HttpStatusCode status,
             WebRequest request) {
 
+        log.debug("Handling Http Request Method Not Supported");
+
         StringBuilder builder = new StringBuilder();
         builder.append(ex.getMethod());
-        builder.append(
-                " method is not supported for this request. Supported methods are ");
+        builder.append(METHOD_NOT_SUPPORTED_ERROR);
 
         Set<HttpMethod> supportedHttpMethods = ex.getSupportedHttpMethods();
         if(supportedHttpMethods != null) {
@@ -135,7 +166,7 @@ public final class  CustomRestExceptionHandler extends ResponseEntityExceptionHa
         }
 
         return new ResponseEntity<>(
-            new ApiError("Error handling HttpRequestMethodNotSupported. No supportedHttpMethods"),
+            new ApiError(HTTP_REQUEST_METHOD_NOT_SUPPORTED_ERROR),
             new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -146,9 +177,11 @@ public final class  CustomRestExceptionHandler extends ResponseEntityExceptionHa
             HttpStatusCode status,
             WebRequest request) {
 
+        log.debug("Handling Http Media Type Not Supported");
+
         StringBuilder builder = new StringBuilder();
         builder.append(ex.getContentType());
-        builder.append(" media type is not supported. Supported media types are ");
+        builder.append(MEDIA_TYPE_NOT_SUPPORTED_ERROR);
 
         ex.getSupportedMediaTypes().forEach(t -> builder.append(t).append(", "));
 
@@ -163,6 +196,8 @@ public final class  CustomRestExceptionHandler extends ResponseEntityExceptionHa
     public ResponseEntity<ApiError> handleApiMissingInformationException(
         ApiMissingInformationException ex) {
 
+        log.debug("Handling Api Missing Information Exception");
+
         return new ResponseEntity<>(ex.getApiError(),
                 HttpStatus.BAD_REQUEST);
     }
@@ -170,6 +205,8 @@ public final class  CustomRestExceptionHandler extends ResponseEntityExceptionHa
     @ExceptionHandler({ ApiBadInformationException.class })
     public ResponseEntity<ApiError> handleApiBadInformationException(
         ApiBadInformationException ex) {
+
+        log.debug("Handling Api Bad Information Exception");
 
         return new ResponseEntity<>(ex.getApiError(),
             HttpStatus.BAD_REQUEST);
@@ -179,6 +216,8 @@ public final class  CustomRestExceptionHandler extends ResponseEntityExceptionHa
     public ResponseEntity<ApiError> handleApiConflictException(
             ApiConflictException ex) {
 
+        log.debug("Handling Api Conflict Exception");
+
         return new ResponseEntity<>(ex.getApiError(),
                 HttpStatus.CONFLICT);
     }
@@ -187,6 +226,8 @@ public final class  CustomRestExceptionHandler extends ResponseEntityExceptionHa
     public ResponseEntity<ApiError> handleApiNoEntityException(
             ApiNoEntityException ex) {
 
+        log.debug("Handling Api No Entity Exception");
+
         return new ResponseEntity<>(ex.getApiError(),
                 HttpStatus.NOT_FOUND);
     }
@@ -194,10 +235,13 @@ public final class  CustomRestExceptionHandler extends ResponseEntityExceptionHa
     @ExceptionHandler({ Exception.class })
     public ResponseEntity<ApiError> handleAll(Exception ex) {
 
+        log.debug("Handling General Exception");
+
         ApiError apiError = new ApiError(ex.getLocalizedMessage(),
-                List.of("An unexpected error has occurred"));
+                List.of(AN_UNEXPECTED_ERROR));
 
         return new ResponseEntity<>(
-                apiError, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+                apiError, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR
+        );
     }
 }

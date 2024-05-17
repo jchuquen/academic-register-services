@@ -32,13 +32,22 @@ implements BasicService<E>
 
     @Override
     public List<E> list() {
-        logger.log(Level.INFO, "Listing using BasicServiceImpl");
+
+        logger.log(Level.INFO, "Listing entities using BasicServiceImpl");
+
         return repository.findAll();
     }
 
     @Override
     public E findById(Integer id) {
-        logger.log(Level.INFO, "Finding by id using BasicServiceImpl");
+
+        logger.log(Level.INFO,
+            String.format(
+                "Finding entity by id %s using BasicServiceImpl",
+                id
+            )
+        );
+
         ObjectValidationsHelper.validateNotNull(id, ID);
         return validateInstanceIfExistsAndReturn(id);
     }
@@ -62,7 +71,14 @@ implements BasicService<E>
 
     @Override
     public E update(Integer id, E entity) {
-        logger.log(Level.INFO, "Updating entity using BasicServiceImpl");
+
+        logger.log(Level.INFO,
+            String.format(
+                "Updating entity by id %s using BasicServiceImpl",
+                id
+            )
+        );
+
         ObjectValidationsHelper.validateNotNull(id, ID);
         ObjectValidationsHelper.validateNotNull(entity,ENTITY);
 
@@ -91,7 +107,14 @@ implements BasicService<E>
 
     @Override
     public void delete(Integer id) {
-        logger.log(Level.INFO, "Deleting entity using BasicServiceImpl");
+
+        logger.log(Level.INFO,
+            String.format(
+                "Deleting entity by id %s using BasicServiceImpl",
+                id
+            )
+        );
+
         ObjectValidationsHelper.validateNotNull(id, ID);
         validateInstanceIfExistsAndReturn(id);
         repository.deleteById(id);
@@ -101,7 +124,14 @@ implements BasicService<E>
     protected abstract void validateConstrains(Integer id, E entity);
 
     private E validateInstanceIfExistsAndReturn(Integer id) {
-        logger.log(Level.INFO, "Validating entity existence using BasicServiceImpl");
+
+        logger.log(Level.INFO,
+            String.format(
+                "Validating entity existence by id %s using BasicServiceImpl",
+                id
+            )
+        );
+
         var entity = repository.findById(id);
 
         if (entity == null) {
@@ -109,7 +139,8 @@ implements BasicService<E>
                 new ApiError(
                     String.format(
                         INSTANCE_DOES_NOT_EXIST,
-                        id)
+                        id
+                    )
                 )
             );
         }
