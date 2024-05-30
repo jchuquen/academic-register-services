@@ -4,4 +4,4 @@
 #CODE COVERAGE STATUS
 [![codecov](https://codecov.io/gh/jchuquen/academic-register-services/graph/badge.svg?token=4DL0FBZ1NE)](https://codecov.io/gh/jchuquen/academic-register-services)
 
-Add here more cool info
+Add here more cool information
